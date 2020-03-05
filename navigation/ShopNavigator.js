@@ -8,6 +8,8 @@ import ProductOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import OrdersScreen from "../screens/shop/OrdersScreen";
+import UserProductsScreen from "../screens/user/UserProductsScreen";
+import EditProductsScreen from "../screens/user/EditProductScreen";
 
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -33,6 +35,7 @@ const ProductsNavigator = createStackNavigator(
   },
   {
     navigationOptions: {
+      // eslint-disable-next-line react/display-name
       drawerIcon: drawerConfig => (
         <Ionicons
           name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
@@ -51,6 +54,7 @@ const OrdersNavigator = createStackNavigator(
   },
   {
     navigationOptions: {
+      // eslint-disable-next-line react/display-name
       drawerIcon: drawerConfig => (
         <Ionicons
           name={Platform.OS === "android" ? "md-list" : "ios-list"}
@@ -63,10 +67,31 @@ const OrdersNavigator = createStackNavigator(
   }
 );
 
+const AdminNavigator = createStackNavigator(
+  {
+    UserProducts: UserProductsScreen,
+    EditProduct: EditProductsScreen
+  },
+  {
+    navigationOptions: {
+      // eslint-disable-next-line react/display-name
+      drawerIcon: drawerConfig => (
+        <Ionicons
+          name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          size={23}
+          color={drawerConfig.tintColor}
+        />
+      )
+    },
+    defaultNavigationOptions: defaultNavOptions
+  }
+);
+
 const ShopNavigator = createDrawerNavigator(
   {
     Products: ProductsNavigator,
-    Orders: OrdersNavigator
+    Orders: OrdersNavigator,
+    Admin: AdminNavigator
   },
   {
     contentOptions: {

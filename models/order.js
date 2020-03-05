@@ -1,4 +1,5 @@
-import * as moment from "moment";
+// import * as moment from "moment";
+var moment = require('moment');
 
 class Order {
   constructor(id, items, totalAmount, date) {
