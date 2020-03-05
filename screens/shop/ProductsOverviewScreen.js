@@ -38,6 +38,20 @@ ProductsOverviewScreen.navigationOptions = navData => {
   return {
     headerTitle: "All Products",
     // eslint-disable-next-line react/display-name
+    headerLeft: () => {
+      return (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Menu"
+            iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+            onPress={() => {
+              navData.navigation.toggleDrawer();
+            }}
+          />
+        </HeaderButtons>
+      );
+    },
+    // eslint-disable-next-line react/display-name
     headerRight: () => {
       return (
         <HeaderButtons HeaderButtonComponent={HeaderButton}>
