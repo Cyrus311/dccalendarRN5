@@ -18,7 +18,7 @@ const ProductItem = props => {
     TouchableComponent = TouchableNativeFeedback;
   }
   return (
-    <View style={styles.product}>
+    <Card style={styles.product}>
       <View style={styles.touchable}>
         <TouchableComponent onPress={props.onSelect} useForeground>
           <View>
@@ -30,25 +30,16 @@ const ProductItem = props => {
               <Text style={styles.title}>{props.title}</Text>
               <Text style={styles.price}>${props.price.toFixed(2)}</Text>
             </View>
-            <View style={styles.actions}>
-              {props.children}
-            </View>
+            <View style={styles.actions}>{props.children}</View>
           </View>
         </TouchableComponent>
       </View>
-    </View>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
     height: 300,
     margin: 20
   },
