@@ -78,7 +78,7 @@ const UserProductsScreen = props => {
   );
 };
 
-UserProductsScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
   return {
     headerTitle: "Your Products",
     // eslint-disable-next-line react/display-name
