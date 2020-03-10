@@ -1,9 +1,15 @@
-import { AUTHENTICATE, LOGOUT, SET_DID_TRY_AL } from "../actions/auth";
+import {
+  AUTHENTICATE,
+  LOGOUT,
+  SET_DID_TRY_AL,
+  CHECK_EMAIL
+} from "../actions/auth";
 
 const initialState = {
   token: null,
   userId: null,
-  didTryAutoLogin: false
+  didTryAutoLogin: false,
+  isEmailCheck: false
 };
 
 export default (state = initialState, action) => {
@@ -23,6 +29,12 @@ export default (state = initialState, action) => {
       return {
         ...initialState,
         didTryAutoLogin: true
+      };
+    case CHECK_EMAIL:
+      return {
+        ...state,
+        didTryAutoLogin: true,
+        isEmailCheck: action.result
       };
     // case SIGNUP:
     //   return {

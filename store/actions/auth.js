@@ -4,6 +4,7 @@ import { AsyncStorage } from "react-native";
 // export const LOGIN = "LOGIN";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
+export const CHECK_EMAIL = "CHECK_EMAIL";
 export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
 
 let timer;
@@ -19,22 +20,22 @@ export const authenticate = (token, userId, expiryTime) => {
   };
 };
 
-export const signup = (email, password) => {
+export const signup = (email, password, fullname) => {
+  const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users/login";
+  // apiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg";
   return async dispatch => {
-    const response = await fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          returnSecureToken: true
-        })
-      }
-    );
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        fullname: fullname,
+        returnSecureToken: true
+      })
+    });
 
     if (!response.ok) {
       const errorResData = await response.json();
@@ -51,6 +52,9 @@ export const signup = (email, password) => {
     }
 
     const resData = await response.json();
+    console.log("resData", resData);
+
+    return;
 
     dispatch(
       authenticate(
@@ -67,21 +71,21 @@ export const signup = (email, password) => {
 };
 
 export const login = (email, password) => {
+  const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users/login";
+  // apiUrl ="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg",
+
   return async dispatch => {
-    const response = await fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          returnSecureToken: true
-        })
-      }
-    );
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        returnSecureToken: true
+      })
+    });
 
     if (!response.ok) {
       const errorResData = await response.json();
@@ -98,10 +102,12 @@ export const login = (email, password) => {
     }
 
     const resData = await response.json();
+    resData.localId = "UU34";
+    resData.expiresIn = "34343434";
 
     dispatch(
       authenticate(
-        resData.idToken,
+        resData.token,
         resData.localId,
         parseInt(resData.expiresIn) * 1000
       )
@@ -142,4 +148,27 @@ const saveDataToStorage = (token, userId, expirationDate) => {
       expiryDate: expirationDate.toISOString()
     })
   );
+};
+
+export const checkEmail = email => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(
+        `https://doctorcalendar.eu-gb.mybluemix.net/users/emailCheck?email=${email}`
+      );
+
+      if (!response.ok) {
+        const errorResData = await response.json();
+
+        throw new Error(errorResData.error.message);
+      }
+
+      const resData = await response.json();
+
+      dispatch({ type: CHECK_EMAIL, result: resData });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 };

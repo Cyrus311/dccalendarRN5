@@ -9,7 +9,7 @@ import {
   Alert
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Input from "../../components/UI/Input";
 import Card from "../../components/UI/Card";
@@ -46,6 +46,8 @@ const AuthScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [isSignup, setIsSignup] = useState(false);
+  const [tryEmailExist, setTryEmailExist] = useState(false);
+  const isEmailCheck = useSelector(state => state.auth.isEmailCheck);
   const dispatch = useDispatch();
 
   const inputChangeHandler = useCallback(
@@ -63,11 +65,13 @@ const AuthScreen = props => {
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: "",
-      password: ""
+      password: "",
+      fullname: ""
     },
     inputValidities: {
       email: false,
-      password: false
+      password: false,
+      fullname: false
     },
     formIsValid: false
   });
@@ -78,9 +82,33 @@ const AuthScreen = props => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (isEmailCheck) {
+      setIsSignup(false);
+    } else if (tryEmailExist) {
+      setIsSignup(true);
+    }
+  }, [isEmailCheck, isSignup, tryEmailExist]);
+
+  const checkMailHandler = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(authActions.checkEmail(formState.inputValues.email));
+
+      setTryEmailExist(true);
+      setIsLoading(false);
+      // props.navigation.navigate("Shop");
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+      setIsSignup(false);
+    }
+  };
+
   const authHandler = async () => {
     let action;
-    if (isSignup) {
+    if (isSignup && tryEmailExist) {
       action = authActions.signup(
         formState.inputValues.email,
         formState.inputValues.password
@@ -99,6 +127,7 @@ const AuthScreen = props => {
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
+      setTryEmailExist(false);
     }
   };
 
@@ -122,21 +151,42 @@ const AuthScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue=""
             />
-            <Input
-              id="password"
-              label="Password"
-              keyboardType="default"
-              secureTextEntry
-              required
-              minLength={5}
-              autoCapitalize="none"
-              errorText="Please enter a valid password."
-              onInputChange={inputChangeHandler}
-              initialValue=""
-            />
+            {isSignup && (
+              <Input
+                id="fullname"
+                label="Name"
+                keyboardType="default"
+                required
+                minLength={5}
+                autoCapitalize="words"
+                errorText="Please enter a name."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+              />
+            )}
+            {tryEmailExist && (
+              <Input
+                id="password"
+                label="Password"
+                keyboardType="default"
+                secureTextEntry
+                required
+                minLength={5}
+                autoCapitalize="none"
+                errorText="Please enter a valid password."
+                onInputChange={inputChangeHandler}
+                initialValue=""
+              />
+            )}
             <View style={styles.buttonContainer}>
               {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.primary} />
+              ) : !tryEmailExist ? (
+                <Button
+                  title="Submit"
+                  color={Colors.primary}
+                  onPress={checkMailHandler}
+                />
               ) : (
                 <Button
                   title={isSignup ? "Sign Up" : "Login"}
@@ -144,15 +194,6 @@ const AuthScreen = props => {
                   onPress={authHandler}
                 />
               )}
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
-                color={Colors.accent}
-                onPress={() => {
-                  setIsSignup(prevState => !prevState);
-                }}
-              />
             </View>
           </ScrollView>
         </Card>
