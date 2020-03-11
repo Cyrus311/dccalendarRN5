@@ -14,7 +14,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 import ProductItem from "../../components/shop/ProductItem";
-import * as productActions from "../../store/actions/products";
+import * as calendarActions from "../../store/actions/calendar";
 
 const UserProductsScreen = props => {
   const userProducts = useSelector(state => state.products.userProducts);
@@ -31,7 +31,7 @@ const UserProductsScreen = props => {
         text: "Yes",
         style: "destructive",
         onPress: () => {
-          dispatch(productActions.deleteProduct(id));
+          dispatch(calendarActions.deleteCalendar(id));
         }
       }
     ]);

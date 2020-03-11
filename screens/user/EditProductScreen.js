@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import Input from "../../components/UI/Input";
 import HeaderButton from "../../components/UI/HeaderButton";
-import * as productActions from "../../store/actions/products";
+import * as calendarActions from "../../store/actions/calendar";
 import Colors from "../../constants/Colors";
 
 const FORM_UPDATE = "FORM_UPDATE";
@@ -85,7 +85,7 @@ const EditProductScreen = props => {
     try {
       if (editedProduct) {
         await dispatch(
-          productActions.updateProduct(
+          calendarActions.updateCalendar(
             prodId,
             formState.inputValues.title,
             formState.inputValues.description,
@@ -94,7 +94,7 @@ const EditProductScreen = props => {
         );
       } else {
         await dispatch(
-          productActions.createProduct(
+          calendarActions.createCalendar(
             formState.inputValues.title,
             formState.inputValues.description,
             formState.inputValues.imageUrl,

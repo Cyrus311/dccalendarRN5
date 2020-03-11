@@ -13,22 +13,22 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import ProductItem from "../../components/shop/ProductItem";
 import * as cartActions from "../../store/actions/cart";
-import * as productActions from "../../store/actions/products";
+import * as calendarActions from "../../store/actions/calendar";
 import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 
-const ProductsOverviewScreen = props => {
+const DutyOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  const products = useSelector(state => state.products.availableProducts);
+  const duty = useSelector(state => state.calendars.availableCalendars);
   const dispatch = useDispatch();
 
-  const loadProducts = useCallback(async () => {
+  const loadDuty = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
     try {
-      await dispatch(productActions.fetchProducts());
+      await dispatch(calendarActions.fetchCalendar());
     } catch (error) {
       console.log("productERROR", error);
       setError(error.message);
@@ -37,19 +37,19 @@ const ProductsOverviewScreen = props => {
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", loadProducts);
+    const unsubscribe = props.navigation.addListener("focus", loadDuty);
 
     return () => {
       unsubscribe();
     };
-  }, [loadProducts]);
+  }, [loadDuty]);
 
   useEffect(() => {
     setIsLoading(true);
-    loadProducts().then(() => {
+    loadDuty().then(() => {
       setIsLoading(false);
     });
-  }, [dispatch, loadProducts]);
+  }, [dispatch, loadDuty]);
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
@@ -64,7 +64,7 @@ const ProductsOverviewScreen = props => {
         <Text>An error occurred!</Text>
         <Button
           title="Try Again"
-          onPress={loadProducts}
+          onPress={loadDuty}
           color={Colors.primary}
         />
       </View>
@@ -79,17 +79,17 @@ const ProductsOverviewScreen = props => {
     );
   }
 
-  if (!isLoading && products.length === 0) {
+  if (!isLoading && duty.length === 0) {
     <View style={styles.centered}>
-      <Text>No products found.</Text>
+      <Text>No duty found.</Text>
     </View>;
   }
 
   return (
     <FlatList
-      onRefresh={loadProducts}
+      onRefresh={loadDuty}
       refreshing={isRefreshing}
-      data={products}
+      data={duty}
       keyExtractor={item => item.id}
       renderItem={itemData => (
         <ProductItem
@@ -122,7 +122,7 @@ const ProductsOverviewScreen = props => {
 
 export const screenOptions = navData => {
   return {
-    headerTitle: "All Products",
+    headerTitle: "All Duty",
     // eslint-disable-next-line react/display-name
     headerLeft: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -154,4 +154,4 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });
 
-export default ProductsOverviewScreen;
+export default DutyOverviewScreen;

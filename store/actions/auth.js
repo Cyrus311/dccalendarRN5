@@ -82,8 +82,7 @@ export const login = (email, password) => {
       },
       body: JSON.stringify({
         email: email,
-        password: password,
-        returnSecureToken: true
+        password: password
       })
     });
 
@@ -101,21 +100,21 @@ export const login = (email, password) => {
       throw new Error(message);
     }
 
-    const resData = await response.json();
-    resData.localId = "UU34";
-    resData.expiresIn = "34343434";
+    const res = await response.json();
+    const resData = res.tokenModel;
+    
 
     dispatch(
       authenticate(
         resData.token,
-        resData.localId,
-        parseInt(resData.expiresIn) * 1000
+        resData.userId,
+        parseInt(resData.exp)
       )
     );
     const expirationDate = new Date(
-      new Date().getTime() + parseInt(resData.expiresIn) * 1000
+      new Date().getTime() + parseInt(resData.exp)
     );
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+    saveDataToStorage(resData.token, resData.userId, expirationDate);
   };
 };
 
@@ -140,6 +139,7 @@ const setLogoutTimer = expirationTime => {
 };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
+  
   AsyncStorage.setItem(
     "userData",
     JSON.stringify({

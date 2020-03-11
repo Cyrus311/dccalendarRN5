@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 
 import ProductOverviewScreen, {
   screenOptions as productOverviewScreenOptions
-} from "../screens/shop/ProductsOverviewScreen";
+} from "../screens/shop/DutyOverviewScreen";
 import ProductDetailScreen, {
   screenOptions as productDetailScreenOptions
 } from "../screens/shop/ProductDetailScreen";
