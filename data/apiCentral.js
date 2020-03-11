@@ -1,11 +1,13 @@
+import { AsyncStorage } from "react-native";
 import axios from "axios";
-import { customVariables } from "../Config/customVariables";
-
+import { customVariables } from "../constants/customVariables";
 
 const request = async function(options, isHeader = true) {
   let authHeader = null;
   if (isHeader) {
-    authHeader = localStorage.getItem(customVariables.TOKEN); 
+    const userData = await AsyncStorage.getItem(customVariables.USERDATA);
+    const { token } = JSON.parse(userData);
+    authHeader = token;
   }
 
   const client = axios.create({
@@ -18,7 +20,6 @@ const request = async function(options, isHeader = true) {
   };
 
   const onError = function(error) {
-
     if (error.response) {
       // Request was made but server responded with something
       // other than 2xx

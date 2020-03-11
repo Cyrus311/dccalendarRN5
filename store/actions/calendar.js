@@ -1,4 +1,5 @@
 import Calendar from "../../models/calendar";
+import { calendarService } from "../../services/calendar";
 
 export const DELETE_CALENDAR = "DELETE_CALENDAR";
 export const CREATE_CALENDAR = "CREATE_CALENDAR";
@@ -9,22 +10,44 @@ export const fetchCalendar = () => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
     const token = getState().auth.token;
+    const filterData = {
+      filter: {
+        where: {
+          groupId: {
+            like: "5e53975e62398900983c869c"
+          }
+        },
+        include: [
+          {
+            relation: "group"
+          },
+          {
+            relation: "user"
+          },
+          {
+            relation: "location"
+          }
+        ]
+      }
+    };
     try {
       // any async code you want!
-      const response = await fetch(
-        "https://doctorcalendar.eu-gb.mybluemix.net/calendars",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      // const response = await fetch(
+      //   "https://doctorcalendar.eu-gb.mybluemix.net/calendars",
+      //   {
+      //     method: "GET",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //       "params": filterData
+      //     }
+      //   }
+      // );
 
-      if (!response.ok) {
-        // throw new Error("Something went wrong!");
-        const errorResData = await response.json();
+      const response = await calendarService.getReminderService(filterData);
+
+      if (response.error) {
+        const errorResData = response.error;
         console.log("ERROR", errorResData);
 
         const errorId = errorResData.error.message;
@@ -37,9 +60,11 @@ export const fetchCalendar = () => {
           message = "This password is not valid!";
         }
         throw new Error(message);
+        // console.log("ERROR");
       }
 
-      const resData = await response.json();
+      const resData = response;
+      console.log("resData", resData[0]);
 
       const loadedCalendars = [];
       for (const key in resData) {
@@ -66,7 +91,7 @@ export const fetchCalendar = () => {
         userCalendars: loadedCalendars.filter(prod => prod.userId === userId)
       });
     } catch (error) {
-      console.log(error);
+      console.log("error", error);
       throw error;
     }
   };

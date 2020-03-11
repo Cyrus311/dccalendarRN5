@@ -30,7 +30,7 @@ const DutyOverviewScreen = props => {
     try {
       await dispatch(calendarActions.fetchCalendar());
     } catch (error) {
-      console.log("productERROR", error);
+      // console.log("productERROR", error);
       setError(error.message);
     }
     setIsRefreshing(false);
@@ -62,11 +62,7 @@ const DutyOverviewScreen = props => {
     return (
       <View style={styles.centered}>
         <Text>An error occurred!</Text>
-        <Button
-          title="Try Again"
-          onPress={loadDuty}
-          color={Colors.primary}
-        />
+        <Button title="Try Again" onPress={loadDuty} color={Colors.primary} />
       </View>
     );
   }
