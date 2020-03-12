@@ -1,4 +1,4 @@
-import Calendar from "../../models/calendar";
+import { Calendar, User, Location, Group } from "../../models/index";
 import { calendarService } from "../../services/calendar";
 
 export const DELETE_CALENDAR = "DELETE_CALENDAR";
@@ -64,26 +64,55 @@ export const fetchCalendar = () => {
       }
 
       const resData = response;
-      console.log("resData", resData[0]);
 
       const loadedCalendars = [];
       for (const key in resData) {
-        loadedCalendars.push(
-          new Calendar(
-            resData[key].id,
-            resData[key].date,
-            resData[key].description,
-            resData[key].type,
-            resData[key].userId,
-            resData[key].groupId,
-            resData[key].locationId,
-            resData[key].createdDate,
-            resData[key].updatedDate,
-            resData[key].createdUserId,
-            resData[key].updatedUserId
-          )
-        );
+        // console.log("USER", key, resData[key].user.id);
+
+        loadedCalendars.push({
+          id: key,
+          calendar: resData[key]
+            ? new Calendar(
+                resData[key].id,
+                resData[key].date,
+                resData[key].description,
+                resData[key].type,
+                resData[key].userId,
+                resData[key].groupId,
+                resData[key].locationId,
+                resData[key].createdDate,
+                resData[key].updatedDate,
+                resData[key].createdUserId,
+                resData[key].updatedUserId
+              )
+            : {},
+          group: resData[key].group
+            ? new Group(resData[key].group.id, resData[key].group.name)
+            : {},
+          location: resData[key].location
+            ? new Location(
+                resData[key].location.id,
+                resData[key].location.name,
+                resData[key].location.colorCode,
+                resData[key].location.groupId
+              )
+            : {},
+          // user:
+          //   resData[key].user === null || resData[key].user === "undefined"
+          //     ? new User(
+          //         resData[key].user.id,
+          //         resData[key].user.email,
+          //         resData[key].user.fullName,
+          //         resData[key].user.title,
+          //         resData[key].user.deviceId,
+          //         resData[key].user.roles,
+          //         resData[key].user.createdDate,
+          //         resData[key].user.updatedDate
+          //       )
+          //     : {}
+        });
       }
+      console.log("loadedCalendars", loadedCalendars[0]);
 
       dispatch({
         type: SET_CALENDARS,
