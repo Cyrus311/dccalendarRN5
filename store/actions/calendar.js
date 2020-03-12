@@ -67,14 +67,12 @@ export const fetchCalendar = () => {
 
       const loadedCalendars = [];
       for (const key in resData) {
-        // console.log("USER", key, resData[key].user.id);
-
         loadedCalendars.push({
           id: key,
           calendar: resData[key]
             ? new Calendar(
                 resData[key].id,
-                resData[key].date,
+                new Date(resData[key].date),
                 resData[key].description,
                 resData[key].type,
                 resData[key].userId,
@@ -97,27 +95,43 @@ export const fetchCalendar = () => {
                 resData[key].location.groupId
               )
             : {},
-          // user:
-          //   resData[key].user === null || resData[key].user === "undefined"
-          //     ? new User(
-          //         resData[key].user.id,
-          //         resData[key].user.email,
-          //         resData[key].user.fullName,
-          //         resData[key].user.title,
-          //         resData[key].user.deviceId,
-          //         resData[key].user.roles,
-          //         resData[key].user.createdDate,
-          //         resData[key].user.updatedDate
-          //       )
-          //     : {}
+          user: resData[key].user
+            ? new User(
+                resData[key].user.id,
+                resData[key].user.email,
+                resData[key].user.fullName,
+                resData[key].user.title,
+                resData[key].user.deviceId,
+                resData[key].user.roles,
+                resData[key].user.createdDate,
+                resData[key].user.updatedDate
+              )
+            : {}
         });
       }
-      console.log("loadedCalendars", loadedCalendars[0]);
 
       dispatch({
         type: SET_CALENDARS,
-        calendars: loadedCalendars,
-        userCalendars: loadedCalendars.filter(prod => prod.userId === userId)
+        calendars: loadedCalendars.sort((a, b) => {
+          if (a.calendar.date > b.calendar.date) {
+            return 1;
+          }
+          if (a.calendar.date < b.calendar.date) {
+            return -1;
+          }
+          return 0;
+        }),
+        userCalendars: loadedCalendars
+          .filter(duty => duty.user.id === userId)
+          .sort((a, b) => {
+            if (a.calendar.date > b.calendar.date) {
+              return 1;
+            }
+            if (a.calendar.date < b.calendar.date) {
+              return -1;
+            }
+            return 0;
+          })
       });
     } catch (error) {
       console.log("error", error);
@@ -232,4 +246,14 @@ export const updateCalendar = (id, title, description, imageUrl) => {
       }
     });
   };
+};
+
+const sortByDate = (a, b) => {
+  if (a.date > b.date) {
+    return -1;
+  }
+  if (a.date < b.date) {
+    return 1;
+  }
+  return 0;
 };

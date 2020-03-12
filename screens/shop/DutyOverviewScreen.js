@@ -30,7 +30,7 @@ const DutyOverviewScreen = props => {
     try {
       await dispatch(calendarActions.fetchCalendar());
     } catch (error) {
-      // console.log("productERROR", error);
+      console.log("dutyERROR", error);
       setError(error.message);
     }
     setIsRefreshing(false);
@@ -82,37 +82,39 @@ const DutyOverviewScreen = props => {
   }
 
   return (
-    <FlatList
-      onRefresh={loadDuty}
-      refreshing={isRefreshing}
-      data={duty}
-      keyExtractor={item => item.id}
-      renderItem={itemData => (
-        <ProductItem
-          image={itemData.item.imageUrl}
-          title={itemData.item.title}
-          price={itemData.item.price}
-          onSelect={() => {
-            selectItemHandler(itemData.item.id, itemData.item.title);
-          }}
-        >
-          <Button
-            color={Colors.primary}
-            title="View Details"
-            onPress={() => {
+    <View style={styles.screen}>
+      <FlatList
+        onRefresh={loadDuty}
+        refreshing={isRefreshing}
+        data={duty}
+        keyExtractor={item => item.id}
+        renderItem={itemData => (
+          <ProductItem
+            date={itemData.item.calendar.readableDate}
+            location={itemData.item.location.name}
+            description={itemData.item.calendar.description}
+            onSelect={() => {
               selectItemHandler(itemData.item.id, itemData.item.title);
             }}
-          />
-          <Button
-            color={Colors.primary}
-            title="To Cart"
-            onPress={() => {
-              dispatch(cartActions.addToCart(itemData.item));
-            }}
-          />
-        </ProductItem>
-      )}
-    />
+          >
+            <Button
+              color={Colors.primary}
+              title="Detay"
+              onPress={() => {
+                selectItemHandler(itemData.item.id, itemData.item.title);
+              }}
+            />
+            <Button
+              color={Colors.primary}
+              title="Takas"
+              onPress={() => {
+                dispatch(cartActions.addToCart(itemData.item));
+              }}
+            />
+          </ProductItem>
+        )}
+      />
+    </View>
   );
 };
 
@@ -147,6 +149,7 @@ export const screenOptions = navData => {
 };
 
 const styles = StyleSheet.create({
+  screen: { backgroundColor: "orange" },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });
 

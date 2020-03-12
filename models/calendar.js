@@ -29,7 +29,7 @@ class Calendar {
   }
 
   get readableDate() {
-    return moment(this.date).format("Do MMMM YYYY, hh:mm");
+    return moment(this.date).format("DD MMM");
   }
 }
 

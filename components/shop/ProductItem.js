@@ -2,14 +2,15 @@ import React from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import Card from "../UI/Card";
+import Colors from "../../constants/Colors";
 
 const ProductItem = props => {
   let TouchableComponent = TouchableOpacity;
@@ -18,19 +19,25 @@ const ProductItem = props => {
     TouchableComponent = TouchableNativeFeedback;
   }
   return (
-    <Card style={styles.product}>
+    <Card style={styles.duty}>
       <View style={styles.touchable}>
         <TouchableComponent onPress={props.onSelect} useForeground>
-          <View>
-            <View style={styles.imageContainer}>
-              <Image style={styles.image} source={{ uri: props.image }} />
+          <View style={styles.dutyContainer}>
+            <View style={styles.gradientContainer}>
+              <LinearGradient
+                colors={[Colors.gradientStart, Colors.gradientEnd]}
+                style={styles.gradient}
+              >
+                <Text style={styles.date} numberOfLines={2}>
+                  {props.date}
+                </Text>
+              </LinearGradient>
             </View>
-
-            <View style={styles.details}>
-              <Text style={styles.title}>{props.title}</Text>
-              <Text style={styles.price}>${props.price}</Text>
+            <View style={styles.locationContainer}>
+              <Text style={styles.location}>{props.location}</Text>
+              <Text style={styles.description}>{props.description}</Text>
+              <View style={styles.actions}>{props.children}</View>
             </View>
-            <View style={styles.actions}>{props.children}</View>
           </View>
         </TouchableComponent>
       </View>
@@ -39,46 +46,62 @@ const ProductItem = props => {
 };
 
 const styles = StyleSheet.create({
-  product: {
-    height: 300,
-    margin: 20
+  duty: {
+    height: 90,
+    margin: 10
   },
   touchable: {
     borderRadius: 10,
     overflow: "hidden"
   },
-  imageContainer: {
+  dutyContainer: {
     width: "100%",
-    height: "60%",
+    height: "100%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    overflow: "hidden"
+    overflow: "hidden",
+    flexDirection: "row"
   },
-  image: {
-    width: "100%",
+  gradientContainer: {
+    flex: 1,
+    // alignItems: "center",
+    justifyContent: "center"
+  },
+  locationContainer: {
+    width: "80%",
     height: "100%"
   },
-  details: {
-    alignItems: "center",
-    height: "17%",
-    padding: 10
-  },
-  title: {
+  date: {
+    backgroundColor: "transparent",
     fontFamily: "open-sans-bold",
     fontSize: 18,
-    marginVertical: 2
+    marginVertical: 4,
+    paddingHorizontal: 4
   },
-  price: {
+  location: {
+    backgroundColor: "transparent",
+    fontFamily: "open-sans-bold",
+    fontSize: 18,
+    marginVertical: 4,
+    paddingHorizontal: 4
+  },
+  description: {
     fontFamily: "open-sans",
-    fontSize: 14,
-    color: "#888"
+    fontSize: 12,
+    color: "#888",
+    paddingHorizontal: 4
   },
   actions: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: "23%",
+    height: "30%",
     paddingHorizontal: 10
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 
