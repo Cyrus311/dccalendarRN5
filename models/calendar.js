@@ -1,5 +1,6 @@
-// import * as moment from "moment";
-var moment = require("moment");
+import moment from "moment";
+import "moment/locale/tr";
+// var moment = require("moment");
 
 class Calendar {
   constructor(

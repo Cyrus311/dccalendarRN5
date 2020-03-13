@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     fontFamily: "open-sans-bold",
     fontSize: 18,
     marginVertical: 4,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
+    color: Colors.textColor
   },
   location: {
     backgroundColor: "transparent",
