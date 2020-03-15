@@ -10,9 +10,9 @@ import { useDispatch } from "react-redux";
 import ProductOverviewScreen, {
   screenOptions as productOverviewScreenOptions
 } from "../screens/shop/DutyOverviewScreen";
-import ProductDetailScreen, {
-  screenOptions as productDetailScreenOptions
-} from "../screens/shop/ProductDetailScreen";
+import DutyDetailScreen, {
+  screenOptions as dutyDetailScreenOptions
+} from "../screens/shop/DutyDetailScreen";
 import CartScreen, {
   screenOptions as cartScreenOptions
 } from "../screens/shop/CartScreen";
@@ -58,9 +58,9 @@ export const ProductsNavigator = () => {
         options={productOverviewScreenOptions}
       />
       <ProductsStackNavigator.Screen
-        name="ProductDetail"
-        component={ProductDetailScreen}
-        options={productDetailScreenOptions}
+        name="DutyDetail"
+        component={DutyDetailScreen}
+        options={dutyDetailScreenOptions}
       />
       <ProductsStackNavigator.Screen
         name="Cart"

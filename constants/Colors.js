@@ -3,6 +3,6 @@ export default {
   accent: "#799da9",
   gradientStart: "#3499b5",
   gradientEnd: "#3499b5",
-  backColor: "#e8ebf0",
+  backColor: "#016e8d",
   textColor: "white"
 };

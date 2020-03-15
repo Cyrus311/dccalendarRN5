@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Calendar, User, Location, Group } from "../../models/index";
 import { calendarService } from "../../services/calendar";
 
@@ -5,31 +6,11 @@ export const DELETE_CALENDAR = "DELETE_CALENDAR";
 export const CREATE_CALENDAR = "CREATE_CALENDAR";
 export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
 export const SET_CALENDARS = "SET_CALENDARS";
+export const DAILY_CALENDARS = "DAILY_CALENDARS";
 
-export const fetchCalendar = () => {
+export const fetchCalendar = filterData => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
-    const token = getState().auth.token;
-    const filterData = {
-      filter: {
-        where: {
-          groupId: {
-            like: "5e53975e62398900983c869c"
-          }
-        },
-        include: [
-          {
-            relation: "group"
-          },
-          {
-            relation: "user"
-          },
-          {
-            relation: "location"
-          }
-        ]
-      }
-    };
     try {
       // any async code you want!
       // const response = await fetch(
@@ -123,6 +104,138 @@ export const fetchCalendar = () => {
         }),
         userCalendars: loadedCalendars
           .filter(duty => duty.user.id === userId)
+          .sort((a, b) => {
+            if (a.calendar.date > b.calendar.date) {
+              return 1;
+            }
+            if (a.calendar.date < b.calendar.date) {
+              return -1;
+            }
+            return 0;
+          }),
+        mountCalenders: loadedCalendars
+          .filter(
+            duty =>
+              duty.user.id === userId &&
+              moment(duty.calendar.date).format("Y-MM") ===
+                moment().format("Y-MM")
+          )
+          .sort((a, b) => {
+            if (a.calendar.date > b.calendar.date) {
+              return 1;
+            }
+            if (a.calendar.date < b.calendar.date) {
+              return -1;
+            }
+            return 0;
+          }),
+        dailyCalenders: []
+      });
+    } catch (error) {
+      console.log("error", error);
+      throw error;
+    }
+  };
+};
+
+export const dailyCalendar = date => {
+  return async (dispatch, getState) => {
+    try {
+      const filterData = {
+        filter: {
+          where: {
+            groupId: {
+              like: "5e53975e62398900983c869c"
+            }
+          },
+          include: [
+            {
+              relation: "group"
+            },
+            {
+              relation: "user"
+            },
+            {
+              relation: "location"
+            }
+          ]
+        }
+      };
+
+      const response = await calendarService.getReminderService(filterData);
+
+      if (response.error) {
+        const errorResData = response.error;
+        console.log("ERROR", errorResData);
+
+        const errorId = errorResData.error.message;
+        let message = "Something went wrong!";
+        if (errorId === "INVALID_EMAIL") {
+          message = "This email is not valid!";
+        } else if (errorId === "EMAIL_NOT_FOUND") {
+          message = "This email could not be found!";
+        } else if (errorId === "INVALID_PASSWORD") {
+          message = "This password is not valid!";
+        }
+        throw new Error(message);
+        // console.log("ERROR");
+      }
+
+      const resData = response;
+
+      const loadedCalendars = [];
+      for (const key in resData) {
+        loadedCalendars.push({
+          id: key,
+          calendar: resData[key]
+            ? new Calendar(
+                resData[key].id,
+                new Date(resData[key].date),
+                resData[key].description,
+                resData[key].type,
+                resData[key].userId,
+                resData[key].groupId,
+                resData[key].locationId,
+                resData[key].createdDate,
+                resData[key].updatedDate,
+                resData[key].createdUserId,
+                resData[key].updatedUserId
+              )
+            : {},
+          group: resData[key].group
+            ? new Group(resData[key].group.id, resData[key].group.name)
+            : {},
+          location: resData[key].location
+            ? new Location(
+                resData[key].location.id,
+                resData[key].location.name,
+                resData[key].location.colorCode,
+                resData[key].location.groupId
+              )
+            : {},
+          user: resData[key].user
+            ? new User(
+                resData[key].user.id,
+                resData[key].user.email,
+                resData[key].user.fullName,
+                resData[key].user.title,
+                resData[key].user.deviceId,
+                resData[key].user.roles,
+                resData[key].user.createdDate,
+                resData[key].user.updatedDate
+              )
+            : {}
+        });
+      }
+
+      dispatch({
+        type: DAILY_CALENDARS,
+        dailyCalenders: loadedCalendars
+          .filter(
+            duty =>
+              moment(duty.calendar.date).format("Y-MM-DD") ===
+              moment(date).format("Y-MM-DD")
+          )
           .sort((a, b) => {
             if (a.calendar.date > b.calendar.date) {
               return 1;
@@ -246,14 +359,4 @@ export const updateCalendar = (id, title, description, imageUrl) => {
       }
     });
   };
-};
-
-const sortByDate = (a, b) => {
-  if (a.date > b.date) {
-    return -1;
-  }
-  if (a.date < b.date) {
-    return 1;
-  }
-  return 0;
 };

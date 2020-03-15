@@ -3,14 +3,17 @@ import {
   DELETE_CALENDAR,
   CREATE_CALENDAR,
   UPDATE_CALENDAR,
-  SET_CALENDARS
+  SET_CALENDARS,
+  DAILY_CALENDARS
 } from "../actions/calendar";
 // import Calendar from "../../models/calendar";
-import Calendar from "../../models/calendar"
+import Calendar from "../../models/calendar";
 
 const initialState = {
   availableCalendars: [],
-  userCalendars: []
+  userCalendars: [],
+  mountCalenders: [],
+  dailyCalenders: []
 };
 
 export default (state = initialState, action) => {
@@ -18,7 +21,15 @@ export default (state = initialState, action) => {
     case SET_CALENDARS: {
       return {
         availableCalendars: action.calendars,
-        userCalendars: action.userCalendars
+        userCalendars: action.userCalendars,
+        mountCalenders: action.mountCalenders,
+        dailyCalenders: action.dailyCalenders
+      };
+    }
+    case DAILY_CALENDARS: {
+      return {
+        ...state,
+        dailyCalenders: action.dailyCalenders
       };
     }
     case CREATE_CALENDAR: {

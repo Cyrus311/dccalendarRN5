@@ -12,6 +12,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
+import moment from "moment";
 
 import ProductItem from "../../components/shop/ProductItem";
 import * as cartActions from "../../store/actions/cart";
@@ -19,7 +20,7 @@ import * as calendarActions from "../../store/actions/calendar";
 import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 
-const ProductDetailScreen = props => {
+const DutyDetailScreen = props => {
   const dateObj = new Date();
   const month = dateObj.getUTCMonth() + 1;
   const year = dateObj.getUTCFullYear();
@@ -29,8 +30,20 @@ const ProductDetailScreen = props => {
   const [error, setError] = useState();
   const [listOfDate, setListOfDate] = useState(plistOfDate);
   const [activeIndex, updActiveIndex] = useState(-1);
-  const duty = useSelector(state => state.calendars.userCalendars);
+  const duty = useSelector(state => state.calendars.dailyCalenders);
+  const [calendar, setCalendar] = useState({});
   const dispatch = useDispatch();
+  const calendarObj = JSON.parse(props.route.params.calendar);
+  const calendarId = calendarObj ? calendarObj.id : "";
+  const selectedDate = calendarObj.date;
+  let passedActiveItem = moment(selectedDate).format("D");
+  console.log("activeIndex", activeIndex);
+
+  const getItemLayout = (data, index) => ({
+    length: 85,
+    offset: 85 * index,
+    index
+  });
 
   let _onPress = ({ item }) => {
     //setPassedItem(-1);
@@ -43,7 +56,14 @@ const ProductDetailScreen = props => {
     setError(null);
     setIsRefreshing(true);
     try {
-      await dispatch(calendarActions.fetchCalendar());
+      console.log("selectedDate", selectedDate);
+      if (passedActiveItem) {
+        console.log("success");
+        updActiveIndex(+passedActiveItem);
+        passedActiveItem = null;
+      }
+
+      await dispatch(calendarActions.dailyCalendar(selectedDate));
     } catch (error) {
       console.log("dutyERROR", error);
       setError(error.message);
@@ -58,6 +78,12 @@ const ProductDetailScreen = props => {
       unsubscribe();
     };
   }, [loadDuty]);
+
+  useEffect(() => {
+    if (calendarId !== "") {
+      setCalendar(duty.filter(duty => duty.calendar.id === calendarId));
+    }
+  }, [calendarId]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -76,6 +102,8 @@ const ProductDetailScreen = props => {
   let keyExtractor = (item, index) => index.toString();
 
   let renderItem = ({ item }) => {
+    // console.log("item", item);
+
     return (
       <TouchableHighlight
         onPress={() => _onPress({ item })}
@@ -97,7 +125,6 @@ const ProductDetailScreen = props => {
           >
             {item.day}
           </Text>
-
           <Text
             style={[
               styles.smallTextArea,
@@ -108,7 +135,6 @@ const ProductDetailScreen = props => {
           >
             {item.shortName}
           </Text>
-
           <Ionicons
             style={styles.icon}
             name="ios-more"
@@ -145,9 +171,15 @@ const ProductDetailScreen = props => {
 
   return (
     <View style={styles.screen}>
-      <View style={{ height: "15%", width: "95%", flexDirection: "row" }}>
+      <View style={styles.daysContainer}>
         <FlatList
+          initialScrollIndex={activeIndex - 2}
           renderItem={item => renderItem(item)}
+          // ref={ref => {
+          //   this.flatListRef = ref;
+          // }}
+          // initialNumToRender={5}
+          getItemLayout={getItemLayout}
           data={listOfDate}
           horizontal={true}
           keyExtractor={keyExtractor}
@@ -169,7 +201,7 @@ const ProductDetailScreen = props => {
           ></Ionicons>
         </View>
       </View>
-      <View style={{ height: "85%" }}>
+      <View style={styles.dutyContainer}>
         <FlatList
           onRefresh={loadDuty}
           refreshing={isRefreshing}
@@ -208,13 +240,16 @@ const ProductDetailScreen = props => {
 
 export const screenOptions = navData => {
   return {
-    headerTitle: navData.route.params.productTitle
+    // headerTitle: navData.route.params.productTitle
+    headerTitle: "Nöbetçi Listesi"
   };
 };
 
 const styles = StyleSheet.create({
   screen: { backgroundColor: Colors.backColor },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+  daysContainer: { height: "15%", width: "95%", flexDirection: "row" },
+  dutyContainer: { height: "85%" },
   safeArea: {
     backgroundColor: "white",
     height: "90%",
@@ -231,6 +266,7 @@ const styles = StyleSheet.create({
 
     // height: '100%',
     width: 80,
+    // height: 80,
     paddingTop: 10,
     //paddingBottom: 20,
     borderWidth: 0.5,
@@ -282,4 +318,4 @@ const getDaysArray = (year, month) => {
   return result;
 };
 
-export default ProductDetailScreen;
+export default DutyDetailScreen;
