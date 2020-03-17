@@ -35,7 +35,7 @@ const DutyDetailScreen = props => {
   const dispatch = useDispatch();
   const calendarObj = JSON.parse(props.route.params.calendar);
   const calendarId = calendarObj ? calendarObj.id : "";
-  const selectedDate = calendarObj.date;
+  const [selectedDate,setSelectedDate] = useState(calendarObj.date);
   let passedActiveItem = moment(selectedDate).format("D");
   console.log("activeIndex", activeIndex);
 
@@ -45,7 +45,7 @@ const DutyDetailScreen = props => {
     index
   });
 
-  let _onPress = ({ item }) => {
+  const _onPress = ({ item }) => {
     //setPassedItem(-1);
     console.log("sdasdasasd", item.id);
     updActiveIndex(item.id);
@@ -56,7 +56,7 @@ const DutyDetailScreen = props => {
     setError(null);
     setIsRefreshing(true);
     try {
-      console.log("selectedDate", selectedDate);
+      console.log("selectedDate1", selectedDate);
       if (passedActiveItem) {
         console.log("success");
         updActiveIndex(+passedActiveItem);
@@ -69,7 +69,7 @@ const DutyDetailScreen = props => {
       setError(error.message);
     }
     setIsRefreshing(false);
-  }, [dispatch, setIsLoading, setError]);
+  }, [dispatch, setIsLoading, setError, setSelectedDate]);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", loadDuty);
@@ -81,16 +81,18 @@ const DutyDetailScreen = props => {
 
   useEffect(() => {
     if (calendarId !== "") {
-      setCalendar(duty.filter(duty => duty.calendar.id === calendarId));
+      console.log("setCalendar");      
+      setCalendar(duty);
     }
   }, [calendarId]);
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true);    
+    setSelectedDate(moment("2020-03-07T12:00:00.000Z"));
     loadDuty().then(() => {
       setIsLoading(false);
     });
-  }, [dispatch, loadDuty]);
+  }, [dispatch, loadDuty,activeIndex]);
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
