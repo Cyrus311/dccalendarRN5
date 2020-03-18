@@ -13,7 +13,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 
-import ProductItem from "../../components/shop/ProductItem";
+import DutyItem from "../../components/shop/DutyItem";
 import * as cartActions from "../../store/actions/cart";
 import * as calendarActions from "../../store/actions/calendar";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -98,7 +98,7 @@ const DutyOverviewScreen = props => {
 
   if (!isLoading && duty.length === 0) {
     <View style={styles.centered}>
-      <Text>No duty found.</Text>
+      <Text>Nöbetiniz bulunamadı.</Text>
     </View>;
   }
 
@@ -116,7 +116,7 @@ const DutyOverviewScreen = props => {
           data={duty}
           keyExtractor={item => item.id}
           renderItem={itemData => (
-            <ProductItem
+            <DutyItem
               date={itemData.item.calendar.readableDate}
               location={itemData.item.location.name}
               description={itemData.item.calendar.description}
@@ -138,7 +138,7 @@ const DutyOverviewScreen = props => {
                   dispatch(cartActions.addToCart(itemData.item.calendar.id));
                 }}
               />
-            </ProductItem>
+            </DutyItem>
           )}
         />
       </View>
@@ -166,18 +166,18 @@ export const screenOptions = navData => {
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Cart"
-          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
           onPress={() => {
             navData.navigation.navigate("Cart");
           }}
         />
-        <Item
+        {/* <Item
           title="Cart2"
           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
           onPress={() => {
             navData.navigation.navigate("Cart");
           }}
-        />
+        /> */}
       </HeaderButtons>
     )
   };

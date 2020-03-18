@@ -14,7 +14,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 
-import ProductItem from "../../components/shop/ProductItem";
+import DutyItem from "../../components/shop/DutyItem";
 import * as cartActions from "../../store/actions/cart";
 import * as calendarActions from "../../store/actions/calendar";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -35,9 +35,8 @@ const DutyDetailScreen = props => {
   const dispatch = useDispatch();
   const calendarObj = JSON.parse(props.route.params.calendar);
   const calendarId = calendarObj ? calendarObj.id : "";
-  const [selectedDate,setSelectedDate] = useState(calendarObj.date);
+  const [selectedDate, setSelectedDate] = useState(calendarObj.date);
   let passedActiveItem = moment(selectedDate).format("D");
-  console.log("activeIndex", activeIndex);
 
   const getItemLayout = (data, index) => ({
     length: 85,
@@ -46,33 +45,36 @@ const DutyDetailScreen = props => {
   });
 
   const _onPress = ({ item }) => {
-    //setPassedItem(-1);
-    console.log("sdasdasasd", item.id);
+    setSelectedDate(item.date);
     updActiveIndex(item.id);
-    // console.log(passedActiveItem);
   };
 
-  const loadDuty = useCallback(async () => {
-    setError(null);
-    setIsRefreshing(true);
-    try {
-      console.log("selectedDate1", selectedDate);
-      if (passedActiveItem) {
-        console.log("success");
-        updActiveIndex(+passedActiveItem);
-        passedActiveItem = null;
-      }
+  const loadDuty = useCallback(
+    async date => {
+      setError(null);
+      setIsRefreshing(true);
+      try {
+        if (passedActiveItem) {
+          console.log("success");
+          updActiveIndex(+passedActiveItem);
+          passedActiveItem = null;
+        }
 
-      await dispatch(calendarActions.dailyCalendar(selectedDate));
-    } catch (error) {
-      console.log("dutyERROR", error);
-      setError(error.message);
-    }
-    setIsRefreshing(false);
-  }, [dispatch, setIsLoading, setError, setSelectedDate]);
+        await dispatch(calendarActions.dailyCalendar(date));
+      } catch (error) {
+        console.log("dutyERROR", error);
+        setError(error.message);
+      }
+      setIsRefreshing(false);
+    },
+    [dispatch, setIsLoading, setError]
+  );
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", loadDuty);
+    const unsubscribe = props.navigation.addListener(
+      "focus",
+      loadDuty.bind(this, selectedDate)
+    );
 
     return () => {
       unsubscribe();
@@ -81,18 +83,17 @@ const DutyDetailScreen = props => {
 
   useEffect(() => {
     if (calendarId !== "") {
-      console.log("setCalendar");      
+      console.log("setCalendar");
       setCalendar(duty);
     }
   }, [calendarId]);
 
   useEffect(() => {
-    setIsLoading(true);    
-    setSelectedDate(moment("2020-03-07T12:00:00.000Z"));
-    loadDuty().then(() => {
+    setIsLoading(true);
+    loadDuty(selectedDate).then(() => {
       setIsLoading(false);
     });
-  }, [dispatch, loadDuty,activeIndex]);
+  }, [dispatch, loadDuty, activeIndex]);
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {
@@ -104,8 +105,6 @@ const DutyDetailScreen = props => {
   let keyExtractor = (item, index) => index.toString();
 
   let renderItem = ({ item }) => {
-    // console.log("item", item);
-
     return (
       <TouchableHighlight
         onPress={() => _onPress({ item })}
@@ -152,24 +151,28 @@ const DutyDetailScreen = props => {
     return (
       <View style={styles.centered}>
         <Text>An error occurred!</Text>
-        <Button title="Try Again" onPress={loadDuty} color={Colors.primary} />
+        <Button
+          title="Try Again"
+          onPress={loadDuty.bind(this, selectedDate)}
+          color={Colors.primary}
+        />
       </View>
     );
   }
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <ActivityIndicator size="large" color={Colors.primary} />
+  //     </View>
+  //   );
+  // }
 
-  if (!isLoading && duty.length === 0) {
-    <View style={styles.centered}>
-      <Text>No duty found.</Text>
-    </View>;
-  }
+  // if (!isLoading && duty.length === 0) {
+  //   <View style={styles.centered}>
+  //     <Text>No duty found.</Text>
+  //   </View>;
+  // }
 
   return (
     <View style={styles.screen}>
@@ -203,39 +206,55 @@ const DutyDetailScreen = props => {
           ></Ionicons>
         </View>
       </View>
-      <View style={styles.dutyContainer}>
-        <FlatList
-          onRefresh={loadDuty}
-          refreshing={isRefreshing}
-          data={duty}
-          keyExtractor={item => item.id}
-          renderItem={itemData => (
-            <ProductItem
-              date={itemData.item.calendar.readableDate}
-              location={itemData.item.location.name}
-              description={itemData.item.calendar.description}
-              onSelect={() => {
-                selectItemHandler(itemData.item.id, itemData.item.title);
-              }}
-            >
-              <Button
-                color={Colors.primary}
-                title="Detay"
-                onPress={() => {
+      {isLoading && (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.textColor} />
+        </View>
+      )}
+      {!isLoading && duty.length === 0 && (
+        <View style={[styles.centered]}>
+          <View style={styles.noDutyContainer}>
+            <Text style={styles.text}>
+              Seçili gün için atanmış nöbetçi bulunamadı.
+            </Text>
+          </View>
+        </View>
+      )}
+      {!isLoading && (
+        <View style={styles.dutyContainer}>
+          <FlatList
+            onRefresh={loadDuty.bind(this, selectedDate)}
+            refreshing={isRefreshing}
+            data={duty}
+            keyExtractor={item => item.id}
+            renderItem={itemData => (
+              <DutyItem
+                date={itemData.item.calendar.readableDate}
+                location={itemData.item.location.name}
+                description={itemData.item.calendar.description}
+                onSelect={() => {
                   selectItemHandler(itemData.item.id, itemData.item.title);
                 }}
-              />
-              <Button
-                color={Colors.primary}
-                title="Takas"
-                onPress={() => {
-                  dispatch(cartActions.addToCart(itemData.item));
-                }}
-              />
-            </ProductItem>
-          )}
-        />
-      </View>
+              >
+                <Button
+                  color={Colors.primary}
+                  title="Detay"
+                  onPress={() => {
+                    selectItemHandler(itemData.item.id, itemData.item.title);
+                  }}
+                />
+                <Button
+                  color={Colors.primary}
+                  title="Takas"
+                  onPress={() => {
+                    dispatch(cartActions.addToCart(itemData.item));
+                  }}
+                />
+              </DutyItem>
+            )}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -248,10 +267,25 @@ export const screenOptions = navData => {
 };
 
 const styles = StyleSheet.create({
-  screen: { backgroundColor: Colors.backColor },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  daysContainer: { height: "15%", width: "95%", flexDirection: "row" },
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.backColor
+  },
+  centered: {
+    height: "85%",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  daysContainer: {
+    height: "15%",
+    width: "100%",
+    flexDirection: "row"
+  },
   dutyContainer: { height: "85%" },
+  noDutyContainer: {
+    flex: 1,
+    paddingTop: 15
+  },
   safeArea: {
     backgroundColor: "white",
     height: "90%",
@@ -275,7 +309,6 @@ const styles = StyleSheet.create({
     borderColor: "#79c962",
     borderRadius: 20
   },
-
   textArea: {
     textAlign: "center",
     fontWeight: "700",
@@ -287,9 +320,16 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 18
   },
-
   icon: {
     alignSelf: "center"
+  },
+  text: {
+    backgroundColor: "transparent",
+    fontFamily: "open-sans-bold",
+    fontSize: 18,
+    marginVertical: 6,
+    paddingHorizontal: 4,
+    color: Colors.textColor
   }
 });
 
@@ -311,7 +351,8 @@ const getDaysArray = (year, month) => {
       {
         id: Number(date.getDate()),
         day: date.getDate(),
-        shortName: names[date.getDay()]
+        shortName: names[date.getDay()],
+        date: moment(date)
       }
       // `${date.getDate()}-${names[date.getDay()]}`
     );

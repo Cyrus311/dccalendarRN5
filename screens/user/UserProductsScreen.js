@@ -13,7 +13,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
-import ProductItem from "../../components/shop/ProductItem";
+import DutyItem from "../../components/shop/DutyItem";
 import * as calendarActions from "../../store/actions/calendar";
 
 const UserProductsScreen = props => {
@@ -50,7 +50,7 @@ const UserProductsScreen = props => {
       data={userProducts}
       keyExtractor={item => item.id}
       renderItem={itemData => (
-        <ProductItem
+        <DutyItem
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
@@ -72,7 +72,7 @@ const UserProductsScreen = props => {
               deleteHandler(itemData.item.id);
             }}
           />
-        </ProductItem>
+        </DutyItem>
       )}
     />
   );

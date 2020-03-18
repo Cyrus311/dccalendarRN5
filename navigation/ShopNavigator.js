@@ -192,7 +192,7 @@ export const ShopNavigator = () => {
       }}
     >
       <ShopDrawerNavigator.Screen
-        name="Products"
+        name="Nöbetlerim"
         component={ProductsNavigator}
         options={{
           // eslint-disable-next-line react/display-name
@@ -206,7 +206,7 @@ export const ShopNavigator = () => {
         }}
       />
       <ShopDrawerNavigator.Screen
-        name="Orders"
+        name="İzinlerim"
         component={OrdersNavigator}
         options={{
           // eslint-disable-next-line react/display-name
@@ -220,7 +220,7 @@ export const ShopNavigator = () => {
         }}
       />
       <ShopDrawerNavigator.Screen
-        name="Admin"
+        name="Ayarlar"
         component={AdminNavigator}
         options={{
           // eslint-disable-next-line react/display-name

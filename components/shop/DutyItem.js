@@ -12,7 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Card from "../UI/Card";
 import Colors from "../../constants/Colors";
 
-const ProductItem = props => {
+const DutyItem = props => {
   let TouchableComponent = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProductItem;
+export default DutyItem;
