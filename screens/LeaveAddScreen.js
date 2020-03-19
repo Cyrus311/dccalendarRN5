@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import Input from "../../components/UI/Input";
-import HeaderButton from "../../components/UI/HeaderButton";
-import * as calendarActions from "../../store/actions/calendar";
-import Colors from "../../constants/Colors";
+import Input from "../components/UI/Input";
+import HeaderButton from "../components/UI/HeaderButton";
+import * as calendarActions from "../store/actions/calendar";
+import Colors from "../constants/Colors";
 
 const FORM_UPDATE = "FORM_UPDATE";
 
@@ -41,13 +41,13 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const EditProductScreen = props => {
+const LeaveAddScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
   const prodId = props.route.params ? props.route.params.productId : null;
   const editedProduct = useSelector(state =>
-    state.products.userProducts.find(prod => prod.id === prodId)
+    state.calendars.userCalendars.find(prod => prod.id === prodId)
   );
   const dispatch = useDispatch();
 
@@ -229,4 +229,4 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });
 
-export default EditProductScreen;
+export default LeaveAddScreen;

@@ -10,20 +10,19 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 
-import DutyItem from "../../components/shop/DutyItem";
-import * as cartActions from "../../store/actions/cart";
-import * as calendarActions from "../../store/actions/calendar";
-import HeaderButton from "../../components/UI/HeaderButton";
-import Colors from "../../constants/Colors";
+import DutyItem from "../components/items/DutyItem";
+import * as cartActions from "../store/actions/cart";
+import * as calendarActions from "../store/actions/calendar";
+import HeaderButton from "../components/UI/HeaderButton";
+import Colors from "../constants/Colors";
 
 const DutyOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  const duty = useSelector(state => state.calendars.mountCalenders);
+  const duty = useSelector(state => state.calendars.mountCalendars);
   const dispatch = useDispatch();
 
   const loadDuty = useCallback(async () => {
@@ -106,7 +105,7 @@ const DutyOverviewScreen = props => {
     <View style={styles.screen}>
       <View style={styles.infoArea}>
         <View>
-          <Text style={styles.text}>{moment().format("MMMM")} Nöbetleri</Text>
+          <Text style={styles.text}>{moment().format("MMMM")}</Text>
         </View>
       </View>
       <View style={styles.dutyListContainer}>
@@ -165,10 +164,10 @@ export const screenOptions = navData => {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
-          title="Cart"
+          title="Leave"
           iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
           onPress={() => {
-            navData.navigation.navigate("Cart");
+            navData.navigation.navigate("Orders");
           }}
         />
         {/* <Item

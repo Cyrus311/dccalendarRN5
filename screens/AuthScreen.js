@@ -11,10 +11,10 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
 
-import Input from "../../components/UI/Input";
-import Card from "../../components/UI/Card";
-import Colors from "../../constants/Colors";
-import * as authActions from "../../store/actions/auth";
+import Input from "../components/UI/Input";
+import Card from "../components/UI/Card";
+import Colors from "../constants/Colors";
+import * as authActions from "../store/actions/auth";
 
 const FORM_UPDATE = "FORM_UPDATE";
 

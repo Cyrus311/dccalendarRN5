@@ -8,11 +8,11 @@ import {
   ActivityIndicator
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import Colors from "../../constants/Colors";
-import CartItem from "../../components/shop/CartItem";
-import Card from "../../components/UI/Card";
-import * as cartActions from "../../store/actions/cart";
-import * as ordersActions from "../../store/actions/orders";
+import Colors from "../constants/Colors";
+import CartItem from "../components/items/CartItem";
+import Card from "../components/UI/Card";
+import * as cartActions from "../store/actions/cart";
+import * as ordersActions from "../store/actions/orders";
 
 const CartScreen = props => {
   const [isLoading, setIsLoading] = useState(false);

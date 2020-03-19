@@ -4,21 +4,18 @@ import {
   Text,
   FlatList,
   Button,
-  Platform,
   ActivityIndicator,
   StyleSheet,
   TouchableHighlight
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 
-import DutyItem from "../../components/shop/DutyItem";
-import * as cartActions from "../../store/actions/cart";
-import * as calendarActions from "../../store/actions/calendar";
-import HeaderButton from "../../components/UI/HeaderButton";
-import Colors from "../../constants/Colors";
+import DutyItem from "../components/items/DutyItem";
+import * as cartActions from "../store/actions/cart";
+import * as calendarActions from "../store/actions/calendar";
+import Colors from "../constants/Colors";
 
 const DutyDetailScreen = props => {
   const dateObj = new Date();
@@ -30,7 +27,7 @@ const DutyDetailScreen = props => {
   const [error, setError] = useState();
   const [listOfDate, setListOfDate] = useState(plistOfDate);
   const [activeIndex, updActiveIndex] = useState(-1);
-  const duty = useSelector(state => state.calendars.dailyCalenders);
+  const duty = useSelector(state => state.calendars.dailyCalendars);
   const [calendar, setCalendar] = useState({});
   const dispatch = useDispatch();
   const calendarObj = JSON.parse(props.route.params.calendar);

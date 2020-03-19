@@ -8,6 +8,7 @@ import {
   Platform
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
 
 import Card from "../UI/Card";
 import Colors from "../../constants/Colors";
@@ -33,11 +34,35 @@ const DutyItem = props => {
                 </Text>
               </LinearGradient>
             </View>
-            <View style={styles.locationContainer}>
-              <Text style={styles.location}>{props.location}</Text>
+            <View
+              style={
+                props.deletable
+                  ? styles.deletableContainer
+                  : styles.locationContainer
+              }
+            >
+              <Text style={styles.location}>
+                {props.type ? "İzin" : props.location}
+              </Text>
               <Text style={styles.description}>{props.description}</Text>
-              <View style={styles.actions}>{props.children}</View>
+              {!props.deletable && (
+                <View style={styles.actions}>{props.children}</View>
+              )}
             </View>
+            {props.deletable && (
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  onPress={props.onRemove}
+                  style={styles.deleteButton}
+                >
+                  <Ionicons
+                    name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
+                    size={23}
+                    color="red"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </TouchableComponent>
       </View>
@@ -69,6 +94,10 @@ const styles = StyleSheet.create({
   },
   locationContainer: {
     width: "80%",
+    height: "100%"
+  },
+  deletableContainer: {
+    width: "60%",
     height: "100%"
   },
   date: {
@@ -103,7 +132,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
-  }
+  },
+  cartItem: {
+    padding: 10,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 20
+  },
+  iconContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  deleteButton: {}
 });
 
 export default DutyItem;

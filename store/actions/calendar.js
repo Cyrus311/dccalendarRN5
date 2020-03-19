@@ -113,7 +113,7 @@ export const fetchCalendar = filterData => {
             }
             return 0;
           }),
-        mountCalenders: loadedCalendars
+        mountCalendars: loadedCalendars
           .filter(
             duty =>
               duty.user.id === userId &&
@@ -129,7 +129,7 @@ export const fetchCalendar = filterData => {
             }
             return 0;
           }),
-        dailyCalenders: []
+        dailyCalendars: []
       });
     } catch (error) {
       console.log("error", error);
@@ -230,7 +230,7 @@ export const dailyCalendar = date => {
 
       dispatch({
         type: DAILY_CALENDARS,
-        dailyCalenders: loadedCalendars
+        dailyCalendars: loadedCalendars
           .filter(
             duty =>
               moment(duty.calendar.date).format("Y-MM-DD") ===

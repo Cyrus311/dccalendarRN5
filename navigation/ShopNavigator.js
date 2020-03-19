@@ -7,27 +7,28 @@ import {
 import { Platform, SafeAreaView, Button, View } from "react-native";
 import { useDispatch } from "react-redux";
 
-import ProductOverviewScreen, {
-  screenOptions as productOverviewScreenOptions
-} from "../screens/shop/DutyOverviewScreen";
+import DutyOverviewScreen, {
+  screenOptions as dutyOverviewScreenOptions
+} from "../screens/DutyOverviewScreen";
 import DutyDetailScreen, {
   screenOptions as dutyDetailScreenOptions
-} from "../screens/shop/DutyDetailScreen";
+} from "../screens/DutyDetailScreen";
 import CartScreen, {
   screenOptions as cartScreenOptions
-} from "../screens/shop/CartScreen";
-import OrdersScreen, {
-  screenOptions as ordersScreenOptions
-} from "../screens/shop/OrdersScreen";
-import UserProductsScreen, {
-  screenOptions as userProductsScreenOptions
-} from "../screens/user/UserProductsScreen";
-import EditProductScreen, {
-  screenOptions as editProductScreenOptions
-} from "../screens/user/EditProductScreen";
+} from "../screens/CartScreen";
+import LeavesScreen, {
+  screenOptions as leavesScreenOptions,
+  screenOptions2 as leavesScreenOptions2
+} from "../screens/LeavesScreen";
+import UserProductScreen, {
+  screenOptions as userProductScreenOptions
+} from "../screens/UserProductScreen";
+import LeaveAddScreen, {
+  screenOptions as leaveAddScreenOptions
+} from "../screens/LeaveAddScreen";
 import AuthScreen, {
   screenOptions as authScreenOptions
-} from "../screens/user/AuthScreen";
+} from "../screens/AuthScreen";
 import StartupScreen from "../screens/StartupScreen";
 
 import Colors from "../constants/Colors";
@@ -54,8 +55,8 @@ export const ProductsNavigator = () => {
     <ProductsStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <ProductsStackNavigator.Screen
         name="ProductOverview"
-        component={ProductOverviewScreen}
-        options={productOverviewScreenOptions}
+        component={DutyOverviewScreen}
+        options={dutyOverviewScreenOptions}
       />
       <ProductsStackNavigator.Screen
         name="DutyDetail"
@@ -66,6 +67,16 @@ export const ProductsNavigator = () => {
         name="Cart"
         component={CartScreen}
         options={cartScreenOptions}
+      />
+      <ProductsStackNavigator.Screen
+        name="Orders"
+        component={LeavesScreen}
+        options={leavesScreenOptions2}
+      />
+      <ProductsStackNavigator.Screen
+        name="AddLeave"
+        component={LeaveAddScreen}
+        options={leaveAddScreenOptions}
       />
     </ProductsStackNavigator.Navigator>
   );
@@ -99,8 +110,8 @@ export const OrdersNavigator = () => {
     <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <OrdersStackNavigator.Screen
         name="Orders"
-        component={OrdersScreen}
-        options={ordersScreenOptions}
+        component={LeavesScreen}
+        options={leavesScreenOptions}
       />
     </OrdersStackNavigator.Navigator>
   );
@@ -108,7 +119,7 @@ export const OrdersNavigator = () => {
 
 // const OrdersNavigator = createStackNavigator(
 //   {
-//     Orders: OrdersScreen
+//     Orders: LeavesScreen
 //   },
 //   {
 //     navigationOptions: {
@@ -132,13 +143,13 @@ export const AdminNavigator = () => {
     <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <AdminStackNavigator.Screen
         name="UserProducts"
-        component={UserProductsScreen}
-        options={userProductsScreenOptions}
+        component={UserProductScreen}
+        options={userProductScreenOptions}
       />
       <AdminStackNavigator.Screen
         name="EditProduct"
-        component={EditProductScreen}
-        options={editProductScreenOptions}
+        component={LeaveAddScreen}
+        options={leaveAddScreenOptions}
       />
     </AdminStackNavigator.Navigator>
   );
@@ -146,7 +157,7 @@ export const AdminNavigator = () => {
 
 // const AdminNavigator = createStackNavigator(
 //   {
-//     UserProducts: UserProductsScreen,
+//     UserProducts: UserProductScreen,
 //     EditProduct: EditProductsScreen
 //   },
 //   {

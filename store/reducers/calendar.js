@@ -12,8 +12,9 @@ import Calendar from "../../models/calendar";
 const initialState = {
   availableCalendars: [],
   userCalendars: [],
-  mountCalenders: [],
-  dailyCalenders: []
+  mountCalendars: [],
+  dailyCalendars: [],
+  noDutyCalendars: []
 };
 
 export default (state = initialState, action) => {
@@ -22,14 +23,15 @@ export default (state = initialState, action) => {
       return {
         availableCalendars: action.calendars,
         userCalendars: action.userCalendars,
-        mountCalenders: action.mountCalenders,
-        dailyCalenders: action.dailyCalenders
+        mountCalendars: action.mountCalendars,
+        dailyCalendars: action.dailyCalendars,
+        noDutyCalendars: action.noDutyCalendars
       };
     }
     case DAILY_CALENDARS: {
       return {
         ...state,
-        dailyCalenders: action.dailyCalenders
+        dailyCalendars: action.dailyCalendars
       };
     }
     case CREATE_CALENDAR: {

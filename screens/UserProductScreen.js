@@ -11,12 +11,12 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-import HeaderButton from "../../components/UI/HeaderButton";
-import Colors from "../../constants/Colors";
-import DutyItem from "../../components/shop/DutyItem";
-import * as calendarActions from "../../store/actions/calendar";
+import HeaderButton from "../components/UI/HeaderButton";
+import Colors from "../constants/Colors";
+import DutyItem from "../components/items/DutyItem";
+import * as calendarActions from "../store/actions/calendar";
 
-const UserProductsScreen = props => {
+const UserProductScreen = props => {
   const userProducts = useSelector(state => state.products.userProducts);
   const dispatch = useDispatch();
 
@@ -112,4 +112,4 @@ const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" }
 });
 
-export default UserProductsScreen;
+export default UserProductScreen;
