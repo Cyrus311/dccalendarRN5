@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import Card from "../UI/Card";
 import Colors from "../../constants/Colors";
+import { typeEnum } from "../../constants/typeEnum";
 
 const DutyItem = props => {
   let TouchableComponent = TouchableOpacity;
@@ -42,7 +43,7 @@ const DutyItem = props => {
               }
             >
               <Text style={styles.location}>
-                {props.type ? "İzin" : props.location}
+                {props.type ? typeEnum[props.type] : props.location}
               </Text>
               <Text style={styles.description}>{props.description}</Text>
               {!props.deletable && (
