@@ -69,7 +69,7 @@ const LeaveAddScreen = props => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert("An error occurred!", error, [{ text: "Okay" }]);
+      Alert.alert("Hata Oluştu!", error, [{ text: "Okay" }]);
     }
   }, [error]);
 

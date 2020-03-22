@@ -81,7 +81,7 @@ const DutyOverviewScreen = props => {
   if (error) {
     return (
       <View style={styles.centered}>
-        <Text>An error occurred!</Text>
+        <Text>Hata Oluştu!</Text>
         <Button title="Try Again" onPress={loadDuty} color={Colors.primary} />
       </View>
     );

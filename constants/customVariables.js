@@ -1,6 +1,6 @@
 export const customVariables = {
   BASE_URL: "https://doctorcalendar.eu-gb.mybluemix.net",
-  USERDATA: "userData",
+  TOKENDATA: "tokenData",
   TOKEN: "token",
   REMEMBERME: "isRememberMe",
   ERRORCODE: {

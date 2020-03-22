@@ -9,13 +9,15 @@ import calendarReducer from "./store/reducers/calendar";
 import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/orders";
 import authReducer from "./store/reducers/auth";
+import userReducer from "./store/reducers/user";
 import AppNavigator from "./navigation/AppNavigator";
 
 const rootReducer = combineReducers({
   calendars: calendarReducer,
   cart: cartReducer,
   orders: ordersReducer,
-  auth: authReducer
+  auth: authReducer,
+  user: userReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

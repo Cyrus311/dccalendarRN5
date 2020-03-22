@@ -9,20 +9,21 @@ import { useDispatch } from "react-redux";
 
 import Colors from "../constants/Colors";
 import * as authActions from "../store/actions/auth";
+import { customVariables } from "../constants/customVariables";
 
 const StartupScreen = props => {
   const dispatch = useDispatch();
   useEffect(() => {
     const tryLogin = async () => {
-      const userData = await AsyncStorage.getItem("userData");
-      console.log(userData);
-      
-      if (!userData) {
+      const tokenData = await AsyncStorage.getItem(customVariables.TOKENDATA);
+      console.log(tokenData);
+
+      if (!tokenData) {
         // props.navigation.navigate("Auth");
         dispatch(authActions.setDidTryAL());
         return;
       }
-      const transformedData = JSON.parse(userData);
+      const transformedData = JSON.parse(tokenData);
       const { token, userId, expiryDate } = transformedData;
       const expirationDate = new Date(expiryDate);
 

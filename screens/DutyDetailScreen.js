@@ -147,7 +147,7 @@ const DutyDetailScreen = props => {
   if (error) {
     return (
       <View style={styles.centered}>
-        <Text>An error occurred!</Text>
+        <Text>Hata Oluştu!</Text>
         <Button
           title="Try Again"
           onPress={loadDuty.bind(this, selectedDate)}

@@ -6,7 +6,8 @@ import {
   KeyboardAvoidingView,
   Button,
   ActivityIndicator,
-  Alert
+  Alert,
+  ImageBackground
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,19 +67,21 @@ const AuthScreen = props => {
     inputValues: {
       email: "",
       password: "",
-      fullname: ""
+      fullName: ""
     },
     inputValidities: {
       email: false,
       password: false,
-      fullname: false
+      fullName: false
     },
     formIsValid: false
   });
 
   useEffect(() => {
     if (error) {
-      Alert.alert("Error Occurred!", error, [{ text: "Okay" }]);
+      setIsSignup(false);
+      setTryEmailExist(false);
+      Alert.alert("Hata Oluştu!", error, [{ text: "Okay" }]);
     }
   }, [error]);
 
@@ -111,7 +114,8 @@ const AuthScreen = props => {
     if (isSignup && tryEmailExist) {
       action = authActions.signup(
         formState.inputValues.email,
-        formState.inputValues.password
+        formState.inputValues.password,
+        formState.inputValues.fullName
       );
     } else {
       action = authActions.login(
@@ -137,7 +141,15 @@ const AuthScreen = props => {
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <LinearGradient colors={["#ffedff", "#ffe3ff"]} style={styles.gradient}>
+      <ImageBackground
+        source={require("../assets/backImage.jpg")}
+        style={styles.gradient}
+        resizeMode="cover"
+      >
+        {/* <LinearGradient
+          colors={[Colors.gradientStart, Colors.gradientEnd]}
+          style={styles.gradient}
+        > */}
         <Card style={styles.authContainer}>
           <ScrollView>
             <Input
@@ -154,7 +166,7 @@ const AuthScreen = props => {
             />
             {isSignup && (
               <Input
-                id="fullname"
+                id="fullName"
                 label="Name"
                 keyboardType="default"
                 required
@@ -172,9 +184,9 @@ const AuthScreen = props => {
                 keyboardType="default"
                 secureTextEntry
                 required
-                minLength={5}
+                minLength={8}
                 autoCapitalize="none"
-                errorText="Please enter a valid password."
+                errorText="Please enter a valid password. Min. 8 characters."
                 onInputChange={inputChangeHandler}
                 initialValue=""
               />
@@ -184,21 +196,29 @@ const AuthScreen = props => {
                 <ActivityIndicator size="small" color={Colors.primary} />
               ) : !tryEmailExist ? (
                 <Button
-                  title="Submit"
+                  title="Devam Et"
                   color={Colors.primary}
+                  disabled={!formState.inputValidities.email}
                   onPress={checkMailHandler}
                 />
               ) : (
                 <Button
-                  title={isSignup ? "Sign Up" : "Login"}
+                  title={isSignup ? "Kayıt Ol" : "Giriş Yap"}
                   color={Colors.primary}
+                  disabled={
+                    isSignup
+                      ? !formState.formIsValid
+                      : !formState.inputValidities.email ||
+                        !formState.inputValidities.password
+                  }
                   onPress={authHandler}
                 />
               )}
             </View>
           </ScrollView>
         </Card>
-      </LinearGradient>
+        {/* </LinearGradient> */}
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 };

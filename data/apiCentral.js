@@ -5,8 +5,8 @@ import { customVariables } from "../constants/customVariables";
 const request = async function(options, isHeader = true) {
   let authHeader = null;
   if (isHeader) {
-    const userData = await AsyncStorage.getItem(customVariables.USERDATA);
-    const { token } = JSON.parse(userData);
+    const tokenData = await AsyncStorage.getItem(customVariables.TOKENDATA);
+    const { token } = JSON.parse(tokenData);
     authHeader = token;
   }
 

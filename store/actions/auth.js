@@ -1,8 +1,10 @@
 import { AsyncStorage } from "react-native";
+import { customVariables } from "../../constants/customVariables";
 
 // export const SIGNUP = "SIGNUP";
 // export const LOGIN = "LOGIN";
 export const AUTHENTICATE = "AUTHENTICATE";
+export const SIGNUP = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
 export const CHECK_EMAIL = "CHECK_EMAIL";
 export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
@@ -16,13 +18,20 @@ export const setDidTryAL = () => {
 export const authenticate = (token, userId, expiryTime) => {
   return dispatch => {
     dispatch(setLogoutTimer(expiryTime));
-    dispatch({ type: AUTHENTICATE, token: token, userId: userId });
+    dispatch({
+      type: AUTHENTICATE,
+      token: token,
+      userId: userId
+    });
   };
 };
 
-export const signup = (email, password, fullname) => {
-  const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users/login";
+export const signup = (email, password, fullName) => {
+  const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users";
   // apiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg";
+  console.log("SIGNUP");
+  console.log("fullName", fullName);
+
   return async dispatch => {
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -32,21 +41,19 @@ export const signup = (email, password, fullname) => {
       body: JSON.stringify({
         email: email,
         password: password,
-        fullname: fullname,
-        returnSecureToken: true
+        fullName: fullName,
+        title: "Dr",
+        deviceId: "QWERT1",
+        roles: ["user"]
       })
     });
 
     if (!response.ok) {
       const errorResData = await response.json();
-      const errorId = errorResData.error.message;
       let message = "Something went wrong!";
-      if (errorId === "INVALID_EMAIL") {
-        message = "This email is not valid!";
-      } else if (errorId === "EMAIL_EXISTS") {
-        message = "This email exist already!";
-      } else if (errorId === "OPERATION_NOT_ALLOWED") {
-        message = "This operation not allowed!";
+      message = errorResData.error.message;
+      if (errorResData.error.details) {
+        message = errorResData.error.details[0].message;
       }
       throw new Error(message);
     }
@@ -54,25 +61,14 @@ export const signup = (email, password, fullname) => {
     const resData = await response.json();
     console.log("resData", resData);
 
-    return;
-
-    dispatch(
-      authenticate(
-        resData.idToken,
-        resData.localId,
-        parseInt(resData.expiresIn) * 1000
-      )
-    );
-    const expirationDate = new Date(
-      new Date().getTime() + parseInt(resData.expiresIn) * 1000
-    );
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+    return { type: SIGNUP, email: resData.email };
   };
 };
 
 export const login = (email, password) => {
   const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users/login";
   // apiUrl ="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg",
+  console.log("LOGIN");
 
   return async dispatch => {
     const response = await fetch(apiUrl, {
@@ -88,28 +84,19 @@ export const login = (email, password) => {
 
     if (!response.ok) {
       const errorResData = await response.json();
-      const errorId = errorResData.error.message;
       let message = "Something went wrong!";
-      if (errorId === "INVALID_EMAIL") {
-        message = "This email is not valid!";
-      } else if (errorId === "EMAIL_NOT_FOUND") {
-        message = "This email could not be found!";
-      } else if (errorId === "INVALID_PASSWORD") {
-        message = "This password is not valid!";
+      message = errorResData.error.message;
+      if (errorResData.error.details) {
+        message = errorResData.error.details[0].message;
       }
       throw new Error(message);
     }
 
     const res = await response.json();
     const resData = res.tokenModel;
-    
 
     dispatch(
-      authenticate(
-        resData.token,
-        resData.userId,
-        parseInt(resData.exp)
-      )
+      authenticate(resData.token, resData.userId, parseInt(resData.exp))
     );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.exp)
@@ -120,7 +107,7 @@ export const login = (email, password) => {
 
 export const logout = () => {
   clearLogoutTimer();
-  AsyncStorage.removeItem("userData");
+  AsyncStorage.removeItem(customVariables.TOKENDATA);
   return { type: LOGOUT };
 };
 
@@ -139,9 +126,8 @@ const setLogoutTimer = expirationTime => {
 };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
-  
   AsyncStorage.setItem(
-    "userData",
+    customVariables.TOKENDATA,
     JSON.stringify({
       token: token,
       userId: userId,

@@ -1,5 +1,6 @@
 import {
   AUTHENTICATE,
+  SIGNUP,
   LOGOUT,
   SET_DID_TRY_AL,
   CHECK_EMAIL
@@ -8,6 +9,7 @@ import {
 const initialState = {
   token: null,
   userId: null,
+  email: null,
   didTryAutoLogin: false,
   isEmailCheck: false
 };
@@ -18,6 +20,12 @@ export default (state = initialState, action) => {
       return {
         token: action.token,
         userId: action.userId,
+        didTryAutoLogin: true
+      };
+    case SIGNUP:
+      return {
+        ...state,
+        email: action.email,
         didTryAutoLogin: true
       };
     case SET_DID_TRY_AL:
