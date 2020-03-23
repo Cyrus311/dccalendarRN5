@@ -25,7 +25,7 @@ export const fetchCalendar = filterData => {
       //   }
       // );
 
-      const response = await calendarService.getReminderService(filterData);
+      const response = await calendarService.getCalendars(filterData);
 
       if (response.error) {
         const errorResData = response.error;
@@ -162,7 +162,7 @@ export const dailyCalendar = date => {
         }
       };
 
-      const response = await calendarService.getReminderService(filterData);
+      const response = await calendarService.getCalendars(filterData);
 
       if (response.error) {
         const errorResData = response.error;
@@ -287,29 +287,21 @@ export const deleteCalendar = calendarId => {
   };
 };
 
-export const createCalendar = (title, description, imageUrl, price) => {
+export const createCalendar = calendar => {
   return async (dispatch, getState) => {
     // any async code you want!
-    const token = getState().auth.token;
+    // const token = getState().auth.token;
     const userId = getState().auth.userId;
-    const response = await fetch(
-      `https://shoppingapp-a4b90.firebaseio.com/calendars.json?auth=${token}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          imageUrl,
-          price,
-          ownerId: userId
-        })
-      }
-    );
-    // .then(response => {})
-    // .catch(error => {});
+
+    // const reminder = {
+    //   locationId: this.props.activeLocationId,
+    //   groupId: "5e53975e62398900983c869c",
+    //   userId: user.user.id,
+    //   date: moment(destination.droppableId).format("YYYY-MM-DD[T]hh:mm:ss.sss[Z]"),
+    //   type: 0
+    // }
+
+    const response = await calendarService.createCalendar(calendar);
 
     const resData = await response.json();
 

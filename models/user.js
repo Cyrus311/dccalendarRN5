@@ -6,6 +6,7 @@ class User {
     title,
     deviceId,
     roles,
+    groups,
     createdDate,
     updatedDate,
     createdUserId,
@@ -17,6 +18,7 @@ class User {
     this.title = title;
     this.deviceId = deviceId;
     this.roles = roles;
+    this.groups = groups;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
     this.createdUserId = createdUserId;

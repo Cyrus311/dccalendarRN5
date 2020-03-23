@@ -8,9 +8,10 @@ export const fetchUser = () => {
   return async (dispatch, getState) => {
     try {
       // any async code you want!
-      const userId = getState().auth.userId;
+      // const userId = getState().auth.userId;
 
-      const response = await userService.userInfo(userId);
+      // const response = await userService.userInfo(userId);
+      const response = await userService.userMe();
 
       if (response.error) {
         const errorResData = response.error;
@@ -20,12 +21,13 @@ export const fetchUser = () => {
       const resData = response;
 
       const user = new User(
-        resData.id,
-        resData.email,
-        resData.fullName,
-        resData.title,
-        resData.deviceId,
-        resData.roles
+        resData.user.id,
+        resData.user.email,
+        resData.user.fullName,
+        resData.user.title,
+        resData.user.deviceId,
+        resData.user.roles,
+        resData.groups
       );
 
       dispatch({ type: SET_USER, user: user });

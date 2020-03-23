@@ -22,10 +22,13 @@ const DutyOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
+  const [groupId, setGroupId] = useState("");
   const duty = useSelector(state => state.calendars.mountCalendars);
+  const user = useSelector(state => state.user.user);
   const dispatch = useDispatch();
 
   const loadDuty = useCallback(async () => {
+    setGroupId(user.groups[0].id);
     setError(null);
     setIsRefreshing(true);
     try {
@@ -33,7 +36,7 @@ const DutyOverviewScreen = props => {
         filter: {
           where: {
             groupId: {
-              like: "5e53975e62398900983c869c"
+              like: groupId
             }
           },
           include: [

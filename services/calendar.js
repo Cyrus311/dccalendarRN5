@@ -1,6 +1,6 @@
 import request from "../data/apiCentral";
 
-const getReminderService = filterData => {
+const getCalendars = filterData => {
   return request({
     url: "/calendars",
     method: "GET",
@@ -8,7 +8,7 @@ const getReminderService = filterData => {
   });
 };
 
-const createReminderService = data => {
+const createCalendar = data => {
   return request({
     url: "/calendars",
     method: "POST",
@@ -16,7 +16,7 @@ const createReminderService = data => {
   });
 };
 
-const deleteReminderService = id => {
+const deleteCalendar = id => {
   return request({
     url: "/calendars/" + id,
     method: "DELETE"
@@ -24,7 +24,7 @@ const deleteReminderService = id => {
 };
 
 export const calendarService = {
-  getReminderService,
-  createReminderService,
-  deleteReminderService
+  getCalendars,
+  createCalendar,
+  deleteCalendar
 };

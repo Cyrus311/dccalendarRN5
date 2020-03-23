@@ -142,9 +142,10 @@ const AuthScreen = props => {
       style={styles.screen}
     >
       <ImageBackground
-        source={require("../assets/backImage.jpg")}
+        source={require("../assets/backImage2.jpg")}
         style={styles.gradient}
         resizeMode="cover"
+        blurRadius={12}
       >
         {/* <LinearGradient
           colors={[Colors.gradientStart, Colors.gradientEnd]}
