@@ -129,6 +129,23 @@ export const fetchCalendar = filterData => {
             }
             return 0;
           }),
+        noDutyCalendars: loadedCalendars
+          .filter(
+            duty =>
+              duty.user.id === userId &&
+              duty.calendar.type !== 0 &&
+              moment(duty.calendar.date).format("Y-MM") ===
+                moment().format("Y-MM")
+          )
+          .sort((a, b) => {
+            if (a.calendar.date > b.calendar.date) {
+              return 1;
+            }
+            if (a.calendar.date < b.calendar.date) {
+              return -1;
+            }
+            return 0;
+          }),
         dailyCalendars: []
       });
     } catch (error) {
@@ -308,7 +325,7 @@ export const createCalendar = calendar => {
     dispatch({
       type: CREATE_CALENDAR,
       calendarData: {
-        id: resData.name,
+        id: resData.id,
         title: title,
         description: description,
         imageUrl,

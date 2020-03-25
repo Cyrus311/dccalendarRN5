@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
-  ActivityIndicator
+  ActivityIndicator,
+  Picker
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -44,6 +45,7 @@ const formReducer = (state, action) => {
 const LeaveAddScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
+  const [language, setLanguage] = useState("");
 
   const prodId = props.route.params ? props.route.params.productId : null;
   const editedProduct = useSelector(state =>
@@ -82,6 +84,13 @@ const LeaveAddScreen = props => {
     }
     setError(null);
     setIsLoading(true);
+    const a = {
+      locationId: "5e3af1a2dc17a67a4d71ad29",
+      groupId: "5e53975e62398900983c869c",
+      userId: "5e1649c879953e4c68d279c4",
+      date: "2020-03-05T03:00:00.000Z",
+      type: 0
+    };
     try {
       if (editedProduct) {
         await dispatch(
@@ -208,6 +217,16 @@ const LeaveAddScreen = props => {
             required
             minLength={5}
           />
+          <View>
+            <Picker
+              selectedValue={language}
+              style={{ height: 50, width: 100 }}
+              onValueChange={(itemValue, itemIndex) => setLanguage(itemValue)}
+            >
+              <Picker.Item label="Java" value="java" />
+              <Picker.Item label="JavaScript" value="js" />
+            </Picker>
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -217,7 +236,7 @@ const LeaveAddScreen = props => {
 export const screenOptions = navData => {
   const routeParams = navData.route.params ? navData.route.params : {};
   return {
-    headerTitle: routeParams.productId ? "Edit Product" : "Add Product"
+    headerTitle: routeParams.productId ? "Edit Product" : "İzin Ekle"
     // eslint-disable-next-line react/display-name
   };
 };

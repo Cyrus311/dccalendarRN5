@@ -4,7 +4,7 @@ import { userService } from "../../services/user";
 export const SET_USER = "SET_USER";
 
 export const fetchUser = () => {
-  console.log("----------------------------");
+  console.log("USERFETCHSERVICE");
   return async (dispatch, getState) => {
     try {
       // any async code you want!

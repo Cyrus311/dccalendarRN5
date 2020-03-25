@@ -13,7 +13,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import moment from "moment";
 
 import DutyItem from "../components/items/DutyItem";
-import * as cartActions from "../store/actions/cart";
+import * as userActions from "../store/actions/user";
 import * as calendarActions from "../store/actions/calendar";
 import HeaderButton from "../components/UI/HeaderButton";
 import Colors from "../constants/Colors";
@@ -22,13 +22,11 @@ const DutyOverviewScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  const [groupId, setGroupId] = useState("");
   const duty = useSelector(state => state.calendars.mountCalendars);
   const user = useSelector(state => state.user.user);
   const dispatch = useDispatch();
 
   const loadDuty = useCallback(async () => {
-    setGroupId(user.groups[0].id);
     setError(null);
     setIsRefreshing(true);
     try {
@@ -36,7 +34,7 @@ const DutyOverviewScreen = props => {
         filter: {
           where: {
             groupId: {
-              like: groupId
+              like: user.groups ? user.groups[0].id : ""
             }
           },
           include: [
@@ -56,8 +54,9 @@ const DutyOverviewScreen = props => {
     } catch (error) {
       console.log("dutyERROR", error);
       setError(error.message);
+    } finally {
+      setIsRefreshing(false);
     }
-    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {

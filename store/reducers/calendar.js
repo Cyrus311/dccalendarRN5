@@ -37,16 +37,20 @@ export default (state = initialState, action) => {
     case CREATE_CALENDAR: {
       const newCalendar = new Calendar(
         action.calendarData.id,
-        action.calendarData.ownerId,
-        action.calendarData.title,
-        action.calendarData.imageUrl,
+        action.calendarData.date,
         action.calendarData.description,
-        action.calendarData.price
+        action.calendarData.type,
+        action.calendarData.userId,
+        action.calendarData.groupId,
+        action.calendarData.locationId
       );
       return {
         ...state,
         availableCalendars: state.availableCalendars.concat(newCalendar),
-        userCalendars: state.userCalendars.concat(newCalendar)
+        userCalendars: state.userCalendars.concat(newCalendar),
+        mountCalendars: state.availableCalendars.concat(newCalendar),
+        dailyCalendars: state.availableCalendars.concat(newCalendar),
+        noDutyCalendars: state.availableCalendars.concat(newCalendar)
       };
     }
     case UPDATE_CALENDAR: {
@@ -81,6 +85,15 @@ export default (state = initialState, action) => {
           calendar => calendar.id !== action.pid
         ),
         availableCalendars: state.availableCalendars.filter(
+          calendar => calendar.id !== action.pid
+        ),
+        noDutyCalendars: state.noDutyCalendars.filter(
+          calendar => calendar.id !== action.pid
+        ),
+        mountCalendars: state.mountCalendars.filter(
+          calendar => calendar.id !== action.pid
+        ),
+        dailyCalendars: state.dailyCalendars.filter(
           calendar => calendar.id !== action.pid
         )
       };

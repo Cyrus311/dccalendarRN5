@@ -19,7 +19,7 @@ import Colors from "../constants/Colors";
 const LeavesScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const orders = useSelector(state => state.orders.orders);
-  const duty = useSelector(state => state.calendars.mountCalendars);
+  const duty = useSelector(state => state.calendars.noDutyCalendars);
   const dispatch = useDispatch();
 
   useEffect(() => {
