@@ -1,9 +1,9 @@
 export const typeEnum = Object.freeze([
   "Nöbet",
-  "İzin",
+  "Yıllık İzin",
   "Rapor",
   "Gebelik",
   "Resmi Tatil",
-  "İdari izin",
+  "İdari İzin",
   "Özel Durum"
 ]);

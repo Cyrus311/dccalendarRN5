@@ -53,7 +53,7 @@ const LeavesScreen = props => {
         <DutyItem
           date={itemData.item.calendar.readableDate}
           type={itemData.item.calendar.type}
-          location={itemData.item.location.name}
+          location={itemData.item.location}
           description={itemData.item.calendar.description}
           onSelect={() => {}}
           deletable

@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 import Card from "../UI/Card";
-import Colors from "../../constants/Colors";
+import Colors, { color } from "../../constants/Colors";
 import { typeEnum } from "../../constants/typeEnum";
 
 const DutyItem = props => {
@@ -26,30 +26,49 @@ const DutyItem = props => {
         <TouchableComponent onPress={props.onSelect} useForeground>
           <View style={styles.dutyContainer}>
             <View style={styles.gradientContainer}>
-              <LinearGradient
-                colors={[Colors.gradientStart, Colors.gradientEnd]}
-                style={styles.gradient}
-              >
-                <Text style={styles.date} numberOfLines={2}>
-                  {props.date}
-                </Text>
-              </LinearGradient>
-            </View>
-            <View
-              style={
-                props.deletable
-                  ? styles.deletableContainer
-                  : styles.locationContainer
-              }
-            >
-              <Text style={styles.location}>
-                {props.type ? typeEnum[props.type] : props.location}
-              </Text>
-              <Text style={styles.description}>{props.description}</Text>
-              {!props.deletable && (
-                <View style={styles.actions}>{props.children}</View>
+              {props.user ? (
+                <View
+                  backgroundColor={color[props.location.colorCode]}
+                  style={styles.locationColorContainer}
+                ></View>
+              ) : (
+                <LinearGradient
+                  colors={[Colors.gradientStart, Colors.gradientEnd]}
+                  style={styles.gradient}
+                >
+                  <Text style={styles.date} numberOfLines={2}>
+                    {props.date}
+                  </Text>
+                </LinearGradient>
               )}
             </View>
+            {props.user ? (
+              <View style={styles.wideLocationContainer}>
+                <Text style={styles.location}>
+                  {props.type ? typeEnum[props.type] : props.location.name}
+                </Text>
+                <Text style={styles.description}>{props.user.fullName}</Text>
+                {!props.deletable && (
+                  <View style={styles.actions}>{props.children}</View>
+                )}
+              </View>
+            ) : (
+              <View
+                style={
+                  props.deletable
+                    ? styles.deletableContainer
+                    : styles.locationContainer
+                }
+              >
+                <Text style={styles.location}>
+                  {props.type ? typeEnum[props.type] : props.location.name}
+                </Text>
+                <Text style={styles.description}>{props.description}</Text>
+                {!props.deletable && (
+                  <View style={styles.actions}>{props.children}</View>
+                )}
+              </View>
+            )}
             {props.deletable && (
               <View style={styles.iconContainer}>
                 <TouchableOpacity
@@ -95,6 +114,10 @@ const styles = StyleSheet.create({
   },
   locationContainer: {
     width: "80%",
+    height: "100%"
+  },
+  wideLocationContainer: {
+    width: "90%",
     height: "100%"
   },
   deletableContainer: {
@@ -144,6 +167,11 @@ const styles = StyleSheet.create({
   iconContainer: {
     flex: 1,
     flexDirection: "row",
+    alignItems: "center"
+  },
+  locationColorContainer: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center"
   },
   deleteButton: {}

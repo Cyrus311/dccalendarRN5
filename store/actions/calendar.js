@@ -117,6 +117,7 @@ export const fetchCalendar = filterData => {
           .filter(
             duty =>
               duty.user.id === userId &&
+              duty.calendar.type === 0 &&
               moment(duty.calendar.date).format("Y-MM") ===
                 moment().format("Y-MM")
           )
@@ -309,6 +310,12 @@ export const createCalendar = calendar => {
     // any async code you want!
     // const token = getState().auth.token;
     const userId = getState().auth.userId;
+    const groupId = getState().user.user.groups[0].id;
+    const isDraft = true;
+
+    console.log("CREATE CALENDAR", { userId, groupId, isDraft }, calendar);
+
+    return;
 
     // const reminder = {
     //   locationId: this.props.activeLocationId,

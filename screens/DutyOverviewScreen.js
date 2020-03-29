@@ -119,7 +119,7 @@ const DutyOverviewScreen = props => {
           renderItem={itemData => (
             <DutyItem
               date={itemData.item.calendar.readableDate}
-              location={itemData.item.location.name}
+              location={itemData.item.location}
               description={itemData.item.calendar.description}
               onSelect={() => {
                 selectItemHandler(itemData.item.calendar);

@@ -1,251 +1,219 @@
-import React, { useState, useEffect, useCallback, useReducer } from "react";
+import React, { useState } from "react";
 import {
-  Platform,
-  View,
-  ScrollView,
   StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  ActivityIndicator,
-  Picker
+  TextInput,
+  View,
+  Text,
+  Picker,
+  Button,
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import Input from "../components/UI/Input";
-import HeaderButton from "../components/UI/HeaderButton";
+import { Formik } from "formik";
+import * as yup from "yup";
+import FlatButton from "../components/UI/FlatButton";
+import { typeEnum } from "../constants/typeEnum";
 import * as calendarActions from "../store/actions/calendar";
-import Colors from "../constants/Colors";
+// import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment";
 
-const FORM_UPDATE = "FORM_UPDATE";
-
-const formReducer = (state, action) => {
-  if (action.type === FORM_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.input]: action.value
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.input]: action.isValid
-    };
-    let updatedFormIsValid = true;
-    for (const key in updatedValidities) {
-      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
-    }
-
-    return {
-      formIsValid: updatedFormIsValid,
-      inputValidities: updatedValidities,
-      inputValues: updatedValues
-    };
-  }
-  return state;
-};
-
-const LeaveAddScreen = props => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-  const [language, setLanguage] = useState("");
-
-  const prodId = props.route.params ? props.route.params.productId : null;
-  const editedProduct = useSelector(state =>
-    state.calendars.userCalendars.find(prod => prod.id === prodId)
-  );
+export default function LeaveAddScreen(props) {
+  const [datetime, setDatetime] = useState(new Date());
+  const [datetimeEnd, setDatetimeEnd] = useState(new Date());
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDatePickerVisibleEnd, setDatePickerVisibilityEnd] = useState(false);
   const dispatch = useDispatch();
 
-  const [formState, dispatchFormState] = useReducer(formReducer, {
-    inputValues: {
-      title: editedProduct ? editedProduct.title : "",
-      imageUrl: editedProduct ? editedProduct.imageUrl : "",
-      description: editedProduct ? editedProduct.description : "",
-      price: ""
-    },
-    inputValidities: {
-      title: editedProduct ? true : false,
-      imageUrl: editedProduct ? true : false,
-      description: editedProduct ? true : false,
-      price: editedProduct ? true : false
-    },
-    formIsValid: editedProduct ? true : false
+  const reviewSchema = yup.object({
+    date: yup.date().required("Zorunlu Alan!"),
+    date2: yup
+      .date()
+      .required("Zorunlu Alan!")
+      .test(
+        "is-endDate-bigger",
+        "Başlangıç tarihi Bitiş tarihinden büyük olamaz!",
+        val => {
+          return moment(val).isSameOrAfter(datetime, "day");
+        }
+      )
+      .test(
+        "is-days-moreThen30",
+        "30 günden fazla izin talep edilemez!",
+        val => {
+          return moment(val).diff(datetime, "days") <= 30;
+        }
+      ),
+    description: yup
+      .string()
+      .required("Zorunlu Alan!")
+      .min(8)
   });
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Hata Oluştu!", error, [{ text: "Okay" }]);
-    }
-  }, [error]);
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
-  const submitHandler = useCallback(async () => {
-    if (!formState.formIsValid) {
-      Alert.alert("Wrong input!", "Please check the errors in the form.", [
-        { text: "Okay" }
-      ]);
-      return;
-    }
-    setError(null);
-    setIsLoading(true);
-    const a = {
-      locationId: "5e3af1a2dc17a67a4d71ad29",
-      groupId: "5e53975e62398900983c869c",
-      userId: "5e1649c879953e4c68d279c4",
-      date: "2020-03-05T03:00:00.000Z",
-      type: 0
-    };
-    try {
-      if (editedProduct) {
-        await dispatch(
-          calendarActions.updateCalendar(
-            prodId,
-            formState.inputValues.title,
-            formState.inputValues.description,
-            formState.inputValues.imageUrl
-          )
-        );
-      } else {
-        await dispatch(
-          calendarActions.createCalendar(
-            formState.inputValues.title,
-            formState.inputValues.description,
-            formState.inputValues.imageUrl,
-            +formState.inputValues.price
-          )
-        );
-      }
-      props.navigation.goBack();
-    } catch (error) {
-      console.log(error);
-      setError(error.message);
-    }
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
 
-    setIsLoading(false);
-  }, [dispatch, prodId, formState]);
+  const showDatePickerEnd = () => {
+    setDatePickerVisibilityEnd(true);
+  };
 
-  useEffect(() => {
-    props.navigation.setOptions({
-      // eslint-disable-next-line react/display-name
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="Save"
-            iconName={
-              Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
-            }
-            onPress={submitHandler}
-          />
-        </HeaderButtons>
-      )
-    });
-  }, [submitHandler]);
+  const hideDatePickerEnd = () => {
+    setDatePickerVisibilityEnd(false);
+  };
 
-  const inputChangeHandler = useCallback(
-    (inputIdentifier, inputValue, inputValidty) => {
-      dispatchFormState({
-        type: FORM_UPDATE,
-        value: inputValue,
-        isValid: inputValidty,
-        input: inputIdentifier
-      });
-    },
-    [dispatchFormState]
-  );
+  const handleConfirm = date => {
+    console.log("A date has been picked: ", date);
+    setDatetime(date);
+    console.log("-----DATE-----", datetime);
+    hideDatePicker();
+  };
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+  const handleConfirmEnd = date => {
+    console.log("A dateEND has been picked: ", date);
+    setDatetimeEnd(date);
+    console.log("-----DATEEND-----", datetime);
+    hideDatePicker();
+  };
+
+  const handleFromSubmit = async values => {
+    console.log("---SUBMIT---", values);
+    await dispatch(calendarActions.createCalendar(values));
+  };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={100}
-    >
-      <ScrollView>
-        <View style={styles.form}>
-          <Input
-            id="title"
-            label="Title"
-            errorText="Please enter a valid title!"
-            keyboardType="default"
-            autoCapitalize="sentences"
-            autoCorrect
-            returnKeyType="next"
-            onInputChange={inputChangeHandler}
-            initialValue={editedProduct ? editedProduct.title : ""}
-            initiallyValid={!!editedProduct}
-            required
-          />
-          <Input
-            id="imageUrl"
-            label="Image Url"
-            errorText="Please enter a valid image url!"
-            keyboardType="default"
-            returnKeyType="next"
-            onInputChange={inputChangeHandler}
-            initialValue={editedProduct ? editedProduct.imageUrl : ""}
-            initiallyValid={!!editedProduct}
-            required
-          />
-          {editedProduct ? null : (
-            <Input
-              id="price"
-              label="Price"
-              errorText="Please enter a valid price!"
-              keyboardType="decimal-pad"
-              returnKeyType="next"
-              onInputChange={inputChangeHandler}
-              required
-              min={0.1}
-            />
-          )}
-          <Input
-            id="description"
-            label="Description"
-            errorText="Please enter a valid description!"
-            keyboardType="default"
-            returnKeyType="next"
-            autoCapitalize="sentences"
-            autoCorrect
-            multiline
-            numberOfLines={3}
-            onInputChange={inputChangeHandler}
-            initialValue={editedProduct ? editedProduct.description : ""}
-            initiallyValid={!!editedProduct}
-            required
-            minLength={5}
-          />
-          <View>
-            <Picker
-              selectedValue={language}
-              style={{ height: 50, width: 100 }}
-              onValueChange={(itemValue, itemIndex) => setLanguage(itemValue)}
-            >
-              <Picker.Item label="Java" value="java" />
-              <Picker.Item label="JavaScript" value="js" />
-            </Picker>
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  );
-};
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Formik
+          initialValues={{
+            description: "",
+            type: 1,
+            date: new Date(),
+            date2: new Date()
+          }}
+          validationSchema={reviewSchema}
+          onSubmit={(values, actions) => {
+            actions.resetForm();
+            // addReview(values);
+            handleFromSubmit(values);
+          }}
+        >
+          {props => (
+            <View>
+              <TouchableWithoutFeedback onPress={showDatePicker}>
+                <View style={{ flexDirection: "row" }}>
+                  <Button title="Başlangıç: " onPress={showDatePicker} />
+                  <Text style={styles.input}>
+                    {moment(datetime).format("DD MMMM YYYY")}
+                  </Text>
+                  <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    minimumDate={new Date(moment())}
+                    date={props.values.date}
+                    mode="date"
+                    locale="tr"
+                    onConfirm={date => {
+                      props.setFieldValue("date", date);
+                      handleConfirm(date);
+                      hideDatePicker();
+                    }}
+                    onCancel={hideDatePicker}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+              <Text style={styles.errorText}>
+                {props.touched.date && props.errors.date}
+              </Text>
+              <TouchableWithoutFeedback onPress={showDatePickerEnd}>
+                <View style={{ flexDirection: "row" }}>
+                  <Button title="Bitiş: " onPress={showDatePickerEnd} />
+                  <Text style={styles.input}>
+                    {moment(datetimeEnd).format("DD MMMM YYYY")}
+                  </Text>
+                  <DateTimePickerModal
+                    isVisible={isDatePickerVisibleEnd}
+                    minimumDate={new Date(moment())}
+                    date={props.values.date2}
+                    mode="date"
+                    locale="tr"
+                    onConfirm={date => {
+                      props.setFieldValue("date2", date);
+                      handleConfirmEnd(date);
+                      hideDatePickerEnd();
+                    }}
+                    onCancel={hideDatePickerEnd}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+              <Text style={styles.errorText}>
+                {props.touched.date2 && props.errors.date2}
+              </Text>
 
-export const screenOptions = navData => {
-  const routeParams = navData.route.params ? navData.route.params : {};
-  return {
-    headerTitle: routeParams.productId ? "Edit Product" : "İzin Ekle"
-    // eslint-disable-next-line react/display-name
-  };
-};
+              <TextInput
+                style={styles.input}
+                multiline
+                minHeight={60}
+                placeholder="Açıklama"
+                onChangeText={props.handleChange("description")}
+                onBlur={props.handleBlur("description")}
+                value={props.values.description}
+              />
+              <Text style={styles.errorText}>
+                {props.touched.description && props.errors.description}
+              </Text>
+
+              <Picker
+                // passing value directly from formik
+                selectedValue={props.values.type}
+                // changing value in formik
+                onValueChange={itemValue =>
+                  props.setFieldValue("type", itemValue)
+                }
+              >
+                <Picker.Item
+                  label="İzin Tipi Seçiniz"
+                  value={props.initialValues.type}
+                  key={0}
+                />
+                <Picker.Item label={typeEnum[1]} value={1} key={1} />
+                <Picker.Item label={typeEnum[2]} value={2} key={2} />
+                <Picker.Item label={typeEnum[3]} value={3} key={3} />
+                <Picker.Item label={typeEnum[4]} value={4} key={4} />
+                <Picker.Item label={typeEnum[5]} value={5} key={5} />
+                <Picker.Item label={typeEnum[6]} value={6} key={6} />
+              </Picker>
+
+              <FlatButton onPress={props.handleSubmit} text="submit" />
+            </View>
+          )}
+        </Formik>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+}
 
 const styles = StyleSheet.create({
-  form: {
-    margin: 20
+  container: {
+    flex: 1,
+    padding: 20
   },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 6
+  },
+  errorText: {
+    color: "crimson",
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 6,
+    textAlign: "center"
+  }
 });
-
-export default LeaveAddScreen;
