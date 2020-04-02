@@ -1,4 +1,5 @@
 export const typeEnum = Object.freeze([
+  "Undefined",
   "Nöbet",
   "Yıllık İzin",
   "Rapor",

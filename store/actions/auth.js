@@ -28,10 +28,6 @@ export const authenticate = (token, userId, expiryTime) => {
 
 export const signup = (email, password, fullName) => {
   const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users";
-  // apiUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg";
-  console.log("SIGNUP");
-  console.log("fullName", fullName);
-
   return async dispatch => {
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -42,7 +38,7 @@ export const signup = (email, password, fullName) => {
         email: email,
         password: password,
         fullName: fullName,
-        title: "Dr",
+        title: "Dr.",
         deviceId: "QWERT1",
         roles: ["user"]
       })
@@ -59,7 +55,6 @@ export const signup = (email, password, fullName) => {
     }
 
     const resData = await response.json();
-    console.log("resData", resData);
 
     return { type: SIGNUP, email: resData.email };
   };
@@ -67,8 +62,6 @@ export const signup = (email, password, fullName) => {
 
 export const login = (email, password) => {
   const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users/login";
-  // apiUrl ="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBPbNMyirVETOQ3YpvckHVfiia4fdoz4Lg",
-  console.log("LOGIN");
 
   return async dispatch => {
     const response = await fetch(apiUrl, {

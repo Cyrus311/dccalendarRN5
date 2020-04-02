@@ -92,13 +92,6 @@ const DutyDetailScreen = props => {
     });
   }, [dispatch, loadDuty, activeIndex]);
 
-  const selectItemHandler = (id, title) => {
-    props.navigation.navigate("ProductDetail", {
-      productId: id,
-      productTitle: title
-    });
-  };
-
   let keyExtractor = (item, index) => index.toString();
 
   let renderItem = ({ item }) => {
@@ -229,25 +222,12 @@ const DutyDetailScreen = props => {
                 date={itemData.item.calendar.readableDate}
                 location={itemData.item.location}
                 description={itemData.item.calendar.description}
-                onSelect={() => {
-                  selectItemHandler(itemData.item.id, itemData.item.title);
-                }}
+                onSelect={() => {}}
                 user={itemData.item.user}
               >
-                <Button
-                  color={Colors.primary}
-                  title="Detay"
-                  onPress={() => {
-                    selectItemHandler(itemData.item.id, itemData.item.title);
-                  }}
-                />
-                <Button
-                  color={Colors.primary}
-                  title="Takas"
-                  onPress={() => {
-                    dispatch(cartActions.addToCart(itemData.item));
-                  }}
-                />
+                <Text style={styles.text}>
+                  Seçili gün için atanmış nöbetçi bulunamadı.
+                </Text>
               </DutyItem>
             )}
           />

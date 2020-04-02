@@ -16,6 +16,14 @@ const createCalendar = data => {
   });
 };
 
+const createCalendarBulk = data => {
+  return request({
+    url: "/calendars/bulk",
+    method: "POST",
+    data: data
+  });
+};
+
 const deleteCalendar = id => {
   return request({
     url: "/calendars/" + id,
@@ -26,5 +34,6 @@ const deleteCalendar = id => {
 export const calendarService = {
   getCalendars,
   createCalendar,
+  createCalendarBulk,
   deleteCalendar
 };

@@ -13,8 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 import Card from "../UI/Card";
 import Colors, { color } from "../../constants/Colors";
 import { typeEnum } from "../../constants/typeEnum";
+import { statusEnum } from "../../constants/statusEnum";
 
-const DutyItem = props => {
+const LeaveItem = props => {
   let TouchableComponent = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -26,49 +27,33 @@ const DutyItem = props => {
         <TouchableComponent onPress={props.onSelect} useForeground>
           <View style={styles.dutyContainer}>
             <View style={styles.gradientContainer}>
-              {props.user ? (
-                <View
-                  backgroundColor={color[props.location.colorCode]}
-                  style={styles.locationColorContainer}
-                ></View>
-              ) : (
-                <LinearGradient
-                  colors={[Colors.gradientStart, Colors.gradientEnd]}
-                  style={styles.gradient}
-                >
-                  <Text style={styles.date} numberOfLines={2}>
-                    {props.date}
-                  </Text>
-                </LinearGradient>
-              )}
-            </View>
-            {props.user ? (
-              <View style={styles.wideLocationContainer}>
-                <Text style={styles.location}>
-                  {props.type ? typeEnum[props.type] : props.location.name}
-                </Text>
-                <Text style={styles.description}>{props.user.fullName}</Text>
-                {!props.deletable && (
-                  <View style={styles.actions}>{props.children}</View>
-                )}
-              </View>
-            ) : (
-              <View
-                style={
-                  props.deletable
-                    ? styles.deletableContainer
-                    : styles.locationContainer
-                }
+              <LinearGradient
+                colors={[Colors.gradientStart, Colors.gradientEnd]}
+                style={styles.gradient}
               >
-                <Text style={styles.location}>
-                  {props.type ? typeEnum[props.type] : props.location.name}
-                </Text>
-                <Text style={styles.description}>{props.description}</Text>
-                {!props.deletable && (
-                  <View style={styles.actions}>{props.children}</View>
+                <Text style={styles.date}>{props.date}</Text>
+                {props.date !== props.date2 && (
+                  <Text style={{ color: Colors.textColor }}> - </Text>
                 )}
-              </View>
-            )}
+                {props.date !== props.date2 && (
+                  <Text style={styles.date}>{props.date2}</Text>
+                )}
+              </LinearGradient>
+            </View>
+            <View
+              style={
+                props.deletable
+                  ? styles.deletableContainer
+                  : styles.locationContainer
+              }
+            >
+              <Text style={styles.location}>{typeEnum[props.type]}</Text>
+              {/* <Text style={styles.status}>{props.status}</Text> */}
+              <Text style={styles.status}> {statusEnum[props.status]} </Text>
+
+              <Text style={styles.description}>{props.description}</Text>
+            </View>
+
             {props.deletable && (
               <View style={styles.iconContainer}>
                 <TouchableOpacity
@@ -135,7 +120,7 @@ const styles = StyleSheet.create({
   location: {
     backgroundColor: "transparent",
     fontFamily: "open-sans-bold",
-    fontSize: 18,
+    fontSize: 20,
     marginVertical: 4,
     paddingHorizontal: 4
   },
@@ -144,13 +129,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#888",
     paddingHorizontal: 4
-  },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "35%",
-    paddingHorizontal: 10
   },
   gradient: {
     flex: 1,
@@ -174,7 +152,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  status: {
+    fontFamily: "open-sans",
+    fontSize: 16,
+    color: "#888",
+    paddingHorizontal: 4,
+    paddingBottom: 5
+  },
   deleteButton: {}
 });
 
-export default DutyItem;
+export default LeaveItem;

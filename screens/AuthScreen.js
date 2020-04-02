@@ -101,7 +101,7 @@ const AuthScreen = props => {
 
       setTryEmailExist(true);
       setIsLoading(false);
-      // props.navigation.navigate("Shop");
+      setIsSignup(false);
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
@@ -127,6 +127,10 @@ const AuthScreen = props => {
     setIsLoading(true);
     try {
       await dispatch(action);
+      if (isSignup) {
+        setIsLoading(false);
+        setTryEmailExist(false);
+      }
       // props.navigation.navigate("Shop");
     } catch (error) {
       setError(error.message);
@@ -145,7 +149,7 @@ const AuthScreen = props => {
         source={require("../assets/backImage2.jpg")}
         style={styles.gradient}
         resizeMode="cover"
-        blurRadius={12}
+        blurRadius={10}
       >
         {/* <LinearGradient
           colors={[Colors.gradientStart, Colors.gradientEnd]}

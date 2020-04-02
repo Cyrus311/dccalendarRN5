@@ -8,6 +8,7 @@ import {
 } from "../actions/calendar";
 // import Calendar from "../../models/calendar";
 import Calendar from "../../models/calendar";
+import moment from "moment";
 
 const initialState = {
   availableCalendars: [],
@@ -20,12 +21,29 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_CALENDARS: {
+      const leaveCalendars = [];
+      const result = action.noDutyCalendars.reduce(function(r, a) {
+        r[a.calendar.calendarGroupId] = r[a.calendar.calendarGroupId] || [];
+        r[a.calendar.calendarGroupId].push(a);
+        return r;
+      }, Object.create(null));
+
+      for (const key in result) {
+        leaveCalendars.push({
+          id: key,
+          calendar: {
+            ...result[key][0].calendar,
+            date2: result[key][result[key].length - 1].calendar.date
+          }
+        });
+      }
+
       return {
         availableCalendars: action.calendars,
         userCalendars: action.userCalendars,
         mountCalendars: action.mountCalendars,
         dailyCalendars: action.dailyCalendars,
-        noDutyCalendars: action.noDutyCalendars
+        noDutyCalendars: leaveCalendars
       };
     }
     case DAILY_CALENDARS: {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -7,9 +7,11 @@ import {
   Picker,
   Button,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert,
+  Platform
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as yup from "yup";
 import FlatButton from "../components/UI/FlatButton";
@@ -18,12 +20,15 @@ import * as calendarActions from "../store/actions/calendar";
 // import DateTimePicker from "@react-native-community/datetimepicker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../components/UI/HeaderButton";
 
 export default function LeaveAddScreen(props) {
   const [datetime, setDatetime] = useState(new Date());
   const [datetimeEnd, setDatetimeEnd] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisibleEnd, setDatePickerVisibilityEnd] = useState(false);
+  const [error, setError] = useState();
   const dispatch = useDispatch();
 
   const reviewSchema = yup.object({
@@ -68,23 +73,30 @@ export default function LeaveAddScreen(props) {
   };
 
   const handleConfirm = date => {
-    console.log("A date has been picked: ", date);
     setDatetime(date);
-    console.log("-----DATE-----", datetime);
     hideDatePicker();
   };
 
   const handleConfirmEnd = date => {
-    console.log("A dateEND has been picked: ", date);
     setDatetimeEnd(date);
-    console.log("-----DATEEND-----", datetime);
     hideDatePicker();
   };
 
   const handleFromSubmit = async values => {
-    console.log("---SUBMIT---", values);
-    await dispatch(calendarActions.createCalendar(values));
+    try {
+      setError(null);
+      await dispatch(calendarActions.createCalendar(values));
+      props.navigation.navigate("DutyOverview");
+    } catch (error) {
+      setError(error.message);
+    }
   };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Hata Oluştu!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -92,14 +104,13 @@ export default function LeaveAddScreen(props) {
         <Formik
           initialValues={{
             description: "",
-            type: 1,
+            type: 2,
             date: new Date(),
             date2: new Date()
           }}
           validationSchema={reviewSchema}
           onSubmit={(values, actions) => {
             actions.resetForm();
-            // addReview(values);
             handleFromSubmit(values);
           }}
         >
@@ -113,7 +124,7 @@ export default function LeaveAddScreen(props) {
                   </Text>
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
-                    minimumDate={new Date(moment())}
+                    // minimumDate={new Date(moment())}
                     date={props.values.date}
                     mode="date"
                     locale="tr"
@@ -137,7 +148,7 @@ export default function LeaveAddScreen(props) {
                   </Text>
                   <DateTimePickerModal
                     isVisible={isDatePickerVisibleEnd}
-                    minimumDate={new Date(moment())}
+                    // minimumDate={new Date(moment())}
                     date={props.values.date2}
                     mode="date"
                     locale="tr"
@@ -178,9 +189,8 @@ export default function LeaveAddScreen(props) {
                 <Picker.Item
                   label="İzin Tipi Seçiniz"
                   value={props.initialValues.type}
-                  key={0}
+                  key={2}
                 />
-                <Picker.Item label={typeEnum[1]} value={1} key={1} />
                 <Picker.Item label={typeEnum[2]} value={2} key={2} />
                 <Picker.Item label={typeEnum[3]} value={3} key={3} />
                 <Picker.Item label={typeEnum[4]} value={4} key={4} />
@@ -188,7 +198,7 @@ export default function LeaveAddScreen(props) {
                 <Picker.Item label={typeEnum[6]} value={6} key={6} />
               </Picker>
 
-              <FlatButton onPress={props.handleSubmit} text="submit" />
+              <FlatButton onPress={props.handleSubmit} text="kaydet" />
             </View>
           )}
         </Formik>
@@ -217,3 +227,9 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 });
+
+export const screenOptions = navData => {
+  return {
+    headerTitle: "İzin Ekle"
+  };
+};

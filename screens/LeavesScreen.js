@@ -5,14 +5,14 @@ import {
   FlatList,
   Platform,
   ActivityIndicator,
-  StyleSheet,
-  Button
+  StyleSheet
 } from "react-native";
+import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import HeaderButton from "../components/UI/HeaderButton";
-import DutyItem from "../components/items/DutyItem";
+import LeaveItem from "../components/items/LeaveItem";
 import * as ordersActions from "../store/actions/orders";
 import Colors from "../constants/Colors";
 
@@ -40,7 +40,7 @@ const LeavesScreen = props => {
   if (duty.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No orders found!</Text>
+        <Text>İzin kaydı bulunamadı!</Text>
       </View>
     );
   }
@@ -50,16 +50,16 @@ const LeavesScreen = props => {
       data={duty}
       keyExtractor={item => item.id}
       renderItem={itemData => (
-        <DutyItem
-          date={itemData.item.calendar.readableDate}
+        <LeaveItem
+          date={moment(itemData.item.calendar.date).format("DD MMM")}
+          date2={moment(itemData.item.calendar.date2).format("DD MMM")}
+          status={itemData.item.calendar.status}
           type={itemData.item.calendar.type}
-          location={itemData.item.location}
           description={itemData.item.calendar.description}
           onSelect={() => {}}
-          deletable
-        >
-          <Button color={Colors.primary} title="İptal" onPress={() => {}} />
-        </DutyItem>
+          onRemove={() => {}}
+          // deletable
+        ></LeaveItem>
       )}
     />
   );

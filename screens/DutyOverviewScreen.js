@@ -136,7 +136,7 @@ const DutyOverviewScreen = props => {
                 color={Colors.primary}
                 title="Takas"
                 onPress={() => {
-                  dispatch(cartActions.addToCart(itemData.item.calendar.id));
+                  // dispatch(cartActions.addToCart(itemData.item.calendar.id));
                 }}
               />
             </DutyItem>

@@ -38,7 +38,9 @@ import LeaveAddScreen, {
 import AuthScreen, {
   screenOptions as authScreenOptions
 } from "../screens/AuthScreen";
-import StartupScreen from "../screens/StartupScreen";
+import SettingScreen, {
+  screenOptions as settingScreenOptions
+} from "../screens/SettingScreen";
 
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -65,7 +67,7 @@ export const ProductsNavigator = () => {
   return (
     <ProductsStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <ProductsStackNavigator.Screen
-        name="ProductOverview"
+        name="DutyOverview"
         component={DutyOverviewScreen}
         options={dutyOverviewScreenOptions}
       />
@@ -113,15 +115,15 @@ export const AdminNavigator = () => {
   return (
     <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <AdminStackNavigator.Screen
-        name="UserProducts"
-        component={UserProductScreen}
-        options={userProductScreenOptions}
+        name="SettingScreen"
+        component={SettingScreen}
+        options={settingScreenOptions}
       />
-      <AdminStackNavigator.Screen
+      {/* <AdminStackNavigator.Screen
         name="EditProduct"
         component={LeaveAddScreen}
         options={leaveAddScreenOptions}
-      />
+      /> */}
     </AdminStackNavigator.Navigator>
   );
 };
@@ -183,7 +185,7 @@ export const ShopNavigator = () => {
           // eslint-disable-next-line react/display-name
           drawerIcon: props => (
             <Ionicons
-              name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+              name={Platform.OS === "android" ? "md-medkit" : "ios-medkit"}
               size={23}
               color={props.color}
             />
@@ -197,7 +199,7 @@ export const ShopNavigator = () => {
           // eslint-disable-next-line react/display-name
           drawerIcon: props => (
             <Ionicons
-              name={Platform.OS === "android" ? "md-list" : "ios-list"}
+              name={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
               size={23}
               color={props.color}
             />
@@ -211,7 +213,7 @@ export const ShopNavigator = () => {
           // eslint-disable-next-line react/display-name
           drawerIcon: props => (
             <Ionicons
-              name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+              name={Platform.OS === "android" ? "md-settings" : "ios-settings"}
               size={23}
               color={props.color}
             />

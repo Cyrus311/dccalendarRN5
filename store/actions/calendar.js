@@ -1,4 +1,5 @@
 import moment from "moment";
+import { extendMoment } from "moment-range";
 import { Calendar, User, Location, Group } from "../../models/index";
 import { calendarService } from "../../services/calendar";
 
@@ -12,19 +13,6 @@ export const fetchCalendar = filterData => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
     try {
-      // any async code you want!
-      // const response = await fetch(
-      //   "https://doctorcalendar.eu-gb.mybluemix.net/calendars",
-      //   {
-      //     method: "GET",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${token}`,
-      //       "params": filterData
-      //     }
-      //   }
-      // );
-
       const response = await calendarService.getCalendars(filterData);
 
       if (response.error) {
@@ -41,7 +29,6 @@ export const fetchCalendar = filterData => {
           message = "This password is not valid!";
         }
         throw new Error(message);
-        // console.log("ERROR");
       }
 
       const resData = response;
@@ -59,6 +46,9 @@ export const fetchCalendar = filterData => {
                 resData[key].userId,
                 resData[key].groupId,
                 resData[key].locationId,
+                resData[key].calendarGroupId,
+                resData[key].isDraft,
+                resData[key].status,
                 resData[key].createdDate,
                 resData[key].updatedDate,
                 resData[key].createdUserId,
@@ -102,51 +92,20 @@ export const fetchCalendar = filterData => {
           }
           return 0;
         }),
-        userCalendars: loadedCalendars
-          .filter(duty => duty.user.id === userId)
-          .sort((a, b) => {
-            if (a.calendar.date > b.calendar.date) {
-              return 1;
-            }
-            if (a.calendar.date < b.calendar.date) {
-              return -1;
-            }
-            return 0;
-          }),
-        mountCalendars: loadedCalendars
-          .filter(
-            duty =>
-              duty.user.id === userId &&
-              duty.calendar.type === 0 &&
-              moment(duty.calendar.date).format("Y-MM") ===
-                moment().format("Y-MM")
-          )
-          .sort((a, b) => {
-            if (a.calendar.date > b.calendar.date) {
-              return 1;
-            }
-            if (a.calendar.date < b.calendar.date) {
-              return -1;
-            }
-            return 0;
-          }),
-        noDutyCalendars: loadedCalendars
-          .filter(
-            duty =>
-              duty.user.id === userId &&
-              duty.calendar.type !== 0 &&
-              moment(duty.calendar.date).format("Y-MM") ===
-                moment().format("Y-MM")
-          )
-          .sort((a, b) => {
-            if (a.calendar.date > b.calendar.date) {
-              return 1;
-            }
-            if (a.calendar.date < b.calendar.date) {
-              return -1;
-            }
-            return 0;
-          }),
+        userCalendars: loadedCalendars.filter(duty => duty.user.id === userId),
+        mountCalendars: loadedCalendars.filter(
+          duty =>
+            duty.user.id === userId &&
+            duty.calendar.type === 1 &&
+            moment(duty.calendar.date).format("Y-MM") ===
+              moment().format("Y-MM")
+        ),
+        noDutyCalendars: loadedCalendars.filter(
+          duty =>
+            duty.user.id === userId &&
+            duty.calendar.type !== 0 &&
+            duty.calendar.type !== 1
+        ),
         dailyCalendars: []
       });
     } catch (error) {
@@ -159,11 +118,12 @@ export const fetchCalendar = filterData => {
 export const dailyCalendar = date => {
   return async (dispatch, getState) => {
     try {
+      const groupId = getState().user.user.groups[0].id;
       const filterData = {
         filter: {
           where: {
             groupId: {
-              like: "5e53975e62398900983c869c"
+              like: groupId
             }
           },
           include: [
@@ -188,13 +148,6 @@ export const dailyCalendar = date => {
 
         const errorId = errorResData.error.message;
         let message = "Something went wrong!";
-        if (errorId === "INVALID_EMAIL") {
-          message = "This email is not valid!";
-        } else if (errorId === "EMAIL_NOT_FOUND") {
-          message = "This email could not be found!";
-        } else if (errorId === "INVALID_PASSWORD") {
-          message = "This password is not valid!";
-        }
         throw new Error(message);
         // console.log("ERROR");
       }
@@ -251,8 +204,9 @@ export const dailyCalendar = date => {
         dailyCalendars: loadedCalendars
           .filter(
             duty =>
+              duty.calendar.type === 1 &&
               moment(duty.calendar.date).format("Y-MM-DD") ===
-              moment(date).format("Y-MM-DD")
+                moment(date).format("Y-MM-DD")
           )
           .sort((a, b) => {
             if (a.calendar.date > b.calendar.date) {
@@ -307,39 +261,80 @@ export const deleteCalendar = calendarId => {
 
 export const createCalendar = calendar => {
   return async (dispatch, getState) => {
-    // any async code you want!
-    // const token = getState().auth.token;
-    const userId = getState().auth.userId;
-    const groupId = getState().user.user.groups[0].id;
-    const isDraft = true;
+    try {
+      // const token = getState().auth.token;
+      const userId = getState().auth.userId;
+      const groupId = getState().user.user.groups[0].id;
+      const status = 1;
+      const guid = (
+        GUID4() +
+        GUID4() +
+        GUID4() +
+        GUID4() +
+        GUID4() +
+        GUID4()
+      ).toLowerCase();
+      const momentRange = extendMoment(moment);
+      const start = moment(calendar.date).format(
+        "YYYY-MM-DD[T]hh:mm:ss.sss[Z]"
+      );
+      const end = moment(calendar.date2).format("YYYY-MM-DD[T]hh:mm:ss.sss[Z]");
+      const range = momentRange.range(start, end);
 
-    console.log("CREATE CALENDAR", { userId, groupId, isDraft }, calendar);
-
-    return;
-
-    // const reminder = {
-    //   locationId: this.props.activeLocationId,
-    //   groupId: "5e53975e62398900983c869c",
-    //   userId: user.user.id,
-    //   date: moment(destination.droppableId).format("YYYY-MM-DD[T]hh:mm:ss.sss[Z]"),
-    //   type: 0
-    // }
-
-    const response = await calendarService.createCalendar(calendar);
-
-    const resData = await response.json();
-
-    dispatch({
-      type: CREATE_CALENDAR,
-      calendarData: {
-        id: resData.id,
-        title: title,
-        description: description,
-        imageUrl,
-        price,
-        ownerId: userId
+      const leaveDays = [];
+      for (let date of range.by("day")) {
+        leaveDays.push({
+          userId,
+          groupId,
+          status,
+          date: date.format("YYYY-MM-DD[T]12:00:00.000[Z]"),
+          description: calendar.description,
+          type: calendar.type,
+          calendarGroupId: guid
+        });
       }
-    });
+
+      console.log("CREATE CALENDAR", leaveDays);
+
+      // return;
+
+      // const reminder = {
+      //   locationId: this.props.activeLocationId,
+      //   groupId: "5e53975e62398900983c869c",
+      //   userId: user.user.id,
+      //   date: moment(destination.droppableId).format("YYYY-MM-DD[T]hh:mm:ss.sss[Z]"), - date: "2020-03-12T12:00:00.000Z"
+      //   type: 0
+      // }
+
+      const response = await calendarService.createCalendarBulk(leaveDays);
+
+      console.log("-----RESDATA-CREATECALENDAR-----", response);
+
+      return;
+
+      dispatch({
+        type: CREATE_CALENDAR,
+        calendarData: {
+          id: resData.id,
+          title: title,
+          description: description,
+          imageUrl,
+          price,
+          ownerId: userId
+        }
+      });
+    } catch (error) {
+      const errorResData = error.data;
+      let message = "Sistem yöneticinize başvurunuz!";
+      message = errorResData.error.message;
+      if (errorResData.error.details) {
+        // message = errorResData.error.details[0].message;
+        message = "Sistem yöneticinize başvurunuz!";
+      }
+      console.log("ERRROR");
+
+      throw new Error(message);
+    }
   };
 };
 
@@ -375,4 +370,8 @@ export const updateCalendar = (id, title, description, imageUrl) => {
       }
     });
   };
+};
+
+const GUID4 = () => {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 };
