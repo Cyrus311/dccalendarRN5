@@ -224,11 +224,7 @@ const DutyDetailScreen = props => {
                 description={itemData.item.calendar.description}
                 onSelect={() => {}}
                 user={itemData.item.user}
-              >
-                <Text style={styles.text}>
-                  Seçili gün için atanmış nöbetçi bulunamadı.
-                </Text>
-              </DutyItem>
+              ></DutyItem>
             )}
           />
         </View>

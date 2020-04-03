@@ -26,12 +26,16 @@ export const color = {
 };
 
 export default {
-  primary: "#016e8d",
+  primary: "#5e72e4",
+  backColor: "#f7fafc",
+  textColor: "#5e72e4",
+  whiteText: "#ffffff",
+  // primary: "#016e8d",
   accent: "#799da9",
   gradientStart: "#79c962",
   gradientEnd: "#3499b5",
-  backColor: "#016e8d",
-  textColor: "#ffffff",
+  // backColor: "#016e8d",
+  // textColor: "#ffffff",
   coolGreen: "#79c962",
   coolBlue: "#3499b5",
   indigo: "#5603ad",

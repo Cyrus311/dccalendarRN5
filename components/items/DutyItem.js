@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 4,
     paddingHorizontal: 4,
-    color: Colors.textColor
+    color: Colors.whiteText
   },
   location: {
     backgroundColor: "transparent",
