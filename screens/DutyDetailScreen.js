@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 
 import DutyItem from "../components/items/DutyItem";
-import * as cartActions from "../store/actions/cart";
 import * as calendarActions from "../store/actions/calendar";
 import Colors from "../constants/Colors";
 

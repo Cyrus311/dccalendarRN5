@@ -169,7 +169,7 @@ export const screenOptions = navData => {
           title="Leave"
           iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
           onPress={() => {
-            navData.navigation.navigate("Orders");
+            navData.navigation.navigate("Leaves");
           }}
         />
         {/* <Item

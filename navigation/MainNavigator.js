@@ -22,9 +22,6 @@ import DutyOverviewScreen, {
 import DutyDetailScreen, {
   screenOptions as dutyDetailScreenOptions
 } from "../screens/DutyDetailScreen";
-import CartScreen, {
-  screenOptions as cartScreenOptions
-} from "../screens/CartScreen";
 import LeavesScreen, {
   screenOptions as leavesScreenOptions,
   screenOptions2 as leavesScreenOptions2
@@ -58,51 +55,46 @@ const defaultNavOptions = {
   headerTintColor: Platform.OS === "android" ? "white" : Colors.primary
 };
 
-const ProductsStackNavigator = createStackNavigator();
+const DutyStackNavigator = createStackNavigator();
 
-export const ProductsNavigator = () => {
+export const DutyNavigator = () => {
   return (
-    <ProductsStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <ProductsStackNavigator.Screen
+    <DutyStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <DutyStackNavigator.Screen
         name="DutyOverview"
         component={DutyOverviewScreen}
         options={dutyOverviewScreenOptions}
       />
-      <ProductsStackNavigator.Screen
+      <DutyStackNavigator.Screen
         name="DutyDetail"
         component={DutyDetailScreen}
         options={dutyDetailScreenOptions}
       />
-      <ProductsStackNavigator.Screen
-        name="Cart"
-        component={CartScreen}
-        options={cartScreenOptions}
-      />
-      <ProductsStackNavigator.Screen
-        name="Orders"
+      <DutyStackNavigator.Screen
+        name="Leaves"
         component={LeavesScreen}
         options={leavesScreenOptions2}
       />
-      <ProductsStackNavigator.Screen
+      <DutyStackNavigator.Screen
         name="AddLeave"
         component={LeaveAddScreen}
         options={leaveAddScreenOptions}
       />
-    </ProductsStackNavigator.Navigator>
+    </DutyStackNavigator.Navigator>
   );
 };
 
-const OrdersStackNavigator = createStackNavigator();
+const LeaveStackNavigator = createStackNavigator();
 
-export const OrdersNavigator = () => {
+export const LeaveNavigator = () => {
   return (
-    <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <OrdersStackNavigator.Screen
-        name="Orders"
+    <LeaveStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <LeaveStackNavigator.Screen
+        name="Leaves"
         component={LeavesScreen}
         options={leavesScreenOptions}
       />
-    </OrdersStackNavigator.Navigator>
+    </LeaveStackNavigator.Navigator>
   );
 };
 
@@ -125,9 +117,9 @@ export const AdminNavigator = () => {
   );
 };
 
-const ShopDrawerNavigator = createDrawerNavigator();
+const MainDrawerNavigator = createDrawerNavigator();
 
-export const ShopNavigator = () => {
+export const MainNavigator = () => {
   const user = useSelector(state => state.user.user);
   const dispatch = useDispatch();
 
@@ -136,7 +128,7 @@ export const ShopNavigator = () => {
   }, [dispatch]);
 
   return (
-    <ShopDrawerNavigator.Navigator
+    <MainDrawerNavigator.Navigator
       drawerContent={props => {
         return (
           <View style={{ flex: 1, padding: 20 }}>
@@ -175,9 +167,9 @@ export const ShopNavigator = () => {
         activeTintColor: Colors.primary
       }}
     >
-      <ShopDrawerNavigator.Screen
+      <MainDrawerNavigator.Screen
         name="Nöbetlerim"
-        component={ProductsNavigator}
+        component={DutyNavigator}
         options={{
           // eslint-disable-next-line react/display-name
           drawerIcon: props => (
@@ -189,9 +181,9 @@ export const ShopNavigator = () => {
           )
         }}
       />
-      <ShopDrawerNavigator.Screen
+      <MainDrawerNavigator.Screen
         name="İzinlerim"
-        component={OrdersNavigator}
+        component={LeaveNavigator}
         options={{
           // eslint-disable-next-line react/display-name
           drawerIcon: props => (
@@ -203,7 +195,7 @@ export const ShopNavigator = () => {
           )
         }}
       />
-      <ShopDrawerNavigator.Screen
+      <MainDrawerNavigator.Screen
         name="Ayarlar"
         component={AdminNavigator}
         options={{
@@ -217,7 +209,7 @@ export const ShopNavigator = () => {
           )
         }}
       />
-    </ShopDrawerNavigator.Navigator>
+    </MainDrawerNavigator.Navigator>
   );
 };
 

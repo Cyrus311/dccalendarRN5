@@ -13,7 +13,6 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import HeaderButton from "../components/UI/HeaderButton";
 import LeaveItem from "../components/items/LeaveItem";
-import * as ordersActions from "../store/actions/orders";
 import Colors from "../constants/Colors";
 
 const LeavesScreen = props => {
@@ -22,12 +21,12 @@ const LeavesScreen = props => {
   const duty = useSelector(state => state.calendars.noDutyCalendars);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setIsLoading(true);
-    dispatch(ordersActions.fetchOrders()).then(() => {
-      setIsLoading(false);
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   dispatch(ordersActions.fetchOrders()).then(() => {
+  //     setIsLoading(false);
+  //   });
+  // }, [dispatch]);
 
   if (isLoading) {
     return (

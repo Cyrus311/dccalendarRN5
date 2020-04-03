@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { ShopNavigator, AuthNavigator } from "./ShopNavigator";
+import { MainNavigator, AuthNavigator } from "./MainNavigator";
 import StartupScreen from "../screens/StartupScreen";
 
 const AppNavigator = props => {
@@ -13,7 +13,7 @@ const AppNavigator = props => {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {isAuth && <ShopNavigator />}
+        {isAuth && <MainNavigator />}
         {!isAuth && didTryAutoLogin && <AuthNavigator />}
         {!isAuth && !didTryAutoLogin && <StartupScreen />}
       </NavigationContainer>
