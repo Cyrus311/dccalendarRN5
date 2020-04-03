@@ -167,9 +167,11 @@ export const screenOptions = navData => {
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Leave"
-          iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
+          iconName={Platform.OS === "android" ? "md-contacts" : "ios-contacts"}
           onPress={() => {
-            navData.navigation.navigate("Orders");
+            navData.navigation.navigate("DutyDetail", {
+              calendar: JSON.stringify(moment())
+            });
           }}
         />
         {/* <Item
