@@ -32,7 +32,7 @@ const LeavesScreen = props => {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.textColor} />
       </View>
     );
   }
@@ -46,22 +46,24 @@ const LeavesScreen = props => {
   }
 
   return (
-    <FlatList
-      data={duty}
-      keyExtractor={item => item.id}
-      renderItem={itemData => (
-        <LeaveItem
-          date={moment(itemData.item.calendar.date).format("DD MMM")}
-          date2={moment(itemData.item.calendar.date2).format("DD MMM")}
-          status={itemData.item.calendar.status}
-          type={itemData.item.calendar.type}
-          description={itemData.item.calendar.description}
-          onSelect={() => {}}
-          onRemove={() => {}}
-          // deletable
-        ></LeaveItem>
-      )}
-    />
+    <View style={styles.screen}>
+      <FlatList
+        data={duty}
+        keyExtractor={item => item.id}
+        renderItem={itemData => (
+          <LeaveItem
+            date={moment(itemData.item.calendar.date).format("DD MMM")}
+            date2={moment(itemData.item.calendar.date2).format("DD MMM")}
+            status={itemData.item.calendar.status}
+            type={itemData.item.calendar.type}
+            description={itemData.item.calendar.description}
+            onSelect={() => {}}
+            onRemove={() => {}}
+            // deletable
+          ></LeaveItem>
+        )}
+      />
+    </View>
   );
 };
 
@@ -106,7 +108,13 @@ export const screenOptions2 = navData => {
 };
 
 const styles = StyleSheet.create({
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" }
+  screen: { flex: 1, backgroundColor: Colors.backColor },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.backColor
+  }
 });
 
 export default LeavesScreen;

@@ -32,3 +32,5 @@ export const fetchUser = () => {
     }
   };
 };
+
+export const updateUser = () => {};

@@ -16,9 +16,10 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import FlatButton from "../components/UI/FlatButton";
 import { titleEnum } from "../constants/titleEnum";
-import * as calendarActions from "../store/actions/calendar";
+import * as userActions from "../store/actions/user";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../components/UI/HeaderButton";
+import Colors from "../constants/Colors";
 
 export default function SettingScreen(props) {
   const [error, setError] = useState();
@@ -29,7 +30,7 @@ export default function SettingScreen(props) {
   const handleFromSubmit = async values => {
     try {
       setError(null);
-      await dispatch(calendarActions.createCalendar(values));
+      await dispatch(userActions.updateUser(values));
     } catch (error) {
       setError(error.message);
     }
@@ -46,10 +47,7 @@ export default function SettingScreen(props) {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            description: "",
-            type: 2,
-            date: new Date(),
-            date2: new Date()
+            title: 2
           }}
           validationSchema={reviewSchema}
           onSubmit={(values, actions) => {
@@ -61,22 +59,47 @@ export default function SettingScreen(props) {
             <View>
               <Picker
                 // passing value directly from formik
-                selectedValue={props.values.type}
+                selectedValue={props.values.title}
                 // changing value in formik
                 onValueChange={itemValue =>
-                  props.setFieldValue("type", itemValue)
+                  props.setFieldValue("title", itemValue)
                 }
               >
                 <Picker.Item
                   label="Ünvan Seçiniz"
-                  value={props.initialValues.type}
+                  value={props.initialValues.title}
                   key={0}
                 />
-                <Picker.Item label={titleEnum[1]} value={1} key={1} />
-                <Picker.Item label={titleEnum[2]} value={2} key={2} />
-                <Picker.Item label={titleEnum[3]} value={3} key={3} />
-                <Picker.Item label={titleEnum[4]} value={4} key={4} />
-                <Picker.Item label={titleEnum[5]} value={4} key={5} />
+                <Picker.Item
+                  color={Colors.textColor}
+                  label={titleEnum[1]}
+                  value={1}
+                  key={1}
+                />
+                <Picker.Item
+                  color={Colors.textColor}
+                  label={titleEnum[2]}
+                  value={2}
+                  key={2}
+                />
+                <Picker.Item
+                  color={Colors.textColor}
+                  label={titleEnum[3]}
+                  value={3}
+                  key={3}
+                />
+                <Picker.Item
+                  color={Colors.textColor}
+                  label={titleEnum[4]}
+                  value={4}
+                  key={4}
+                />
+                <Picker.Item
+                  color={Colors.textColor}
+                  label={titleEnum[5]}
+                  value={4}
+                  key={5}
+                />
               </Picker>
 
               <FlatButton onPress={props.handleSubmit} text="kaydet" />
@@ -91,7 +114,8 @@ export default function SettingScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    paddingHorizontal: 20,
+    backgroundColor: Colors.backColor
   },
   input: {
     borderWidth: 1,

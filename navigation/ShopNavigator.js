@@ -29,9 +29,6 @@ import LeavesScreen, {
   screenOptions as leavesScreenOptions,
   screenOptions2 as leavesScreenOptions2
 } from "../screens/LeavesScreen";
-import UserProductScreen, {
-  screenOptions as userProductScreenOptions
-} from "../screens/UserProductScreen";
 import LeaveAddScreen, {
   screenOptions as leaveAddScreenOptions
 } from "../screens/LeaveAddScreen";

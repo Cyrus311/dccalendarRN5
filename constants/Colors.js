@@ -33,5 +33,8 @@ export default {
   backColor: "#016e8d",
   textColor: "#ffffff",
   coolGreen: "#79c962",
-  coolBlue: "#3499b5"
+  coolBlue: "#3499b5",
+  indigo: "#5603ad",
+  light: "#ced4da",
+  coolCrimson: "#f01d71"
 };

@@ -165,19 +165,19 @@ const AuthScreen = props => {
               email
               autoCapitalize="none"
               autoCorrect={false}
-              errorText="Please enter a valid email address."
+              errorText="E-Mail adresi hatalı."
               onInputChange={inputChangeHandler}
               initialValue=""
             />
             {isSignup && (
               <Input
                 id="fullName"
-                label="Name"
+                label="Ad Soyad"
                 keyboardType="default"
                 required
                 minLength={5}
                 autoCapitalize="words"
-                errorText="Please enter a name."
+                errorText="Lütfen tam adınızı giriniz."
                 onInputChange={inputChangeHandler}
                 initialValue=""
               />
@@ -185,13 +185,13 @@ const AuthScreen = props => {
             {tryEmailExist && (
               <Input
                 id="password"
-                label="Password"
+                label="Şifre"
                 keyboardType="default"
                 secureTextEntry
                 required
                 minLength={8}
                 autoCapitalize="none"
-                errorText="Please enter a valid password. Min. 8 characters."
+                errorText="Lütfen geçerli bir şifre giriniz. Minimum 8 karakter."
                 onInputChange={inputChangeHandler}
                 initialValue=""
               />
