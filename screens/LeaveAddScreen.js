@@ -74,6 +74,7 @@ export default function LeaveAddScreen(props) {
 
   const handleConfirm = date => {
     setDatetime(date);
+    setDatetimeEnd(date);
     hideDatePicker();
   };
 
@@ -131,11 +132,12 @@ export default function LeaveAddScreen(props) {
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     minimumDate={new Date(moment())}
-                    date={props.values.date}
+                    date={datetime}
                     mode="date"
                     locale="tr"
                     onConfirm={date => {
                       props.setFieldValue("date", date);
+                      props.setFieldValue("date2", date);
                       handleConfirm(date);
                       hideDatePicker();
                     }}
@@ -161,7 +163,7 @@ export default function LeaveAddScreen(props) {
                   <DateTimePickerModal
                     isVisible={isDatePickerVisibleEnd}
                     minimumDate={props.values.date}
-                    date={props.values.date2}
+                    date={datetimeEnd}
                     mode="date"
                     locale="tr"
                     onConfirm={date => {
