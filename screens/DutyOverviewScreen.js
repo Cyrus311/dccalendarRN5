@@ -167,13 +167,20 @@ export const screenOptions = navData => {
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Leave"
+          iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
+          onPress={() => {
+            navData.navigation.navigate("Orders");
+          }}
+        />
+        {/* <Item
+          title="Leave"
           iconName={Platform.OS === "android" ? "md-contacts" : "ios-contacts"}
           onPress={() => {
             navData.navigation.navigate("DutyDetail", {
               calendar: JSON.stringify(moment())
             });
           }}
-        />
+        /> */}
         {/* <Item
           title="Cart2"
           iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
