@@ -1,10 +1,10 @@
 import request from "../data/apiCentral";
 
-const getUsers = filterData => {
+const getUsers = (filterData) => {
   return request({
     url: "/user-groups",
     method: "GET",
-    params: filterData
+    params: filterData,
   });
 };
 
@@ -13,20 +13,29 @@ const userMe = () => {
   return request({
     url: `/users/me`,
     method: "GET",
-    data: null
+    data: null,
   });
 };
 
-const userInfo = id => {
+const userInfo = (id) => {
   return request({
     url: `/users/${id}`,
     method: "GET",
-    data: null
+    data: null,
+  });
+};
+
+const updateUser = (id, data) => {
+  return request({
+    url: `/users/${id}`,
+    method: "PATCH",
+    data: data,
   });
 };
 
 export const userService = {
   getUsers,
   userMe,
-  userInfo
+  userInfo,
+  updateUser,
 };

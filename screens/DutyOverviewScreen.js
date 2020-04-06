@@ -6,24 +6,23 @@ import {
   Button,
   Platform,
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import moment from "moment";
 
 import DutyItem from "../components/items/DutyItem";
-import * as userActions from "../store/actions/user";
 import * as calendarActions from "../store/actions/calendar";
 import HeaderButton from "../components/UI/HeaderButton";
 import Colors from "../constants/Colors";
 
-const DutyOverviewScreen = props => {
+const DutyOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  const duty = useSelector(state => state.calendars.mountCalendars);
-  const user = useSelector(state => state.user.user);
+  const duty = useSelector((state) => state.calendars.mountCalendars);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   const loadDuty = useCallback(async () => {
@@ -34,21 +33,21 @@ const DutyOverviewScreen = props => {
         filter: {
           where: {
             groupId: {
-              like: user.groups ? user.groups[0].id : ""
-            }
+              like: user.groups ? user.groups[0].id : "",
+            },
           },
           include: [
             {
-              relation: "group"
+              relation: "group",
             },
             {
-              relation: "user"
+              relation: "user",
             },
             {
-              relation: "location"
-            }
-          ]
-        }
+              relation: "location",
+            },
+          ],
+        },
       };
       await dispatch(calendarActions.fetchCalendar(filterData));
     } catch (error) {
@@ -74,9 +73,9 @@ const DutyOverviewScreen = props => {
     });
   }, [dispatch, loadDuty]);
 
-  const selectItemHandler = calendar => {
+  const selectItemHandler = (calendar) => {
     props.navigation.navigate("DutyDetail", {
-      calendar: JSON.stringify(calendar)
+      calendar: JSON.stringify(calendar),
     });
   };
 
@@ -115,8 +114,8 @@ const DutyOverviewScreen = props => {
           onRefresh={loadDuty}
           refreshing={isRefreshing}
           data={duty}
-          keyExtractor={item => item.id}
-          renderItem={itemData => (
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
             <DutyItem
               date={itemData.item.calendar.readableDate}
               location={itemData.item.location}
@@ -124,22 +123,8 @@ const DutyOverviewScreen = props => {
               onSelect={() => {
                 selectItemHandler(itemData.item.calendar);
               }}
-            >
-              <Button
-                color={Colors.primary}
-                title="Detay"
-                onPress={() => {
-                  selectItemHandler(itemData.item.calendar);
-                }}
-              />
-              <Button
-                color={Colors.primary}
-                title="Takas"
-                onPress={() => {
-                  // dispatch(cartActions.addToCart(itemData.item.calendar.id));
-                }}
-              />
-            </DutyItem>
+              navigatable
+            ></DutyItem>
           )}
         />
       </View>
@@ -147,7 +132,7 @@ const DutyOverviewScreen = props => {
   );
 };
 
-export const screenOptions = navData => {
+export const screenOptions = (navData) => {
   return {
     headerTitle: "Nöbetlerim",
     // eslint-disable-next-line react/display-name
@@ -166,30 +151,16 @@ export const screenOptions = navData => {
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
-          title="Leave"
+          title="DutyDetail"
           iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
           onPress={() => {
-            navData.navigation.navigate("Leaves");
-          }}
-        />
-        {/* <Item
-          title="Leave"
-          iconName={Platform.OS === "android" ? "md-contacts" : "ios-contacts"}
-          onPress={() => {
             navData.navigation.navigate("DutyDetail", {
-              calendar: JSON.stringify(moment())
+              calendar: JSON.stringify({ date: moment() }),
             });
           }}
-        /> */}
-        {/* <Item
-          title="Cart2"
-          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
-          onPress={() => {
-            navData.navigation.navigate("Cart");
-          }}
-        /> */}
+        />
       </HeaderButtons>
-    )
+    ),
   };
 };
 
@@ -199,7 +170,10 @@ const styles = StyleSheet.create({
   dutyListContainer: { height: "95%" },
   infoArea: {
     alignItems: "center",
-    height: "5%"
+    height: "5%",
+    borderWidth: 1,
+    borderColor: Colors.textColor,
+    backgroundColor: Colors.accent,
   },
   text: {
     backgroundColor: "transparent",
@@ -207,8 +181,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 6,
     paddingHorizontal: 4,
-    color: Colors.textColor
-  }
+    color: Colors.textColor,
+  },
 });
 
 export default DutyOverviewScreen;

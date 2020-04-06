@@ -9,7 +9,7 @@ export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
 export const SET_CALENDARS = "SET_CALENDARS";
 export const DAILY_CALENDARS = "DAILY_CALENDARS";
 
-export const fetchCalendar = filterData => {
+export const fetchCalendar = (filterData) => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
     try {
@@ -77,7 +77,7 @@ export const fetchCalendar = filterData => {
                 resData[key].user.createdDate,
                 resData[key].user.updatedDate
               )
-            : {}
+            : {},
         });
       }
 
@@ -92,21 +92,23 @@ export const fetchCalendar = filterData => {
           }
           return 0;
         }),
-        userCalendars: loadedCalendars.filter(duty => duty.user.id === userId),
+        userCalendars: loadedCalendars.filter(
+          (duty) => duty.user.id === userId
+        ),
         mountCalendars: loadedCalendars.filter(
-          duty =>
+          (duty) =>
             duty.user.id === userId &&
             duty.calendar.type === 1 &&
             moment(duty.calendar.date).format("Y-MM") ===
               moment().format("Y-MM")
         ),
         noDutyCalendars: loadedCalendars.filter(
-          duty =>
+          (duty) =>
             duty.user.id === userId &&
             duty.calendar.type !== 0 &&
             duty.calendar.type !== 1
         ),
-        dailyCalendars: []
+        dailyCalendars: [],
       });
     } catch (error) {
       console.log("error", error);
@@ -115,7 +117,7 @@ export const fetchCalendar = filterData => {
   };
 };
 
-export const dailyCalendar = date => {
+export const dailyCalendar = (date) => {
   return async (dispatch, getState) => {
     try {
       const groupId = getState().user.user.groups[0].id;
@@ -123,21 +125,21 @@ export const dailyCalendar = date => {
         filter: {
           where: {
             groupId: {
-              like: groupId
-            }
+              like: groupId,
+            },
           },
           include: [
             {
-              relation: "group"
+              relation: "group",
             },
             {
-              relation: "user"
+              relation: "user",
             },
             {
-              relation: "location"
-            }
-          ]
-        }
+              relation: "location",
+            },
+          ],
+        },
       };
 
       const response = await calendarService.getCalendars(filterData);
@@ -195,7 +197,7 @@ export const dailyCalendar = date => {
                 resData[key].user.createdDate,
                 resData[key].user.updatedDate
               )
-            : {}
+            : {},
         });
       }
 
@@ -203,7 +205,7 @@ export const dailyCalendar = date => {
         type: DAILY_CALENDARS,
         dailyCalendars: loadedCalendars
           .filter(
-            duty =>
+            (duty) =>
               duty.calendar.type === 1 &&
               moment(duty.calendar.date).format("Y-MM-DD") ===
                 moment(date).format("Y-MM-DD")
@@ -216,7 +218,7 @@ export const dailyCalendar = date => {
               return -1;
             }
             return 0;
-          })
+          }),
       });
     } catch (error) {
       console.log("error", error);
@@ -225,7 +227,7 @@ export const dailyCalendar = date => {
   };
 };
 
-export const deleteCalendar = calendarId => {
+export const deleteCalendar = (calendarId) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     const response = await fetch(
@@ -233,8 +235,8 @@ export const deleteCalendar = calendarId => {
       {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
 
@@ -259,7 +261,7 @@ export const deleteCalendar = calendarId => {
   };
 };
 
-export const createCalendar = calendar => {
+export const createCalendar = (calendar) => {
   return async (dispatch, getState) => {
     try {
       // const token = getState().auth.token;
@@ -290,12 +292,9 @@ export const createCalendar = calendar => {
           date: date.format("YYYY-MM-DD[T]12:00:00.000[Z]"),
           description: calendar.description,
           type: calendar.type,
-          calendarGroupId: guid
+          calendarGroupId: guid,
         });
       }
-
-      console.log("CREATE CALENDAR", leaveDays);
-
       // return;
 
       // const reminder = {
@@ -308,8 +307,6 @@ export const createCalendar = calendar => {
 
       const response = await calendarService.createCalendarBulk(leaveDays);
 
-      console.log("-----RESDATA-CREATECALENDAR-----", response);
-
       return;
 
       dispatch({
@@ -320,8 +317,8 @@ export const createCalendar = calendar => {
           description: description,
           imageUrl,
           price,
-          ownerId: userId
-        }
+          ownerId: userId,
+        },
       });
     } catch (error) {
       const errorResData = error.data;
@@ -331,8 +328,6 @@ export const createCalendar = calendar => {
         // message = errorResData.error.details[0].message;
         message = "Sistem yöneticinize başvurunuz!";
       }
-      console.log("ERRROR");
-
       throw new Error(message);
     }
   };
@@ -346,13 +341,13 @@ export const updateCalendar = (id, title, description, imageUrl) => {
       {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           title,
           description,
-          imageUrl
-        })
+          imageUrl,
+        }),
       }
     );
 
@@ -366,8 +361,8 @@ export const updateCalendar = (id, title, description, imageUrl) => {
       calendarData: {
         title: title,
         description: description,
-        imageUrl
-      }
+        imageUrl,
+      },
     });
   };
 };

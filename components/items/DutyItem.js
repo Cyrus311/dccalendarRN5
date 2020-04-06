@@ -5,16 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableNativeFeedback,
-  Platform
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
+import ArrowIcon from "../UI/ArrowIcon";
 
 import Card from "../UI/Card";
 import Colors, { color } from "../../constants/Colors";
 import { typeEnum } from "../../constants/typeEnum";
 
-const DutyItem = props => {
+const DutyItem = (props) => {
   let TouchableComponent = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -42,47 +42,29 @@ const DutyItem = props => {
                 </LinearGradient>
               )}
             </View>
+
             {props.user ? (
               <View style={styles.wideLocationContainer}>
                 <Text style={styles.location}>
                   {props.type ? typeEnum[props.type] : props.location.name}
                 </Text>
-                <Text style={styles.description}>{props.user.fullName}</Text>
-                {!props.deletable && (
-                  <View style={styles.actions}>{props.children}</View>
-                )}
+                <Text style={styles.user}>{props.user.fullName}</Text>
+                <Text style={styles.description}>{props.description}</Text>
               </View>
             ) : (
-              <View
-                style={
-                  props.deletable
-                    ? styles.deletableContainer
-                    : styles.locationContainer
-                }
-              >
+              <View style={styles.locationContainer}>
                 <Text style={styles.location}>
                   {props.type ? typeEnum[props.type] : props.location.name}
                 </Text>
                 <Text style={styles.description}>{props.description}</Text>
-                {!props.deletable && (
-                  <View style={styles.actions}>{props.children}</View>
-                )}
               </View>
             )}
-            {props.deletable && (
-              <View style={styles.iconContainer}>
-                <TouchableOpacity
-                  onPress={props.onRemove}
-                  style={styles.deleteButton}
-                >
-                  <Ionicons
-                    name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
-                    size={27}
-                    color="red"
-                  />
-                </TouchableOpacity>
-              </View>
+
+            {!!props.children && (
+              <View style={styles.buttonContainer}>{props.children}</View>
             )}
+
+            {props.navigatable && <ArrowIcon />}
           </View>
         </TouchableComponent>
       </View>
@@ -93,11 +75,11 @@ const DutyItem = props => {
 const styles = StyleSheet.create({
   duty: {
     height: 90,
-    margin: 10
+    margin: 10,
   },
   touchable: {
     borderRadius: 10,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   dutyContainer: {
     width: "100%",
@@ -105,24 +87,20 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     overflow: "hidden",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   gradientContainer: {
     flex: 1,
     // alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   locationContainer: {
     width: "80%",
-    height: "100%"
+    height: "100%",
   },
   wideLocationContainer: {
     width: "90%",
-    height: "100%"
-  },
-  deletableContainer: {
-    width: "60%",
-    height: "100%"
+    height: "100%",
   },
   date: {
     backgroundColor: "transparent",
@@ -130,51 +108,54 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 4,
     paddingHorizontal: 4,
-    color: Colors.dateText
+    color: Colors.dateText,
   },
   location: {
     backgroundColor: "transparent",
     fontFamily: "open-sans-bold",
-    fontSize: 18,
+    fontSize: 16,
     marginVertical: 4,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
+  },
+  user: {
+    backgroundColor: "transparent",
+    fontFamily: "open-sans",
+    fontSize: 14,
+    color: "#888",
+    paddingHorizontal: 4,
   },
   description: {
     fontFamily: "open-sans",
     fontSize: 12,
     color: "#888",
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "35%",
-    paddingHorizontal: 10
+  buttonContainer: {
+    width: "20%",
+    height: "100%",
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   cartItem: {
     padding: 10,
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   iconContainer: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   locationColorContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
-  deleteButton: {}
 });
 
 export default DutyItem;

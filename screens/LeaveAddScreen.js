@@ -9,7 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
-  Platform
+  Platform,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
@@ -39,21 +39,21 @@ export default function LeaveAddScreen(props) {
       .test(
         "is-endDate-bigger",
         "Başlangıç tarihi Bitiş tarihinden büyük olamaz!",
-        val => {
+        (val) => {
           return moment(val).isSameOrAfter(datetime, "day");
         }
       )
       .test(
         "is-days-moreThen30",
         "30 günden fazla izin talep edilemez!",
-        val => {
+        (val) => {
           return moment(val).diff(datetime, "days") <= 30;
         }
       ),
     description: yup
       .string()
       .required("Zorunlu Alan!")
-      .min(8, "En az 8 karakter!")
+      .min(8, "En az 8 karakter!"),
   });
 
   const showDatePicker = () => {
@@ -72,22 +72,22 @@ export default function LeaveAddScreen(props) {
     setDatePickerVisibilityEnd(false);
   };
 
-  const handleConfirm = date => {
+  const handleConfirm = (date) => {
     setDatetime(date);
     setDatetimeEnd(date);
     hideDatePicker();
   };
 
-  const handleConfirmEnd = date => {
+  const handleConfirmEnd = (date) => {
     setDatetimeEnd(date);
     hideDatePicker();
   };
 
-  const handleFromSubmit = async values => {
+  const handleFormSubmit = async (values) => {
     try {
       setError(null);
       await dispatch(calendarActions.createCalendar(values));
-      props.navigation.navigate("DutyOverview");
+      props.navigation.navigate("Leaves");
     } catch (error) {
       setError(error.message);
     }
@@ -107,15 +107,15 @@ export default function LeaveAddScreen(props) {
             description: "",
             type: 2,
             date: new Date(),
-            date2: new Date()
+            date2: new Date(),
           }}
           validationSchema={reviewSchema}
           onSubmit={(values, actions) => {
             actions.resetForm();
-            handleFromSubmit(values);
+            handleFormSubmit(values);
           }}
         >
-          {props => (
+          {(props) => (
             <View>
               <TouchableWithoutFeedback onPress={showDatePicker}>
                 <View style={styles.inputContainer}>
@@ -135,7 +135,7 @@ export default function LeaveAddScreen(props) {
                     date={datetime}
                     mode="date"
                     locale="tr"
-                    onConfirm={date => {
+                    onConfirm={(date) => {
                       props.setFieldValue("date", date);
                       props.setFieldValue("date2", date);
                       handleConfirm(date);
@@ -166,7 +166,7 @@ export default function LeaveAddScreen(props) {
                     date={datetimeEnd}
                     mode="date"
                     locale="tr"
-                    onConfirm={date => {
+                    onConfirm={(date) => {
                       props.setFieldValue("date2", date);
                       handleConfirmEnd(date);
                       hideDatePickerEnd();
@@ -199,7 +199,7 @@ export default function LeaveAddScreen(props) {
                 // passing value directly from formik
                 selectedValue={props.values.type}
                 // changing value in formik
-                onValueChange={itemValue =>
+                onValueChange={(itemValue) =>
                   props.setFieldValue("type", itemValue)
                 }
               >
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     textAlignVertical: "center",
-    backgroundColor: Colors.backColor
+    backgroundColor: Colors.backColor,
   },
   inputContainer: {
     flexDirection: "row",
@@ -263,26 +263,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.textColor,
     padding: 10,
-    borderRadius: 6
+    borderRadius: 6,
   },
   Icon: { paddingHorizontal: 10, color: Colors.textColor },
   picker: { color: Colors.textColor },
   input: {
     flex: 1,
     fontSize: 18,
-    color: Colors.textColor
+    color: Colors.textColor,
   },
   errorText: {
     color: Colors.coolCrimson,
     fontWeight: "bold",
     marginBottom: 10,
     marginTop: 6,
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 });
 
-export const screenOptions = navData => {
+export const screenOptions = (navData) => {
   return {
-    headerTitle: "İzin Ekle"
+    headerTitle: "İzin Ekle",
   };
 };

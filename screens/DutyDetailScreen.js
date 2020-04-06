@@ -6,7 +6,7 @@ import {
   Button,
   ActivityIndicator,
   StyleSheet,
-  TouchableHighlight
+  TouchableHighlight,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +16,7 @@ import DutyItem from "../components/items/DutyItem";
 import * as calendarActions from "../store/actions/calendar";
 import Colors from "../constants/Colors";
 
-const DutyDetailScreen = props => {
+const DutyDetailScreen = (props) => {
   const dateObj = new Date();
   const month = dateObj.getUTCMonth() + 1;
   const year = dateObj.getUTCFullYear();
@@ -26,7 +26,7 @@ const DutyDetailScreen = props => {
   const [error, setError] = useState();
   const [listOfDate, setListOfDate] = useState(plistOfDate);
   const [activeIndex, updActiveIndex] = useState(-1);
-  const duty = useSelector(state => state.calendars.dailyCalendars);
+  const duty = useSelector((state) => state.calendars.dailyCalendars);
   const [calendar, setCalendar] = useState({});
   const dispatch = useDispatch();
   const calendarObj = JSON.parse(props.route.params.calendar);
@@ -37,7 +37,7 @@ const DutyDetailScreen = props => {
   const getItemLayout = (data, index) => ({
     length: 85,
     offset: 85 * index,
-    index
+    index,
   });
 
   const _onPress = ({ item }) => {
@@ -46,12 +46,11 @@ const DutyDetailScreen = props => {
   };
 
   const loadDuty = useCallback(
-    async date => {
+    async (date) => {
       setError(null);
       setIsRefreshing(true);
       try {
         if (passedActiveItem) {
-          console.log("success");
           updActiveIndex(+passedActiveItem);
           passedActiveItem = null;
         }
@@ -79,7 +78,6 @@ const DutyDetailScreen = props => {
 
   useEffect(() => {
     if (calendarId !== "") {
-      console.log("setCalendar");
       setCalendar(duty);
     }
   }, [calendarId]);
@@ -100,8 +98,8 @@ const DutyDetailScreen = props => {
         style={[
           styles.viewArea,
           {
-            backgroundColor: activeIndex === item.id ? "#79c962" : "#ffffff"
-          }
+            backgroundColor: activeIndex === item.id ? "#79c962" : "#ffffff",
+          },
         ]}
       >
         <View>
@@ -109,8 +107,8 @@ const DutyDetailScreen = props => {
             style={[
               styles.textArea,
               {
-                color: activeIndex === item.id ? "#fff" : "#ced4cc"
-              }
+                color: activeIndex === item.id ? "#fff" : "#ced4cc",
+              },
             ]}
           >
             {item.day}
@@ -119,8 +117,8 @@ const DutyDetailScreen = props => {
             style={[
               styles.smallTextArea,
               {
-                color: activeIndex === item.id ? "#fff" : "#ced4cc"
-              }
+                color: activeIndex === item.id ? "#fff" : "#ced4cc",
+              },
             ]}
           >
             {item.shortName}
@@ -168,7 +166,7 @@ const DutyDetailScreen = props => {
       <View style={styles.daysContainer}>
         <FlatList
           initialScrollIndex={activeIndex - 2}
-          renderItem={item => renderItem(item)}
+          renderItem={(item) => renderItem(item)}
           // ref={ref => {
           //   this.flatListRef = ref;
           // }}
@@ -184,7 +182,7 @@ const DutyDetailScreen = props => {
             justifyContent: "center",
             alignSelf: "center",
             alignItems: "flex-end",
-            width: "5%"
+            width: "5%",
           }}
         >
           <Ionicons
@@ -215,8 +213,8 @@ const DutyDetailScreen = props => {
             onRefresh={loadDuty.bind(this, selectedDate)}
             refreshing={isRefreshing}
             data={duty}
-            keyExtractor={item => item.id}
-            renderItem={itemData => (
+            keyExtractor={(item) => item.id}
+            renderItem={(itemData) => (
               <DutyItem
                 date={itemData.item.calendar.readableDate}
                 location={itemData.item.location}
@@ -232,32 +230,32 @@ const DutyDetailScreen = props => {
   );
 };
 
-export const screenOptions = navData => {
+export const screenOptions = (navData) => {
   return {
     // headerTitle: navData.route.params.productTitle
-    headerTitle: "Nöbetçi Listesi"
+    headerTitle: "Nöbetçi Listesi",
   };
 };
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Colors.backColor
+    backgroundColor: Colors.backColor,
   },
   centered: {
     height: "85%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   daysContainer: {
     height: "15%",
     width: "100%",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   dutyContainer: { height: "85%" },
   noDutyContainer: {
     flex: 1,
-    paddingTop: 15
+    paddingTop: 15,
   },
   safeArea: {
     backgroundColor: "white",
@@ -266,7 +264,7 @@ const styles = StyleSheet.create({
     paddingLeft: "2%",
     paddingRight: "2%",
     // maxWidth: 340,
-    alignSelf: "center"
+    alignSelf: "center",
     // justifyContent: 'center',
   },
   viewArea: {
@@ -280,21 +278,21 @@ const styles = StyleSheet.create({
     //paddingBottom: 20,
     borderWidth: 0.5,
     borderColor: "#79c962",
-    borderRadius: 20
+    borderRadius: 20,
   },
   textArea: {
     textAlign: "center",
     fontWeight: "700",
-    fontSize: 20
+    fontSize: 20,
   },
   smallTextArea: {
     marginTop: 10,
     textAlign: "center",
     fontWeight: "400",
-    fontSize: 18
+    fontSize: 18,
   },
   icon: {
-    alignSelf: "center"
+    alignSelf: "center",
   },
   text: {
     backgroundColor: "transparent",
@@ -302,8 +300,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 6,
     paddingHorizontal: 4,
-    color: Colors.textColor
-  }
+    color: Colors.textColor,
+  },
 });
 
 const getDaysArray = (year, month) => {
@@ -315,7 +313,7 @@ const getDaysArray = (year, month) => {
     "Çar",
     "Per",
     "Cum",
-    "Cmt"
+    "Cmt",
   ]);
   const date = new Date(year, monthIndex, 1);
   const result = [];
@@ -325,7 +323,7 @@ const getDaysArray = (year, month) => {
         id: Number(date.getDate()),
         day: date.getDate(),
         shortName: names[date.getDay()],
-        date: moment(date)
+        date: moment(date),
       }
       // `${date.getDate()}-${names[date.getDay()]}`
     );

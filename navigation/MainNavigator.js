@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
   createDrawerNavigator,
-  DrawerItemList
+  DrawerItemList,
 } from "@react-navigation/drawer";
 import {
   Platform,
@@ -12,28 +12,27 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  Text
+  Text,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import DutyOverviewScreen, {
-  screenOptions as dutyOverviewScreenOptions
+  screenOptions as dutyOverviewScreenOptions,
 } from "../screens/DutyOverviewScreen";
 import DutyDetailScreen, {
-  screenOptions as dutyDetailScreenOptions
+  screenOptions as dutyDetailScreenOptions,
 } from "../screens/DutyDetailScreen";
 import LeavesScreen, {
   screenOptions as leavesScreenOptions,
-  screenOptions2 as leavesScreenOptions2
 } from "../screens/LeavesScreen";
 import LeaveAddScreen, {
-  screenOptions as leaveAddScreenOptions
+  screenOptions as leaveAddScreenOptions,
 } from "../screens/LeaveAddScreen";
 import AuthScreen, {
-  screenOptions as authScreenOptions
+  screenOptions as authScreenOptions,
 } from "../screens/AuthScreen";
 import SettingScreen, {
-  screenOptions as settingScreenOptions
+  screenOptions as settingScreenOptions,
 } from "../screens/SettingScreen";
 
 import Colors from "../constants/Colors";
@@ -44,15 +43,15 @@ import TitleText from "../components/UI/TitleText";
 
 const defaultNavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === "android" ? Colors.primary : ""
+    backgroundColor: Platform.OS === "android" ? Colors.primary : "",
   },
   headerTitleStyle: {
-    fontFamily: "open-sans-bold"
+    fontFamily: "open-sans-bold",
   },
   headerBackTitleStyle: {
-    fontFamily: "open-sans"
+    fontFamily: "open-sans",
   },
-  headerTintColor: Platform.OS === "android" ? "white" : Colors.primary
+  headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
 };
 
 const DutyStackNavigator = createStackNavigator();
@@ -70,16 +69,6 @@ export const DutyNavigator = () => {
         component={DutyDetailScreen}
         options={dutyDetailScreenOptions}
       />
-      <DutyStackNavigator.Screen
-        name="Leaves"
-        component={LeavesScreen}
-        options={leavesScreenOptions2}
-      />
-      <DutyStackNavigator.Screen
-        name="AddLeave"
-        component={LeaveAddScreen}
-        options={leaveAddScreenOptions}
-      />
     </DutyStackNavigator.Navigator>
   );
 };
@@ -93,6 +82,11 @@ export const LeaveNavigator = () => {
         name="Leaves"
         component={LeavesScreen}
         options={leavesScreenOptions}
+      />
+      <LeaveStackNavigator.Screen
+        name="AddLeave"
+        component={LeaveAddScreen}
+        options={leaveAddScreenOptions}
       />
     </LeaveStackNavigator.Navigator>
   );
@@ -108,11 +102,6 @@ export const AdminNavigator = () => {
         component={SettingScreen}
         options={settingScreenOptions}
       />
-      {/* <AdminStackNavigator.Screen
-        name="EditProduct"
-        component={LeaveAddScreen}
-        options={leaveAddScreenOptions}
-      /> */}
     </AdminStackNavigator.Navigator>
   );
 };
@@ -120,7 +109,7 @@ export const AdminNavigator = () => {
 const MainDrawerNavigator = createDrawerNavigator();
 
 export const MainNavigator = () => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -129,7 +118,7 @@ export const MainNavigator = () => {
 
   return (
     <MainDrawerNavigator.Navigator
-      drawerContent={props => {
+      drawerContent={(props) => {
         return (
           <View style={{ flex: 1, padding: 20 }}>
             <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
@@ -164,7 +153,7 @@ export const MainNavigator = () => {
         );
       }}
       drawerContentOptions={{
-        activeTintColor: Colors.primary
+        activeTintColor: Colors.primary,
       }}
     >
       <MainDrawerNavigator.Screen
@@ -172,13 +161,13 @@ export const MainNavigator = () => {
         component={DutyNavigator}
         options={{
           // eslint-disable-next-line react/display-name
-          drawerIcon: props => (
+          drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-medkit" : "ios-medkit"}
               size={23}
               color={props.color}
             />
-          )
+          ),
         }}
       />
       <MainDrawerNavigator.Screen
@@ -186,13 +175,13 @@ export const MainNavigator = () => {
         component={LeaveNavigator}
         options={{
           // eslint-disable-next-line react/display-name
-          drawerIcon: props => (
+          drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
               size={23}
               color={props.color}
             />
-          )
+          ),
         }}
       />
       <MainDrawerNavigator.Screen
@@ -200,13 +189,13 @@ export const MainNavigator = () => {
         component={AdminNavigator}
         options={{
           // eslint-disable-next-line react/display-name
-          drawerIcon: props => (
+          drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-settings" : "ios-settings"}
               size={23}
               color={props.color}
             />
-          )
+          ),
         }}
       />
     </MainDrawerNavigator.Navigator>
@@ -216,7 +205,7 @@ export const MainNavigator = () => {
 const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   imageContainer: {
     width: Dimensions.get("window").width * 0.3,
@@ -225,14 +214,14 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: "black",
     overflow: "hidden",
-    marginVertical: Dimensions.get("window").height / 50
+    marginVertical: Dimensions.get("window").height / 50,
     // alignSelf: "center"
   },
   image: {
     width: "100%",
-    height: "100%"
+    height: "100%",
   },
-  textContainer: { alignItems: "center" }
+  textContainer: { alignItems: "center" },
 });
 
 const AuthStackNavigator = createStackNavigator();
