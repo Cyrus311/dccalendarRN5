@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   dutyListContainer: { height: "95%" },
   infoArea: {
     alignItems: "center",
-    height: "5%",
+    height: 45,
     borderWidth: 1,
     borderColor: Colors.textColor,
     backgroundColor: Colors.accent,
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 6,
     paddingHorizontal: 4,
+    paddingVertical: 4,
     color: Colors.textColor,
   },
 });

@@ -15,6 +15,7 @@ import moment from "moment";
 import DutyItem from "../components/items/DutyItem";
 import * as calendarActions from "../store/actions/calendar";
 import Colors from "../constants/Colors";
+import ArrowIcon from "../components/UI/ArrowIcon";
 
 const DutyDetailScreen = (props) => {
   const dateObj = new Date();
@@ -176,8 +177,8 @@ const DutyDetailScreen = (props) => {
           horizontal={true}
           keyExtractor={keyExtractor}
         />
-
-        <View
+        <ArrowIcon />
+        {/* <View
           style={{
             justifyContent: "center",
             alignSelf: "center",
@@ -191,7 +192,7 @@ const DutyDetailScreen = (props) => {
             color="grey"
             style={{ marginTop: "50%" }}
           ></Ionicons>
-        </View>
+        </View> */}
       </View>
       {isLoading && (
         <View style={styles.centered}>
@@ -250,6 +251,7 @@ const styles = StyleSheet.create({
   daysContainer: {
     height: "15%",
     width: "100%",
+    minHeight: 109,
     flexDirection: "row",
   },
   dutyContainer: { height: "85%" },
@@ -270,13 +272,12 @@ const styles = StyleSheet.create({
   viewArea: {
     marginRight: 5,
     marginTop: 5,
-
-    // height: '100%',
+    minHeight: 102,
     width: 80,
     // height: 80,
     paddingTop: 10,
     //paddingBottom: 20,
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: "#79c962",
     borderRadius: 20,
   },

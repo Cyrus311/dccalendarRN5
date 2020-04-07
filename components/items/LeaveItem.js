@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableNativeFeedback,
-  Platform
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,7 @@ import Colors, { color } from "../../constants/Colors";
 import { typeEnum } from "../../constants/typeEnum";
 import { statusEnum } from "../../constants/statusEnum";
 
-const LeaveItem = props => {
+const LeaveItem = (props) => {
   let TouchableComponent = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -78,11 +78,11 @@ const LeaveItem = props => {
 const styles = StyleSheet.create({
   duty: {
     height: 90,
-    margin: 10
+    margin: 10,
   },
   touchable: {
     borderRadius: 10,
-    overflow: "hidden"
+    overflow: "hidden",
   },
   dutyContainer: {
     width: "100%",
@@ -90,24 +90,20 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     overflow: "hidden",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   gradientContainer: {
     flex: 1,
     // alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   locationContainer: {
-    width: "80%",
-    height: "100%"
-  },
-  wideLocationContainer: {
-    width: "90%",
-    height: "100%"
+    width: "73%",
+    height: "100%",
   },
   deletableContainer: {
     width: "60%",
-    height: "100%"
+    height: "100%",
   },
   date: {
     backgroundColor: "transparent",
@@ -115,51 +111,51 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 4,
     paddingHorizontal: 4,
-    color: Colors.dateText
+    color: Colors.dateText,
   },
   location: {
     backgroundColor: "transparent",
     fontFamily: "open-sans-bold",
     fontSize: 20,
     marginVertical: 4,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
   description: {
     fontFamily: "open-sans",
     fontSize: 12,
     color: "#888",
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   cartItem: {
     padding: 10,
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   iconContainer: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   locationColorContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   status: {
     fontFamily: "open-sans",
     fontSize: 16,
     color: "#888",
     paddingHorizontal: 4,
-    paddingBottom: 5
+    paddingBottom: 5,
   },
-  deleteButton: {}
+  deleteButton: {},
 });
 
 export default LeaveItem;
