@@ -49,14 +49,18 @@ const DutyItem = (props) => {
                   {props.type ? typeEnum[props.type] : props.location.name}
                 </Text>
                 <Text style={styles.user}>{props.user.fullName}</Text>
-                <Text style={styles.description}>{props.description}</Text>
+                <Text style={styles.description}>
+                  {props.description ? props.description : "Açıklama yok"}
+                </Text>
               </View>
             ) : (
               <View style={styles.locationContainer}>
                 <Text style={styles.location}>
                   {props.type ? typeEnum[props.type] : props.location.name}
                 </Text>
-                <Text style={styles.description}>{props.description}</Text>
+                <Text style={styles.description}>
+                  {props.description ? props.description : "Açıklama yok"}
+                </Text>
               </View>
             )}
 
@@ -109,25 +113,31 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     paddingHorizontal: 4,
     color: Colors.dateText,
+    textAlign: "center",
   },
   location: {
     backgroundColor: "transparent",
-    fontFamily: "open-sans-bold",
+    // fontFamily: "open-sans-bold",
+    fontWeight: "600",
     fontSize: 16,
+    marginTop: 6,
     marginVertical: 4,
     paddingHorizontal: 4,
+    color: Colors.tertiary,
   },
   user: {
     backgroundColor: "transparent",
     fontFamily: "open-sans",
     fontSize: 14,
-    color: "#888",
+    color: Colors.tertiary,
+    marginVertical: 4,
     paddingHorizontal: 4,
   },
   description: {
     fontFamily: "open-sans",
     fontSize: 12,
-    color: "#888",
+    color: Colors.gray,
+    marginVertical: 4,
     paddingHorizontal: 4,
   },
   buttonContainer: {

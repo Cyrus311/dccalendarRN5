@@ -33,7 +33,7 @@ const LeaveItem = (props) => {
               >
                 <Text style={styles.date}>{props.date}</Text>
                 {props.date !== props.date2 && (
-                  <Text style={{ color: Colors.textColor }}> - </Text>
+                  <Text style={{ color: Colors.dateText }}> - </Text>
                 )}
                 {props.date !== props.date2 && (
                   <Text style={styles.date}>{props.date2}</Text>
@@ -48,10 +48,8 @@ const LeaveItem = (props) => {
               }
             >
               <Text style={styles.location}>{typeEnum[props.type]}</Text>
-              {/* <Text style={styles.status}>{props.status}</Text> */}
-              <Text style={styles.status}> {statusEnum[props.status]} </Text>
-
               <Text style={styles.description}>{props.description}</Text>
+              <Text style={styles.status}> {statusEnum[props.status]} </Text>
             </View>
 
             {props.deletable && (
@@ -115,16 +113,27 @@ const styles = StyleSheet.create({
   },
   location: {
     backgroundColor: "transparent",
-    fontFamily: "open-sans-bold",
-    fontSize: 20,
+    // fontFamily: "open-sans-bold",
+    fontWeight: "600",
+    fontSize: 18,
+    marginTop: 6,
     marginVertical: 4,
     paddingHorizontal: 4,
+    color: Colors.tertiary,
   },
   description: {
     fontFamily: "open-sans",
     fontSize: 12,
-    color: "#888",
+    color: Colors.gray,
+    marginVertical: 4,
     paddingHorizontal: 4,
+  },
+  status: {
+    backgroundColor: "transparent",
+    fontFamily: "open-sans",
+    fontSize: 10,
+    color: Colors.tertiary,
+    marginTop: 8,
   },
   gradient: {
     flex: 1,
@@ -147,13 +156,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  status: {
-    fontFamily: "open-sans",
-    fontSize: 16,
-    color: "#888",
-    paddingHorizontal: 4,
-    paddingBottom: 5,
   },
   deleteButton: {},
 });

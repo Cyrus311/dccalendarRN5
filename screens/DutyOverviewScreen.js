@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderWidth: 1,
     borderColor: Colors.textColor,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
   },
   text: {
     backgroundColor: "transparent",
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     paddingHorizontal: 4,
     paddingVertical: 4,
-    color: Colors.textColor,
+    color: Colors.dateText,
   },
 });
 

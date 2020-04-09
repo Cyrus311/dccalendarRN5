@@ -96,6 +96,7 @@ const DutyDetailScreen = (props) => {
     return (
       <TouchableHighlight
         onPress={() => _onPress({ item })}
+        underlayColor="transparent"
         style={[
           styles.viewArea,
           {
@@ -140,27 +141,13 @@ const DutyDetailScreen = (props) => {
       <View style={styles.centered}>
         <Text>Hata Oluştu!</Text>
         <Button
-          title="Try Again"
+          title="Tekrar Deneyin"
           onPress={loadDuty.bind(this, selectedDate)}
           color={Colors.primary}
         />
       </View>
     );
   }
-
-  // if (isLoading) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <ActivityIndicator size="large" color={Colors.primary} />
-  //     </View>
-  //   );
-  // }
-
-  // if (!isLoading && duty.length === 0) {
-  //   <View style={styles.centered}>
-  //     <Text>No duty found.</Text>
-  //   </View>;
-  // }
 
   return (
     <View style={styles.screen}>
@@ -178,25 +165,10 @@ const DutyDetailScreen = (props) => {
           keyExtractor={keyExtractor}
         />
         <ArrowIcon />
-        {/* <View
-          style={{
-            justifyContent: "center",
-            alignSelf: "center",
-            alignItems: "flex-end",
-            width: "5%",
-          }}
-        >
-          <Ionicons
-            name="ios-arrow-forward"
-            size={24}
-            color="grey"
-            style={{ marginTop: "50%" }}
-          ></Ionicons>
-        </View> */}
       </View>
       {isLoading && (
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color={Colors.textColor} />
+          <ActivityIndicator size="large" color={Colors.primary} />
         </View>
       )}
       {!isLoading && duty.length === 0 && (
@@ -274,9 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     minHeight: 102,
     width: 80,
-    // height: 80,
     paddingTop: 10,
-    //paddingBottom: 20,
     borderWidth: 1,
     borderColor: "#79c962",
     borderRadius: 20,

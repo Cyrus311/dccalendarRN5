@@ -22,23 +22,37 @@ export const color = {
   dark: "#212529",
   default: "#172b4d",
   white: "#fff",
-  neutral: "#fff"
+  neutral: "#fff",
 };
 
 export default {
-  // primary: "#5e72e4",
-  // backColor: "#f7fafc",
-  // textColor: "#5e72e4",
-  primary: "#016e8d",
-  backColor: "#016e8d",
-  textColor: "#ffffff",
-  accent: "#799da9",
-  gradientStart: "#79c962",
-  gradientEnd: "#3499b5",
+  primary: "#5e72e4",
+  backColor: "#f7fafc",
+  textColor: "#5e72e4",
+  tertiary: "#1c5d7d",
+  gray: "#8898aa",
+  gradientStart: "#40d4d4",
+  gradientEnd: "#5e72e4",
   dateText: "#ffffff",
+};
+
+const backup = {
+  dark: "#174c4c",
+  secondary: "#41c6f1",
+  accent: "#00cccc",
   coolGreen: "#79c962",
   coolBlue: "#3499b5",
+  coolPurple: "#5e72e4",
   indigo: "#5603ad",
-  light: "#ced4da",
-  coolCrimson: "#f01d71"
+  coolCrimson: "#f01d71",
+  medium: "#ece0ad",
+  light: "#40d4d4",
+  success: "#88c69c",
+  warning: "#ff7902",
+  danger: "#f06261",
+  // gradientStart: "#79c962",
+  // gradientEnd: "#3499b5",
+  // primary: "#016e8d",
+  // backColor: "#016e8d",
+  // textColor: "#ffffff",
 };

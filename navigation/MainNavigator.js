@@ -135,8 +135,10 @@ export const MainNavigator = () => {
                   />
                 </View>
                 <View style={styles.textContainer}>
-                  <Text>Merhaba,</Text>
-                  <TitleText> {user.fullName} </TitleText>
+                  <Text style={styles.textContainer}>Merhaba,</Text>
+                  <TitleText style={styles.textContainer}>
+                    {user.fullName}
+                  </TitleText>
                 </View>
               </View>
               <DrawerItemList {...props} />
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").width * 0.3,
     borderRadius: (Dimensions.get("window").width * 0.3) / 2,
     borderWidth: 3,
-    borderColor: "black",
+    borderColor: Colors.tertiary,
     overflow: "hidden",
     marginVertical: Dimensions.get("window").height / 50,
     // alignSelf: "center"
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  textContainer: { alignItems: "center" },
+  textContainer: { alignItems: "center", color: Colors.tertiary },
 });
 
 const AuthStackNavigator = createStackNavigator();
