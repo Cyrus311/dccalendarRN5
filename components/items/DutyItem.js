@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import ArrowIcon from "../UI/ArrowIcon";
 
 import Card from "../UI/Card";
-import Colors, { color } from "../../constants/Colors";
+import Colors, { locationColors } from "../../constants/Colors";
 import { typeEnum } from "../../constants/typeEnum";
 
 const DutyItem = (props) => {
@@ -28,7 +28,7 @@ const DutyItem = (props) => {
             <View style={styles.gradientContainer}>
               {props.user ? (
                 <View
-                  backgroundColor={color[props.location.colorCode]}
+                  backgroundColor={locationColors[props.location.colorCode]}
                   style={styles.locationColorContainer}
                 ></View>
               ) : (
