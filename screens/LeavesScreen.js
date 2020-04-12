@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Button,
 } from "react-native";
+import SafeAreaView from "react-native-safe-area-view";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -105,26 +106,28 @@ const LeavesScreen = (props) => {
   }
 
   return (
-    <View style={styles.screen}>
-      <FlatList
-        onRefresh={loadDuty}
-        refreshing={isRefreshing}
-        data={duty}
-        keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <LeaveItem
-            date={moment(itemData.item.calendar.date).format("DD MMM")}
-            date2={moment(itemData.item.calendar.date2).format("DD MMM")}
-            status={itemData.item.calendar.status}
-            type={itemData.item.calendar.type}
-            description={itemData.item.calendar.description}
-            onSelect={() => {}}
-            onRemove={() => {}}
-            // deletable
-          ></LeaveItem>
-        )}
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.screen}>
+        <FlatList
+          onRefresh={loadDuty}
+          refreshing={isRefreshing}
+          data={duty}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <LeaveItem
+              date={moment(itemData.item.calendar.date).format("DD MMM")}
+              date2={moment(itemData.item.calendar.date2).format("DD MMM")}
+              status={itemData.item.calendar.status}
+              type={itemData.item.calendar.type}
+              description={itemData.item.calendar.description}
+              onSelect={() => {}}
+              onRemove={() => {}}
+              // deletable
+            ></LeaveItem>
+          )}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 

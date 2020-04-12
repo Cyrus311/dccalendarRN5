@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import SafeAreaView from "react-native-safe-area-view";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import moment from "moment";
@@ -105,32 +106,34 @@ const DutyOverviewScreen = (props) => {
   }
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.infoArea}>
-        <View>
-          <Text style={styles.text}>{moment().format("MMMM")}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.screen}>
+        <View style={styles.infoArea}>
+          <View>
+            <Text style={styles.text}>{moment().format("MMMM")}</Text>
+          </View>
+        </View>
+        <View style={styles.dutyListContainer}>
+          <FlatList
+            onRefresh={loadDuty}
+            refreshing={isRefreshing}
+            data={duty}
+            keyExtractor={(item) => item.id}
+            renderItem={(itemData) => (
+              <DutyItem
+                date={itemData.item.calendar.readableDate}
+                location={itemData.item.location}
+                description={itemData.item.calendar.description}
+                onSelect={() => {
+                  selectItemHandler(itemData.item.calendar);
+                }}
+                navigatable
+              ></DutyItem>
+            )}
+          />
         </View>
       </View>
-      <View style={styles.dutyListContainer}>
-        <FlatList
-          onRefresh={loadDuty}
-          refreshing={isRefreshing}
-          data={duty}
-          keyExtractor={(item) => item.id}
-          renderItem={(itemData) => (
-            <DutyItem
-              date={itemData.item.calendar.readableDate}
-              location={itemData.item.location}
-              description={itemData.item.calendar.description}
-              onSelect={() => {
-                selectItemHandler(itemData.item.calendar);
-              }}
-              navigatable
-            ></DutyItem>
-          )}
-        />
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -167,7 +170,7 @@ export const screenOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
-  screen: { backgroundColor: Colors.backColor },
+  screen: { flex: 1, backgroundColor: Colors.backColor },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
   dutyListContainer: { height: "95%" },
   infoArea: {
