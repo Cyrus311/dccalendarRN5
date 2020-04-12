@@ -7,9 +7,10 @@ import {
   Button,
   ActivityIndicator,
   Alert,
-  ImageBackground
+  ImageBackground,
+  Platform,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+// import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
 
 import Input from "../components/UI/Input";
@@ -23,11 +24,11 @@ const formReducer = (state, action) => {
   if (action.type === FORM_UPDATE) {
     const updatedValues = {
       ...state.inputValues,
-      [action.input]: action.value
+      [action.input]: action.value,
     };
     const updatedValidities = {
       ...state.inputValidities,
-      [action.input]: action.isValid
+      [action.input]: action.isValid,
     };
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
@@ -37,18 +38,18 @@ const formReducer = (state, action) => {
     return {
       formIsValid: updatedFormIsValid,
       inputValidities: updatedValidities,
-      inputValues: updatedValues
+      inputValues: updatedValues,
     };
   }
   return state;
 };
 
-const AuthScreen = props => {
+const AuthScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [isSignup, setIsSignup] = useState(false);
   const [tryEmailExist, setTryEmailExist] = useState(false);
-  const isEmailCheck = useSelector(state => state.auth.isEmailCheck);
+  const isEmailCheck = useSelector((state) => state.auth.isEmailCheck);
   const dispatch = useDispatch();
 
   const inputChangeHandler = useCallback(
@@ -57,7 +58,7 @@ const AuthScreen = props => {
         type: FORM_UPDATE,
         value: inputValue,
         isValid: inputValidty,
-        input: inputIdentifier
+        input: inputIdentifier,
       });
     },
     [dispatchFormState]
@@ -67,14 +68,14 @@ const AuthScreen = props => {
     inputValues: {
       email: "",
       password: "",
-      fullName: ""
+      fullName: "",
     },
     inputValidities: {
       email: false,
       password: false,
-      fullName: false
+      fullName: false,
     },
-    formIsValid: false
+    formIsValid: false,
   });
 
   useEffect(() => {
@@ -130,8 +131,8 @@ const AuthScreen = props => {
       if (isSignup) {
         setIsLoading(false);
         setTryEmailExist(false);
+        setIsSignup(false);
       }
-      // props.navigation.navigate("Shop");
     } catch (error) {
       setError(error.message);
       setIsLoading(false);
@@ -141,7 +142,7 @@ const AuthScreen = props => {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
@@ -149,7 +150,7 @@ const AuthScreen = props => {
         source={require("../assets/backImage2.jpg")}
         style={styles.gradient}
         resizeMode="cover"
-        blurRadius={10}
+        // blurRadius={10}
       >
         {/* <LinearGradient
           colors={[Colors.gradientStart, Colors.gradientEnd]}
@@ -229,27 +230,27 @@ const AuthScreen = props => {
 };
 
 export const screenOptions = {
-  headerTitle: "Authenticate"
+  headerTitle: "",
 };
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   authContainer: {
     width: "80%",
     maxWidth: 400,
     maxHeight: 400,
-    padding: 20
+    padding: 20,
   },
   buttonContainer: {
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });
 
 export default AuthScreen;

@@ -100,9 +100,11 @@ const DutyOverviewScreen = (props) => {
   }
 
   if (!isLoading && duty.length === 0) {
-    <View style={styles.centered}>
-      <Text>Nöbetiniz bulunamadı.</Text>
-    </View>;
+    return (
+      <View style={styles.centered}>
+        <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
+      </View>
+    );
   }
 
   return (
