@@ -80,13 +80,11 @@ export default function LeaveAddScreen(props) {
   };
 
   const handleConfirm = (date) => {
-    hideDatePicker();
     setDatetime(date);
     setDatetimeEnd(date);
   };
 
   const handleConfirmEnd = (date) => {
-    hideDatePickerEnd();
     setDatetimeEnd(date);
   };
 
@@ -146,6 +144,7 @@ export default function LeaveAddScreen(props) {
                     mode="date"
                     locale="tr"
                     onConfirm={(date) => {
+                      hideDatePicker();
                       props.setFieldValue("date", date);
                       props.setFieldValue("date2", date);
                       handleConfirm(date);
@@ -179,6 +178,7 @@ export default function LeaveAddScreen(props) {
                     mode="date"
                     locale="tr"
                     onConfirm={(date) => {
+                      hideDatePickerEnd();
                       props.setFieldValue("date2", date);
                       handleConfirmEnd(date);
                     }}
