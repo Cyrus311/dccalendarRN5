@@ -100,7 +100,8 @@ const DutyDetailScreen = (props) => {
         style={[
           styles.viewArea,
           {
-            backgroundColor: activeIndex === item.id ? "#79c962" : "#ffffff",
+            backgroundColor:
+              activeIndex === item.id ? Colors.tertiary : "#ffffff",
           },
         ]}
       >
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
     width: 80,
     paddingTop: 10,
     borderWidth: 1,
-    borderColor: "#79c962",
+    borderColor: Colors.tertiary,
     borderRadius: 20,
   },
   textArea: {

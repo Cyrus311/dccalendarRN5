@@ -22,8 +22,15 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import useStateWithCallback from "../utilty/useStateWithCallback";
 
 export default function LeaveAddScreen(props) {
+  // const [datetime, setDatetime] = useStateWithCallback(new Date(), () =>
+  //   setDatePickerVisibility(Platform.OS === "ios")
+  // );
+  // const [datetimeEnd, setDatetimeEnd] = useStateWithCallback(new Date(), () =>
+  //   setDatePickerVisibilityEnd(Platform.OS === "ios")
+  // );
   const [datetime, setDatetime] = useState(new Date());
   const [datetimeEnd, setDatetimeEnd] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -73,14 +80,14 @@ export default function LeaveAddScreen(props) {
   };
 
   const handleConfirm = (date) => {
+    hideDatePicker();
     setDatetime(date);
     setDatetimeEnd(date);
-    hideDatePicker();
   };
 
   const handleConfirmEnd = (date) => {
+    hideDatePickerEnd();
     setDatetimeEnd(date);
-    hideDatePicker();
   };
 
   const handleFormSubmit = async (values) => {
@@ -130,6 +137,9 @@ export default function LeaveAddScreen(props) {
                     {moment(datetime).format("DD MMMM YYYY")}
                   </Text>
                   <DateTimePickerModal
+                    confirmTextIOS="Seç"
+                    cancelTextIOS="İptal"
+                    headerTextIOS="Başlangıç Tarihi"
                     isVisible={isDatePickerVisible}
                     minimumDate={new Date(moment())}
                     date={datetime}
@@ -139,7 +149,6 @@ export default function LeaveAddScreen(props) {
                       props.setFieldValue("date", date);
                       props.setFieldValue("date2", date);
                       handleConfirm(date);
-                      hideDatePicker();
                     }}
                     onCancel={hideDatePicker}
                   />
@@ -161,6 +170,9 @@ export default function LeaveAddScreen(props) {
                     {moment(datetimeEnd).format("DD MMMM YYYY")}
                   </Text>
                   <DateTimePickerModal
+                    confirmTextIOS="Seç"
+                    cancelTextIOS="İptal"
+                    headerTextIOS="Bitiş Tarihi"
                     isVisible={isDatePickerVisibleEnd}
                     minimumDate={props.values.date}
                     date={datetimeEnd}
@@ -169,7 +181,6 @@ export default function LeaveAddScreen(props) {
                     onConfirm={(date) => {
                       props.setFieldValue("date2", date);
                       handleConfirmEnd(date);
-                      hideDatePickerEnd();
                     }}
                     onCancel={hideDatePickerEnd}
                   />
@@ -210,9 +221,21 @@ export default function LeaveAddScreen(props) {
                 />
                 <Picker.Item
                   color={Colors.textColor}
+                  label={typeEnum[8]}
+                  value={8}
+                  key={8}
+                />
+                <Picker.Item
+                  color={Colors.textColor}
                   label={typeEnum[2]}
                   value={2}
                   key={2}
+                />
+                <Picker.Item
+                  color={Colors.textColor}
+                  label={typeEnum[7]}
+                  value={7}
+                  key={7}
                 />
                 <Picker.Item
                   color={Colors.textColor}

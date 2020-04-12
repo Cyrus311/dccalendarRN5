@@ -50,7 +50,9 @@ const DutyItem = (props) => {
                 </Text>
                 <Text style={styles.user}>{props.user.fullName}</Text>
                 <Text style={styles.description}>
-                  {props.description ? props.description : "Açıklama yok"}
+                  {props.description
+                    ? props.description.trim()
+                    : "Açıklama yok"}
                 </Text>
               </View>
             ) : (

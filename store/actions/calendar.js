@@ -293,6 +293,7 @@ export const createCalendar = (calendar) => {
           description: calendar.description,
           type: calendar.type,
           calendarGroupId: guid,
+          isWeekend: date.isoWeekday() === 6 || date.isoWeekday() === 7,
         });
       }
       // return;
@@ -325,6 +326,8 @@ export const createCalendar = (calendar) => {
       let message = "Sistem yöneticinize başvurunuz!";
       message = errorResData.error.message;
       if (errorResData.error.details) {
+        console.log("errorResData", errorResData.error);
+
         // message = errorResData.error.details[0].message;
         message = "Sistem yöneticinize başvurunuz!";
       }

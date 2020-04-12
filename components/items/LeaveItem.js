@@ -47,8 +47,12 @@ const LeaveItem = (props) => {
                   : styles.locationContainer
               }
             >
-              <Text style={styles.location}>{typeEnum[props.type]}</Text>
-              <Text style={styles.description}>{props.description}</Text>
+              <Text numberOfLines={1} style={styles.location}>
+                {typeEnum[props.type]}
+              </Text>
+              <Text numberOfLines={1} style={styles.description}>
+                {props.description ? props.description.trim() : "Açıklama yok"}
+              </Text>
               <Text style={styles.status}> {statusEnum[props.status]} </Text>
             </View>
 
