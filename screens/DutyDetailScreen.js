@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     minHeight: 102,
     width: 80,
     paddingTop: 10,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: Colors.tertiary,
     borderRadius: 20,
   },

@@ -20,6 +20,11 @@ const DutyItem = (props) => {
   if (Platform.OS === "android" && Platform.Version >= 21) {
     TouchableComponent = TouchableNativeFeedback;
   }
+
+  if (!props.navigatable) {
+    TouchableComponent = View;
+  }
+
   return (
     <Card style={styles.duty}>
       <View style={styles.touchable}>

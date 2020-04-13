@@ -120,6 +120,12 @@ export const fetchCalendar = (filterData) => {
 export const dailyCalendar = (date) => {
   return async (dispatch, getState) => {
     try {
+      if (!getState().user.user.groups) {
+        return;
+      }
+      if (getState().user.user.groups.length <= 0) {
+        return;
+      }
       const groupId = getState().user.user.groups[0].id;
       const filterData = {
         filter: {

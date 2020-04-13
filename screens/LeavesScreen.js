@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Button,
+  Alert,
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import moment from "moment";
@@ -36,6 +37,15 @@ const LeavesScreen = (props) => {
     setError(null);
     setIsRefreshing(true);
     try {
+      if (user.groups && user.groups.length <= 0) {
+        Alert.alert(
+          "Bağlı grup bulunamadı!",
+          "Lütfen sistem yöneticinize başvurunuz",
+          [{ text: "Okay" }]
+        );
+        return;
+      }
+
       const filterData = {
         filter: {
           where: {

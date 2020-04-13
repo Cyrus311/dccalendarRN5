@@ -7,6 +7,7 @@ import {
   Platform,
   ActivityIndicator,
   StyleSheet,
+  Alert,
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import { useSelector, useDispatch } from "react-redux";
@@ -31,6 +32,14 @@ const DutyOverviewScreen = (props) => {
     setIsRefreshing(true);
     try {
       // filter: {"where":{"date":{"between":["2020-05-01","2020-05-31"]},"groupId":{"like":"5e8db35c3322910099e91a2b"},"type":1},"include":[{"relation":"group"},{"relation":"user"},{"relation":"location"}]}
+      if (user.groups && user.groups.length <= 0) {
+        Alert.alert(
+          "Bağlı grup bulunamadı!",
+          "Lütfen sistem yöneticinize başvurunuz",
+          [{ text: "Okay" }]
+        );
+        return;
+      }
 
       const filterData = {
         filter: {

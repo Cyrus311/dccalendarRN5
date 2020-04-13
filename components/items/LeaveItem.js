@@ -3,8 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  TouchableNativeFeedback,
+  // TouchableOpacity,
+  // TouchableNativeFeedback,
   Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,62 +16,62 @@ import { typeEnum } from "../../constants/typeEnum";
 import { statusEnum } from "../../constants/statusEnum";
 
 const LeaveItem = (props) => {
-  let TouchableComponent = TouchableOpacity;
+  // let TouchableComponent = TouchableOpacity;
 
-  if (Platform.OS === "android" && Platform.Version >= 21) {
-    TouchableComponent = TouchableNativeFeedback;
-  }
+  // if (Platform.OS === "android" && Platform.Version >= 21) {
+  //   TouchableComponent = TouchableNativeFeedback;
+  // }
   return (
     <Card style={styles.duty}>
       <View style={styles.touchable}>
-        <TouchableComponent onPress={props.onSelect} useForeground>
-          <View style={styles.dutyContainer}>
-            <View style={styles.gradientContainer}>
-              <LinearGradient
-                colors={[Colors.gradientStart, Colors.gradientEnd]}
-                style={styles.gradient}
-              >
-                <Text style={styles.date}>{props.date}</Text>
-                {props.date !== props.date2 && (
-                  <Text style={{ color: Colors.dateText }}> - </Text>
-                )}
-                {props.date !== props.date2 && (
-                  <Text style={styles.date}>{props.date2}</Text>
-                )}
-              </LinearGradient>
-            </View>
-            <View
-              style={
-                props.deletable
-                  ? styles.deletableContainer
-                  : styles.locationContainer
-              }
+        {/* <TouchableComponent onPress={props.onSelect} useForeground> */}
+        <View style={styles.dutyContainer}>
+          <View style={styles.gradientContainer}>
+            <LinearGradient
+              colors={[Colors.gradientStart, Colors.gradientEnd]}
+              style={styles.gradient}
             >
-              <Text numberOfLines={1} style={styles.location}>
-                {typeEnum[props.type]}
-              </Text>
-              <Text numberOfLines={1} style={styles.description}>
-                {props.description ? props.description.trim() : "Açıklama yok"}
-              </Text>
-              <Text style={styles.status}> {statusEnum[props.status]} </Text>
-            </View>
-
-            {props.deletable && (
-              <View style={styles.iconContainer}>
-                <TouchableOpacity
-                  onPress={props.onRemove}
-                  style={styles.deleteButton}
-                >
-                  <Ionicons
-                    name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
-                    size={27}
-                    color="red"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+              <Text style={styles.date}>{props.date}</Text>
+              {props.date !== props.date2 && (
+                <Text style={{ color: Colors.dateText }}> - </Text>
+              )}
+              {props.date !== props.date2 && (
+                <Text style={styles.date}>{props.date2}</Text>
+              )}
+            </LinearGradient>
           </View>
-        </TouchableComponent>
+          <View
+            style={
+              props.deletable
+                ? styles.deletableContainer
+                : styles.locationContainer
+            }
+          >
+            <Text numberOfLines={1} style={styles.location}>
+              {typeEnum[props.type]}
+            </Text>
+            <Text numberOfLines={1} style={styles.description}>
+              {props.description ? props.description.trim() : "Açıklama yok"}
+            </Text>
+            <Text style={styles.status}> {statusEnum[props.status]} </Text>
+          </View>
+
+          {props.deletable && (
+            <View style={styles.iconContainer}>
+              <TouchableOpacity
+                onPress={props.onRemove}
+                style={styles.deleteButton}
+              >
+                <Ionicons
+                  name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
+                  size={27}
+                  color="red"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        {/* </TouchableComponent> */}
       </View>
     </Card>
   );

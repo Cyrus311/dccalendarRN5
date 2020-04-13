@@ -6,6 +6,7 @@ import { customVariables } from "../../constants/customVariables";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const SIGNUP = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
+export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
 export const CHECK_EMAIL = "CHECK_EMAIL";
 export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
 
@@ -16,23 +17,23 @@ export const setDidTryAL = () => {
 };
 
 export const authenticate = (token, userId, expiryTime) => {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(setLogoutTimer(expiryTime));
     dispatch({
       type: AUTHENTICATE,
       token: token,
-      userId: userId
+      userId: userId,
     });
   };
 };
 
 export const signup = (email, password, fullName) => {
   const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users";
-  return async dispatch => {
+  return async (dispatch) => {
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
@@ -40,8 +41,8 @@ export const signup = (email, password, fullName) => {
         fullName: fullName,
         title: "Dr.",
         deviceId: "QWERT1",
-        roles: ["user"]
-      })
+        roles: ["user"],
+      }),
     });
 
     if (!response.ok) {
@@ -63,16 +64,16 @@ export const signup = (email, password, fullName) => {
 export const login = (email, password) => {
   const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users/login";
 
-  return async dispatch => {
+  return async (dispatch) => {
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
-        password: password
-      })
+        password: password,
+      }),
     });
 
     if (!response.ok) {
@@ -104,32 +105,29 @@ export const logout = () => {
   return { type: LOGOUT };
 };
 
-const clearLogoutTimer = () => {
-  if (timer) {
-    clearTimeout(timer);
-  }
-};
+export const forgot = (email) => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(
+        `https://doctorcalendar.eu-gb.mybluemix.net/users/forgot?email=${email}`
+      );
 
-const setLogoutTimer = expirationTime => {
-  return dispatch => {
-    timer = setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime);
+      if (!response.ok) {
+        const errorResData = await response.json();
+        throw new Error(errorResData.error.message);
+      }
+
+      const resData = await response.json();
+
+      dispatch({ type: FORGOT_PASSWORD, result: resData });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 };
 
-const saveDataToStorage = (token, userId, expirationDate) => {
-  AsyncStorage.setItem(
-    customVariables.TOKENDATA,
-    JSON.stringify({
-      token: token,
-      userId: userId,
-      expiryDate: expirationDate.toISOString()
-    })
-  );
-};
-
-export const checkEmail = email => {
+export const checkEmail = (email) => {
   return async (dispatch, getState) => {
     try {
       const response = await fetch(
@@ -150,4 +148,29 @@ export const checkEmail = email => {
       throw error;
     }
   };
+};
+
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+};
+
+const setLogoutTimer = (expirationTime) => {
+  return (dispatch) => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  };
+};
+
+const saveDataToStorage = (token, userId, expirationDate) => {
+  AsyncStorage.setItem(
+    customVariables.TOKENDATA,
+    JSON.stringify({
+      token: token,
+      userId: userId,
+      expiryDate: expirationDate.toISOString(),
+    })
+  );
 };

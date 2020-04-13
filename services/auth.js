@@ -7,8 +7,8 @@ export const login = (email, password) => {
       method: "POST",
       data: {
         email: email,
-        password: password
-      }
+        password: password,
+      },
     },
     false
   );
@@ -24,8 +24,21 @@ export const register = (email, fullName, password, title) => {
         password: password,
         fullName: fullName,
         deviceId: "QWE123",
-        title: title
-      }
+        title: title,
+      },
+    },
+    false
+  );
+};
+
+export const forgot = (email) => {
+  return request(
+    {
+      url: `/users/forgot`,
+      method: "POST",
+      data: {
+        email: email,
+      },
     },
     false
   );
@@ -33,5 +46,6 @@ export const register = (email, fullName, password, title) => {
 
 export const authService = {
   login,
-  register
+  register,
+  forgot,
 };
