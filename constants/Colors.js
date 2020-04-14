@@ -36,6 +36,8 @@ export default {
   gradientStart: "#40d4d4",
   gradientEnd: "#5e72e4",
   dateText: "#ffffff",
+  success: "#2dce89",
+  warning: "#fb6340",
 };
 
 const backup = {

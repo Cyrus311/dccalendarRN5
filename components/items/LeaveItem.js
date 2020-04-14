@@ -53,7 +53,25 @@ const LeaveItem = (props) => {
             <Text numberOfLines={1} style={styles.description}>
               {props.description ? props.description.trim() : "Açıklama yok"}
             </Text>
-            <Text style={styles.status}> {statusEnum[props.status]} </Text>
+            <View
+              style={[
+                props.status === 1
+                  ? styles.statusContainerWaitColor
+                  : styles.statusContainerAprovedColor,
+                styles.statusContainer,
+              ]}
+            >
+              <Text
+                style={[
+                  props.status === 1
+                    ? styles.statusWaitColor
+                    : styles.statusAprovedColor,
+                  styles.status,
+                ]}
+              >
+                {statusEnum[props.status]}
+              </Text>
+            </View>
           </View>
 
           {props.deletable && (
@@ -132,33 +150,41 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     paddingHorizontal: 4,
   },
+  statusContainer: {
+    width: 90,
+    marginTop: 8,
+    marginHorizontal: 4,
+    elevation: 5,
+    borderRadius: 10,
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  statusContainerWaitColor: {
+    backgroundColor: Colors.gradientEnd,
+  },
+  statusContainerAprovedColor: {
+    backgroundColor: Colors.gradientStart,
+  },
   status: {
     backgroundColor: "transparent",
     fontFamily: "open-sans",
-    fontSize: 10,
+    fontSize: 12,
+  },
+  statusWaitColor: {
+    color: Colors.dateText,
+  },
+  statusAprovedColor: {
     color: Colors.tertiary,
-    marginTop: 8,
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  cartItem: {
-    padding: 10,
-    backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 20,
-  },
   iconContainer: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "center",
-  },
-  locationColorContainer: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
   },
   deleteButton: {},
