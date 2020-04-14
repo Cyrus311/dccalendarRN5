@@ -47,6 +47,7 @@ const backup = {
   coolGreen: "#79c962",
   coolBlue: "#3499b5",
   coolPurple: "#5e72e4",
+  coolPurple2: "#6a51ae",
   indigo: "#5603ad",
   coolCrimson: "#f01d71",
   medium: "#ece0ad",

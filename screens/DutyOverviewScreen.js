@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Alert,
+  StatusBar,
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import { useSelector, useDispatch } from "react-redux";
@@ -118,6 +119,10 @@ const DutyOverviewScreen = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        barStyle={Platform.OS === "android" ? "default" : "dark-content"}
+        backgroundColor="#6a51ae"
+      />
       <View style={styles.screen}>
         <View style={styles.infoArea}>
           <View>
