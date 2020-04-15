@@ -31,6 +31,7 @@ const DutyOverviewScreen = (props) => {
   const loadDuty = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
+    props.navigation.closeDrawer();
     try {
       // filter: {"where":{"date":{"between":["2020-05-01","2020-05-31"]},"groupId":{"like":"5e8db35c3322910099e91a2b"},"type":1},"include":[{"relation":"group"},{"relation":"user"},{"relation":"location"}]}
       if (user.groups && user.groups.length <= 0) {
