@@ -49,7 +49,13 @@ const DutyItem = (props) => {
             </View>
 
             {props.user ? (
-              <View style={styles.wideLocationContainer}>
+              <View
+                style={
+                  props.children
+                    ? styles.locationContainer
+                    : styles.wideLocationContainer
+                }
+              >
                 <Text style={styles.location}>
                   {props.type ? typeEnum[props.type] : props.location.name}
                 </Text>
@@ -66,13 +72,15 @@ const DutyItem = (props) => {
                   {props.type ? typeEnum[props.type] : props.location.name}
                 </Text>
                 <Text style={styles.description}>
-                  {props.description ? props.description : "Açıklama yok"}
+                  {props.description
+                    ? props.description.trim()
+                    : "Açıklama yok"}
                 </Text>
               </View>
             )}
 
             {!!props.children && (
-              <View style={styles.buttonContainer}>{props.children}</View>
+              <View style={styles.iconContainer}>{props.children}</View>
             )}
 
             {props.navigatable && <ArrowIcon />}
@@ -147,25 +155,15 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     paddingHorizontal: 4,
   },
-  buttonContainer: {
-    width: "20%",
-    height: "100%",
+  iconContainer: {
+    flex: 2,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   gradient: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-  },
-  cartItem: {
-    padding: 10,
-    backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 20,
-  },
-  iconContainer: {
-    flex: 1,
-    flexDirection: "row",
     alignItems: "center",
   },
   locationColorContainer: {

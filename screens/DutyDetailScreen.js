@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   TouchableHighlight,
+  TouchableOpacity,
+  Platform,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,6 +30,7 @@ const DutyDetailScreen = (props) => {
   const [listOfDate, setListOfDate] = useState(plistOfDate);
   const [activeIndex, updActiveIndex] = useState(-1);
   const duty = useSelector((state) => state.calendars.dailyCalendars);
+  const user = useSelector((state) => state.user.user);
   const [calendar, setCalendar] = useState({});
   const dispatch = useDispatch();
   const calendarObj = JSON.parse(props.route.params.calendar);
@@ -195,7 +198,20 @@ const DutyDetailScreen = (props) => {
                 description={itemData.item.calendar.description}
                 onSelect={() => {}}
                 user={itemData.item.user}
-              ></DutyItem>
+              >
+                {user.id !== itemData.item.user.id && (
+                  <TouchableOpacity
+                    onPress={() => {}}
+                    style={styles.swapButton}
+                  >
+                    <Ionicons
+                      name={Platform.OS === "android" ? "md-swap" : "ios-swap"}
+                      size={30}
+                      color={Colors.tertiary}
+                    />
+                  </TouchableOpacity>
+                )}
+              </DutyItem>
             )}
           />
         </View>
@@ -274,6 +290,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     color: Colors.textColor,
   },
+  swapButton: {},
 });
 
 const getDaysArray = (year, month) => {
