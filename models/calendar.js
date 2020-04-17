@@ -5,30 +5,34 @@ import "moment/locale/tr";
 class Calendar {
   constructor(
     id,
-    date,
+    startDate,
+    endDate,
     description,
     type,
     userId,
     groupId,
     locationId,
-    calendarGroupId,
     isDraft,
     status,
+    isWeekend,
+    sourceDate,
     createdDate,
     updatedDate,
     createdUserId,
     updatedUserId
   ) {
     this.id = id;
-    this.date = date;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.description = description;
     this.type = type;
     this.userId = userId;
     this.groupId = groupId;
     this.locationId = locationId;
-    this.calendarGroupId = calendarGroupId;
     this.isDraft = isDraft;
     this.status = status;
+    this.isWeekend = isWeekend;
+    this.sourceDate = sourceDate;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
     this.createdUserId = createdUserId;
@@ -36,7 +40,7 @@ class Calendar {
   }
 
   get readableDate() {
-    return moment(this.date).format("DD MMM");
+    return moment(this.startDate).format("DD MMM");
   }
 }
 

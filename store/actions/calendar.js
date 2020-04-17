@@ -40,15 +40,17 @@ export const fetchCalendar = (filterData) => {
           calendar: resData[key]
             ? new Calendar(
                 resData[key].id,
-                new Date(resData[key].date),
+                new Date(resData[key].startDate),
+                new Date(resData[key].endDate),
                 resData[key].description,
                 resData[key].type,
                 resData[key].userId,
                 resData[key].groupId,
                 resData[key].locationId,
-                resData[key].calendarGroupId,
                 resData[key].isDraft,
                 resData[key].status,
+                resData[key].isWeekend,
+                resData[key].sourceDate,
                 resData[key].createdDate,
                 resData[key].updatedDate,
                 resData[key].createdUserId,
@@ -84,10 +86,10 @@ export const fetchCalendar = (filterData) => {
       dispatch({
         type: SET_CALENDARS,
         calendars: loadedCalendars.sort((a, b) => {
-          if (a.calendar.date > b.calendar.date) {
+          if (a.calendar.startDate > b.calendar.startDate) {
             return 1;
           }
-          if (a.calendar.date < b.calendar.date) {
+          if (a.calendar.startDate < b.calendar.startDate) {
             return -1;
           }
           return 0;
@@ -99,7 +101,7 @@ export const fetchCalendar = (filterData) => {
           (duty) =>
             duty.user.id === userId &&
             duty.calendar.type === 1 &&
-            moment(duty.calendar.date).format("Y-MM") ===
+            moment(duty.calendar.startDate).format("Y-MM") ===
               moment().format("Y-MM")
         ),
         noDutyCalendars: loadedCalendars.filter(
@@ -169,12 +171,17 @@ export const dailyCalendar = (date) => {
           calendar: resData[key]
             ? new Calendar(
                 resData[key].id,
-                new Date(resData[key].date),
+                new Date(resData[key].startDate),
+                new Date(resData[key].endDate),
                 resData[key].description,
                 resData[key].type,
                 resData[key].userId,
                 resData[key].groupId,
                 resData[key].locationId,
+                resData[key].isDraft,
+                resData[key].status,
+                resData[key].isWeekend,
+                resData[key].sourceDate,
                 resData[key].createdDate,
                 resData[key].updatedDate,
                 resData[key].createdUserId,
@@ -213,14 +220,14 @@ export const dailyCalendar = (date) => {
           .filter(
             (duty) =>
               duty.calendar.type === 1 &&
-              moment(duty.calendar.date).format("Y-MM-DD") ===
+              moment(duty.calendar.startDate).format("Y-MM-DD") ===
                 moment(date).format("Y-MM-DD")
           )
           .sort((a, b) => {
-            if (a.calendar.date > b.calendar.date) {
+            if (a.calendar.startDate > b.calendar.startDate) {
               return 1;
             }
-            if (a.calendar.date < b.calendar.date) {
+            if (a.calendar.startDate < b.calendar.startDate) {
               return -1;
             }
             return 0;
@@ -282,26 +289,31 @@ export const createCalendar = (calendar) => {
         GUID4() +
         GUID4()
       ).toLowerCase();
-      const momentRange = extendMoment(moment);
-      const start = moment(calendar.date).format(
-        "YYYY-MM-DD[T]hh:mm:ss.sss[Z]"
-      );
-      const end = moment(calendar.date2).format("YYYY-MM-DD[T]hh:mm:ss.sss[Z]");
-      const range = momentRange.range(start, end);
+      // const momentRange = extendMoment(moment);
+      // const start = moment(calendar.date).format(
+      //   "YYYY-MM-DD[T]hh:mm:ss.sss[Z]"
+      // );
+      // const end = moment(calendar.date2).format("YYYY-MM-DD[T]hh:mm:ss.sss[Z]");
+      // const range = momentRange.range(start, end);
 
       const leaveDays = [];
-      for (let date of range.by("day")) {
-        leaveDays.push({
-          userId,
-          groupId,
-          status,
-          date: date.format("YYYY-MM-DD[T]12:00:00.000[Z]"),
-          description: calendar.description,
-          type: calendar.type,
-          calendarGroupId: guid,
-          isWeekend: date.isoWeekday() === 6 || date.isoWeekday() === 7,
-        });
-      }
+      // for (let date of range.by("day")) {
+      leaveDays.push({
+        userId,
+        groupId,
+        status,
+        sourceDate: moment(calendar.date).format(
+          "YYYY-MM-DD[T]12:00:00.000[Z]"
+        ),
+        startDate: moment(calendar.date).format("YYYY-MM-DD[T]12:00:00.000[Z]"),
+        endDate: moment(calendar.date2).format("YYYY-MM-DD[T]12:00:00.000[Z]"),
+        description: calendar.description,
+        type: calendar.type,
+        isWeekend:
+          moment(calendar.date).isoWeekday() === 6 ||
+          moment(calendar.date).isoWeekday() === 7,
+      });
+      // }
       // return;
 
       // const reminder = {

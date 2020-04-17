@@ -125,8 +125,8 @@ const LeavesScreen = (props) => {
           keyExtractor={(item) => item.id}
           renderItem={(itemData) => (
             <LeaveItem
-              date={moment(itemData.item.calendar.date).format("DD MMM")}
-              date2={moment(itemData.item.calendar.date2).format("DD MMM")}
+              date={moment(itemData.item.calendar.startDate).format("DD MMM")}
+              date2={moment(itemData.item.calendar.endDate).format("DD MMM")}
               status={itemData.item.calendar.status}
               type={itemData.item.calendar.type}
               description={itemData.item.calendar.description}

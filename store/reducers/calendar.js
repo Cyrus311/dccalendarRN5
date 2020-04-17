@@ -4,7 +4,7 @@ import {
   CREATE_CALENDAR,
   UPDATE_CALENDAR,
   SET_CALENDARS,
-  DAILY_CALENDARS
+  DAILY_CALENDARS,
 } from "../actions/calendar";
 // import Calendar from "../../models/calendar";
 import Calendar from "../../models/calendar";
@@ -15,52 +15,63 @@ const initialState = {
   userCalendars: [],
   mountCalendars: [],
   dailyCalendars: [],
-  noDutyCalendars: []
+  noDutyCalendars: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_CALENDARS: {
-      const leaveCalendars = [];
-      const result = action.noDutyCalendars.reduce(function(r, a) {
-        r[a.calendar.calendarGroupId] = r[a.calendar.calendarGroupId] || [];
-        r[a.calendar.calendarGroupId].push(a);
-        return r;
-      }, Object.create(null));
+      //----------------Gruplama kodu---------------------------------
+      // const leaveCalendars = [];
+      // const result = action.noDutyCalendars.reduce(function(r, a) {
+      //   r[a.calendar.calendarGroupId] = r[a.calendar.calendarGroupId] || [];
+      //   r[a.calendar.calendarGroupId].push(a);
+      //   return r;
+      // }, Object.create(null));
 
-      for (const key in result) {
-        leaveCalendars.push({
-          id: key,
-          calendar: {
-            ...result[key][0].calendar,
-            date2: result[key][result[key].length - 1].calendar.date
-          }
-        });
-      }
+      // for (const key in result) {
+      //   leaveCalendars.push({
+      //     id: key,
+      //     calendar: {
+      //       ...result[key][0].calendar,
+      //       date2: result[key][result[key].length - 1].calendar.date
+      //     }
+      //   });
+      // }
+      //--------------------------------------------------------------
 
       return {
         availableCalendars: action.calendars,
         userCalendars: action.userCalendars,
         mountCalendars: action.mountCalendars,
         dailyCalendars: action.dailyCalendars,
-        noDutyCalendars: leaveCalendars
+        noDutyCalendars: action.noDutyCalendars,
       };
     }
     case DAILY_CALENDARS: {
       return {
         ...state,
-        dailyCalendars: action.dailyCalendars
+        dailyCalendars: action.dailyCalendars,
       };
     }
     case CREATE_CALENDAR: {
       const newCalendar = new Calendar(
         action.calendarData.id,
-        action.calendarData.date,
+        action.calendarData.startDate,
+        action.calendarData.endDate,
         action.calendarData.description,
         action.calendarData.type,
         action.calendarData.userId,
         action.calendarData.groupId,
-        action.calendarData.locationId
+        action.calendarData.locationId,
+        action.calendarData.isDraft,
+        action.calendarData.status,
+        action.calendarData.isWeekend,
+        action.calendarData.sourceDate,
+        action.calendarData.createdDate,
+        action.calendarData.updatedDate,
+        action.calendarData.createdUserId,
+        action.calendarData.updatedUserId
       );
       return {
         ...state,
@@ -68,12 +79,12 @@ export default (state = initialState, action) => {
         userCalendars: state.userCalendars.concat(newCalendar),
         mountCalendars: state.availableCalendars.concat(newCalendar),
         dailyCalendars: state.availableCalendars.concat(newCalendar),
-        noDutyCalendars: state.availableCalendars.concat(newCalendar)
+        noDutyCalendars: state.availableCalendars.concat(newCalendar),
       };
     }
     case UPDATE_CALENDAR: {
       const calendarIndex = state.userCalendars.findIndex(
-        prod => prod.id === action.pid
+        (prod) => prod.id === action.pid
       );
       const updatedCalendar = new Calendar(
         action.pid,
@@ -86,34 +97,34 @@ export default (state = initialState, action) => {
       const updatedUserCalendars = [...state.userCalendars];
       updatedUserCalendars[calendarIndex] = updatedCalendar;
       const availableCalendarIndex = state.userCalendars.findIndex(
-        prod => prod.id === action.pid
+        (prod) => prod.id === action.pid
       );
       const updatedAvailableCalendars = [...state.availableCalendars];
       updatedAvailableCalendars[availableCalendarIndex] = updatedCalendar;
       return {
         ...state,
         availableCalendars: updatedAvailableCalendars,
-        userCalendars: updatedUserCalendars
+        userCalendars: updatedUserCalendars,
       };
     }
     case DELETE_CALENDAR: {
       return {
         ...state,
         userCalendars: state.userCalendars.filter(
-          calendar => calendar.id !== action.pid
+          (calendar) => calendar.id !== action.pid
         ),
         availableCalendars: state.availableCalendars.filter(
-          calendar => calendar.id !== action.pid
+          (calendar) => calendar.id !== action.pid
         ),
         noDutyCalendars: state.noDutyCalendars.filter(
-          calendar => calendar.id !== action.pid
+          (calendar) => calendar.id !== action.pid
         ),
         mountCalendars: state.mountCalendars.filter(
-          calendar => calendar.id !== action.pid
+          (calendar) => calendar.id !== action.pid
         ),
         dailyCalendars: state.dailyCalendars.filter(
-          calendar => calendar.id !== action.pid
-        )
+          (calendar) => calendar.id !== action.pid
+        ),
       };
     }
   }

@@ -35,7 +35,7 @@ const DutyDetailScreen = (props) => {
   const dispatch = useDispatch();
   const calendarObj = JSON.parse(props.route.params.calendar);
   const calendarId = calendarObj ? calendarObj.id : "";
-  const [selectedDate, setSelectedDate] = useState(calendarObj.date);
+  const [selectedDate, setSelectedDate] = useState(calendarObj.startDate);
   let passedActiveItem = moment(selectedDate).format("D");
 
   const getItemLayout = (data, index) => ({
