@@ -279,14 +279,14 @@ export const createCalendar = (calendar) => {
       const userId = getState().auth.userId;
       const groupId = getState().user.user.groups[0].id;
       const status = 1;
-      const guid = (
-        GUID4() +
-        GUID4() +
-        GUID4() +
-        GUID4() +
-        GUID4() +
-        GUID4()
-      ).toLowerCase();
+      // const guid = (
+      //   GUID4() +
+      //   GUID4() +
+      //   GUID4() +
+      //   GUID4() +
+      //   GUID4() +
+      //   GUID4()
+      // ).toLowerCase();
       // const momentRange = extendMoment(moment);
       // const start = moment(calendar.date).format(
       //   "YYYY-MM-DD[T]hh:mm:ss.sss[Z]"
