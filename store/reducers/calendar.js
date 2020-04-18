@@ -8,7 +8,7 @@ import {
 } from "../actions/calendar";
 // import Calendar from "../../models/calendar";
 import Calendar from "../../models/calendar";
-import moment from "moment";
+// import moment from "moment";
 
 const initialState = {
   availableCalendars: [],
@@ -67,7 +67,6 @@ export default (state = initialState, action) => {
         action.calendarData.isDraft,
         action.calendarData.status,
         action.calendarData.isWeekend,
-        action.calendarData.sourceDate,
         action.calendarData.createdDate,
         action.calendarData.updatedDate,
         action.calendarData.createdUserId,

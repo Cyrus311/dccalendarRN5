@@ -15,7 +15,6 @@ class Calendar {
     isDraft,
     status,
     isWeekend,
-    sourceDate,
     createdDate,
     updatedDate,
     createdUserId,
@@ -32,7 +31,6 @@ class Calendar {
     this.isDraft = isDraft;
     this.status = status;
     this.isWeekend = isWeekend;
-    this.sourceDate = sourceDate;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
     this.createdUserId = createdUserId;

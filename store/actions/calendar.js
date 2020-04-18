@@ -50,7 +50,6 @@ export const fetchCalendar = (filterData) => {
                 resData[key].isDraft,
                 resData[key].status,
                 resData[key].isWeekend,
-                resData[key].sourceDate,
                 resData[key].createdDate,
                 resData[key].updatedDate,
                 resData[key].createdUserId,
@@ -181,7 +180,6 @@ export const dailyCalendar = (date) => {
                 resData[key].isDraft,
                 resData[key].status,
                 resData[key].isWeekend,
-                resData[key].sourceDate,
                 resData[key].createdDate,
                 resData[key].updatedDate,
                 resData[key].createdUserId,
@@ -302,9 +300,6 @@ export const createCalendar = (calendar) => {
         userId,
         groupId,
         status,
-        sourceDate: moment(calendar.date).format(
-          "YYYY-MM-DD[T]12:00:00.000[Z]"
-        ),
         startDate: moment(calendar.date).format("YYYY-MM-DD[T]12:00:00.000[Z]"),
         endDate: moment(calendar.date2).format("YYYY-MM-DD[T]12:00:00.000[Z]"),
         description: calendar.description,
