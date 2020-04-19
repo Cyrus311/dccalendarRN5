@@ -57,20 +57,13 @@ const LeaveItem = (props) => {
               style={[
                 props.status === 1
                   ? styles.statusContainerWaitColor
-                  : styles.statusContainerAprovedColor,
+                  : props.status === 2
+                  ? styles.statusContainerAprovedColor
+                  : styles.statusContainerRejectColor,
                 styles.statusContainer,
               ]}
             >
-              <Text
-                style={[
-                  props.status === 1
-                    ? styles.statusWaitColor
-                    : styles.statusAprovedColor,
-                  styles.status,
-                ]}
-              >
-                {statusEnum[props.status]}
-              </Text>
+              <Text style={styles.statusText}>{statusEnum[props.status]}</Text>
             </View>
           </View>
 
@@ -166,16 +159,14 @@ const styles = StyleSheet.create({
   statusContainerAprovedColor: {
     backgroundColor: Colors.gradientStart,
   },
-  status: {
+  statusContainerRejectColor: {
+    backgroundColor: Colors.warning,
+  },
+  statusText: {
     backgroundColor: "transparent",
     fontFamily: "open-sans",
     fontSize: 12,
-  },
-  statusWaitColor: {
     color: Colors.dateText,
-  },
-  statusAprovedColor: {
-    color: Colors.tertiary,
   },
   gradient: {
     flex: 1,
