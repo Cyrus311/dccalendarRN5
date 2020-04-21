@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   daysContainer: {
+    marginTop: 3,
     height: "15%",
     width: "100%",
     minHeight: 109,
