@@ -204,62 +204,66 @@ export default function LeaveAddScreen(props) {
                 {props.touched.description && props.errors.description}
               </Text>
 
-              <Picker
-                // passing value directly from formik
-                selectedValue={props.values.type}
-                // changing value in formik
-                onValueChange={(itemValue) =>
-                  props.setFieldValue("type", itemValue)
-                }
+              <View
+                style={Platform.OS === "android" ? styles.pickerContainer : ""}
               >
-                <Picker.Item
-                  label="İzin Tipi Seçiniz"
-                  value={props.initialValues.type}
-                  key={2}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[8]}
-                  value={8}
-                  key={8}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[2]}
-                  value={2}
-                  key={2}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[7]}
-                  value={7}
-                  key={7}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[3]}
-                  value={3}
-                  key={3}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[4]}
-                  value={4}
-                  key={4}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[5]}
-                  value={5}
-                  key={5}
-                />
-                <Picker.Item
-                  color={Colors.textColor}
-                  label={typeEnum[6]}
-                  value={6}
-                  key={6}
-                />
-              </Picker>
+                <Picker
+                  // passing value directly from formik
+                  selectedValue={props.values.type}
+                  // changing value in formik
+                  onValueChange={(itemValue) =>
+                    props.setFieldValue("type", itemValue)
+                  }
+                >
+                  <Picker.Item
+                    label="İzin Tipi Seçiniz"
+                    value={props.initialValues.type}
+                    key={2}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[8]}
+                    value={8}
+                    key={8}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[2]}
+                    value={2}
+                    key={2}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[7]}
+                    value={7}
+                    key={7}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[3]}
+                    value={3}
+                    key={3}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[4]}
+                    value={4}
+                    key={4}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[5]}
+                    value={5}
+                    key={5}
+                  />
+                  <Picker.Item
+                    color={Colors.textColor}
+                    label={typeEnum[6]}
+                    value={6}
+                    key={6}
+                  />
+                </Picker>
+              </View>
 
               <FlatButton onPress={props.handleSubmit} text="kaydet" />
             </View>
@@ -281,6 +285,12 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.textColor,
+    padding: 10,
+    borderRadius: 6,
+  },
+  pickerContainer: {
     borderWidth: 1,
     borderColor: Colors.textColor,
     padding: 10,
