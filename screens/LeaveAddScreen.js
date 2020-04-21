@@ -264,7 +264,9 @@ export default function LeaveAddScreen(props) {
                   />
                 </Picker>
               </View>
-
+              {Platform.OS === "android" && (
+                <Text style={styles.errorText}></Text>
+              )}
               <FlatButton onPress={props.handleSubmit} text="kaydet" />
             </View>
           )}
