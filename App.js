@@ -8,12 +8,14 @@ import ReduxThunk from "redux-thunk";
 import calendarReducer from "./store/reducers/calendar";
 import authReducer from "./store/reducers/auth";
 import userReducer from "./store/reducers/user";
+// import swapReducer from "./store/reducers/swap";
 import AppNavigator from "./navigation/AppNavigator";
 
 const rootReducer = combineReducers({
   calendars: calendarReducer,
   auth: authReducer,
-  user: userReducer
+  user: userReducer,
+  // swap: swapReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -21,7 +23,7 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 const fetchFonts = () => {
   return Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
-    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf")
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
 };
 export default function App() {

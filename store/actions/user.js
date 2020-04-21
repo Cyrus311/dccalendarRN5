@@ -23,7 +23,8 @@ export const fetchUser = () => {
         resData.user.title,
         resData.user.deviceId,
         resData.user.roles,
-        resData.groups
+        resData.groups,
+        resData.user.platform
       );
 
       dispatch({ type: SET_USER, user: user });
@@ -37,6 +38,9 @@ export const fetchUser = () => {
 export const updateUser = (id, data) => {
   return async (dispatch, getState) => {
     try {
+      // console.log("values:", data);
+
+      // return;
       const response = await userService.updateUser(id, data);
 
       if (response.error) {
@@ -60,7 +64,8 @@ export const updateUser = (id, data) => {
         resData.user.title,
         resData.user.deviceId,
         resData.user.roles,
-        resData.groups
+        resData.groups,
+        resData.user.platform
       );
 
       dispatch({ type: UPDATE_USER, user: user });

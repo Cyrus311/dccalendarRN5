@@ -34,6 +34,12 @@ import AuthScreen, {
 import SettingScreen, {
   screenOptions as settingScreenOptions,
 } from "../screens/SettingScreen";
+// import SwapScreen, {
+//   screenOptions as swapScreenOptions,
+// } from "../screens/SwapScreen";
+// import SwapRequestsScreen, {
+//   screenOptions as swapRequestsScreenOptions,
+// } from "../screens/SwapRequestsScreen";
 
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -54,24 +60,46 @@ const defaultNavOptions = {
   headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
 };
 
-const DutyStackNavigator = createStackNavigator();
+const DutyScreenStackNavigator = createStackNavigator();
 
 export const DutyNavigator = () => {
   return (
-    <DutyStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <DutyStackNavigator.Screen
+    <DutyScreenStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <DutyScreenStackNavigator.Screen
         name="DutyOverview"
         component={DutyOverviewScreen}
         options={dutyOverviewScreenOptions}
       />
-      <DutyStackNavigator.Screen
+      <DutyScreenStackNavigator.Screen
         name="DutyDetail"
         component={DutyDetailScreen}
         options={dutyDetailScreenOptions}
       />
-    </DutyStackNavigator.Navigator>
+    </DutyScreenStackNavigator.Navigator>
   );
 };
+
+// const DutyStackNavigator = createStackNavigator();
+
+// export const DutyNavigator = () => {
+//   return (
+//     <DutyStackNavigator.Navigator
+//       mode="modal"
+//       screenOptions={defaultNavOptions}
+//     >
+//       <DutyStackNavigator.Screen
+//         name="Duty"
+//         component={DutyScreenNavigator}
+//         options={{ headerShown: false }}
+//       />
+//       <DutyStackNavigator.Screen
+//         name="Swap"
+//         component={SwapScreen}
+//         options={swapScreenOptions}
+//       />
+//     </DutyStackNavigator.Navigator>
+//   );
+// };
 
 const LeaveStackNavigator = createStackNavigator();
 
@@ -105,6 +133,20 @@ export const AdminNavigator = () => {
     </AdminStackNavigator.Navigator>
   );
 };
+
+// const SwapRequestStackNavigator = createStackNavigator();
+
+// export const SwapRequestNavigator = () => {
+//   return (
+//     <SwapRequestStackNavigator.Navigator screenOptions={defaultNavOptions}>
+//       <SwapRequestStackNavigator.Screen
+//         name="SwapRequestsScreen"
+//         component={SwapRequestsScreen}
+//         options={swapRequestsScreenOptions}
+//       />
+//     </SwapRequestStackNavigator.Navigator>
+//   );
+// };
 
 const MainDrawerNavigator = createDrawerNavigator();
 
@@ -187,8 +229,22 @@ export const MainNavigator = () => {
         }}
       />
       <MainDrawerNavigator.Screen
-        name="Ayarlar"
+        name="Hesabım"
         component={AdminNavigator}
+        options={{
+          // eslint-disable-next-line react/display-name
+          drawerIcon: (props) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-person" : "md-person"}
+              size={23}
+              color={props.color}
+            />
+          ),
+        }}
+      />
+      {/* <MainDrawerNavigator.Screen
+        name="Takas Talepleri"
+        component={SwapRequestNavigator}
         options={{
           // eslint-disable-next-line react/display-name
           drawerIcon: (props) => (
@@ -199,7 +255,7 @@ export const MainNavigator = () => {
             />
           ),
         }}
-      />
+      /> */}
     </MainDrawerNavigator.Navigator>
   );
 };

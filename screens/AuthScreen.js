@@ -231,6 +231,7 @@ const AuthScreen = (props) => {
             id="email"
             label="E-Mail"
             keyboardType="email-address"
+            textContentType="emailAddress"
             required
             email
             autoCapitalize="none"
@@ -246,6 +247,7 @@ const AuthScreen = (props) => {
               id="fullName"
               label="Ad Soyad"
               keyboardType="default"
+              textContentType="username"
               required
               minLength={5}
               autoCapitalize="words"
@@ -260,6 +262,7 @@ const AuthScreen = (props) => {
               label="Şifre"
               keyboardType="default"
               secureTextEntry
+              textContentType="password"
               required
               minLength={8}
               autoCapitalize="none"

@@ -5,7 +5,6 @@ import {
   View,
   Text,
   Picker,
-  Button,
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
@@ -22,7 +21,6 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import useStateWithCallback from "../utilty/useStateWithCallback";
 
 export default function LeaveAddScreen(props) {
   // const [datetime, setDatetime] = useStateWithCallback(new Date(), () =>
@@ -296,7 +294,7 @@ const styles = StyleSheet.create({
     color: Colors.textColor,
   },
   errorText: {
-    color: Colors.coolCrimson,
+    color: Colors.danger,
     fontWeight: "bold",
     marginBottom: 10,
     marginTop: 6,

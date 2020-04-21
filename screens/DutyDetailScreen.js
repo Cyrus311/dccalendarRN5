@@ -198,10 +198,11 @@ const DutyDetailScreen = (props) => {
                 description={itemData.item.calendar.description}
                 onSelect={() => {}}
                 user={itemData.item.user}
+                // selectable={user.id !== itemData.item.user.id}
               >
-                {user.id !== itemData.item.user.id && (
+                {/* {user.id !== itemData.item.user.id && (
                   <TouchableOpacity
-                    onPress={() => {}}
+                    onPress={() => props.navigation.navigate("Swap")}
                     style={styles.swapButton}
                   >
                     <Ionicons
@@ -210,7 +211,7 @@ const DutyDetailScreen = (props) => {
                       color={Colors.tertiary}
                     />
                   </TouchableOpacity>
-                )}
+                )} */}
               </DutyItem>
             )}
           />

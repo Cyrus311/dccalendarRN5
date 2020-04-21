@@ -21,7 +21,7 @@ const DutyItem = (props) => {
     TouchableComponent = TouchableNativeFeedback;
   }
 
-  if (!props.navigatable) {
+  if (!props.navigatable && !props.selectable) {
     TouchableComponent = View;
   }
 

@@ -42,6 +42,7 @@ export const signup = (email, password, fullName) => {
         title: "Dr.",
         deviceId: "QWERT1",
         roles: ["user"],
+        platform: 2,
       }),
     });
 

@@ -7,6 +7,7 @@ class User {
     deviceId,
     roles,
     groups,
+    platform,
     createdDate,
     updatedDate,
     createdUserId,
@@ -19,6 +20,7 @@ class User {
     this.deviceId = deviceId;
     this.roles = roles;
     this.groups = groups;
+    this.platform = platform;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
     this.createdUserId = createdUserId;

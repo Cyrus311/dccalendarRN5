@@ -38,6 +38,7 @@ export default {
   dateText: "#ffffff",
   success: "#2dce89",
   warning: "#fb6340",
+  danger: "#f06261",
 };
 
 const backup = {

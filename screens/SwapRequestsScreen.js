@@ -3,32 +3,36 @@ import {
   View,
   Text,
   FlatList,
-  Button,
   ActivityIndicator,
   StyleSheet,
+  Button,
   Alert,
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
-
-import DutyItem from "../components/items/DutyItem";
-import * as calendarActions from "../store/actions/calendar";
+import * as swapActions from "../store/actions/swap";
+import SwapItem from "../components/items/SwapItem";
 import Colors from "../constants/Colors";
 
-const SwapScreen = (props) => {
+const SwapRequestsScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  const duty = useSelector((state) => state.calendars.mountCalendars);
+  const swap = useSelector((state) => state.swap.swaps);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   dispatch(ordersActions.fetchOrders()).then(() => {
+  //     setIsLoading(false);
+  //   });
+  // }, [dispatch]);
 
   const loadDuty = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
     try {
-      // filter: {"where":{"date":{"between":["2020-05-01","2020-05-31"]},"groupId":{"like":"5e8db35c3322910099e91a2b"},"type":1},"include":[{"relation":"group"},{"relation":"user"},{"relation":"location"}]}
       if (user.groups && user.groups.length <= 0) {
         Alert.alert(
           "Bağlı grup bulunamadı!",
@@ -58,7 +62,7 @@ const SwapScreen = (props) => {
           ],
         },
       };
-      await dispatch(calendarActions.fetchCalendar(filterData));
+      await dispatch(swapActions.fetchSwap(filterData));
     } catch (error) {
       console.log("dutyERROR", error);
       setError(error.message);
@@ -82,12 +86,6 @@ const SwapScreen = (props) => {
     });
   }, [dispatch, loadDuty]);
 
-  const selectItemHandler = (calendar) => {
-    // props.navigation.navigate("DutyDetail", {
-    //   calendar: JSON.stringify(calendar),
-    // });
-  };
-
   if (error) {
     return (
       <View style={styles.centered}>
@@ -100,15 +98,15 @@ const SwapScreen = (props) => {
   if (isLoading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.textColor} />
       </View>
     );
   }
 
-  if (!isLoading && duty.length === 0) {
+  if (swap.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
+        <Text>İzin kaydı bulunamadı!</Text>
       </View>
     );
   }
@@ -116,32 +114,28 @@ const SwapScreen = (props) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.screen}>
-        <View style={styles.infoArea}>
-          <View>
-            <Text style={styles.text}>
-              Değiştirmek istediğiniz nöbeti seçiniz!
-            </Text>
-          </View>
-        </View>
-        <View style={styles.dutyListContainer}>
-          <FlatList
-            onRefresh={loadDuty}
-            refreshing={isRefreshing}
-            data={duty}
-            keyExtractor={(item) => item.id}
-            renderItem={(itemData) => (
-              <DutyItem
-                date={itemData.item.calendar.readableDate}
-                location={itemData.item.location}
-                description={itemData.item.calendar.description}
-                onSelect={() => {
-                  selectItemHandler(itemData.item.calendar);
-                }}
-                selectable
-              ></DutyItem>
-            )}
-          />
-        </View>
+        <FlatList
+          onRefresh={loadDuty}
+          refreshing={isRefreshing}
+          data={swap}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <SwapItem
+              onSelect={() => {}}
+              onRemove={() => {}}
+              // deletable
+            ></SwapItem>
+          )}
+        />
+      </View>
+      <View style={styles.centered}>
+        <Button
+          title="Tekrar Deneyin"
+          onPress={() => {
+            dispatch(swapActions.createSwap());
+          }}
+          color={Colors.primary}
+        />
       </View>
     </SafeAreaView>
   );
@@ -149,30 +143,18 @@ const SwapScreen = (props) => {
 
 export const screenOptions = (navData) => {
   return {
-    headerTitle: "Takas",
+    headerTitle: "Takas İstekleri",
   };
 };
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: Colors.backColor },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  dutyListContainer: { height: "95%" },
-  infoArea: {
+  centered: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    height: 45,
-    borderWidth: 1,
-    borderColor: Colors.textColor,
-    backgroundColor: Colors.primary,
-  },
-  text: {
-    backgroundColor: "transparent",
-    fontFamily: "open-sans-bold",
-    fontSize: 18,
-    marginVertical: 6,
-    paddingHorizontal: 4,
-    paddingVertical: 4,
-    color: Colors.dateText,
+    backgroundColor: Colors.backColor,
   },
 });
 
-export default SwapScreen;
+export default SwapRequestsScreen;
