@@ -157,6 +157,7 @@ const DutyDetailScreen = (props) => {
     <View style={styles.screen}>
       <View style={styles.daysContainer}>
         <FlatList
+          showsHorizontalScrollIndicator={false}
           initialScrollIndex={activeIndex - 2}
           renderItem={(item) => renderItem(item)}
           // ref={ref => {

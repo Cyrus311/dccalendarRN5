@@ -60,8 +60,6 @@ export default function SettingScreen(props) {
 
   const handleFormSubmit = async (values) => {
     try {
-      console.log(values);
-
       setError(null);
       await dispatch(userActions.updateUser(user.id, values));
       setFullName(values.fullName);
