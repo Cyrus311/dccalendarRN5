@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     borderWidth: 1,
     borderColor: Colors.textColor,
-    padding: 5,
+    // padding: 5,
     borderRadius: 6,
   },
   Icon: { paddingHorizontal: 10, color: Colors.textColor },
