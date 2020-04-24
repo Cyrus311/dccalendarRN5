@@ -16,7 +16,6 @@ import * as yup from "yup";
 import FlatButton from "../components/UI/FlatButton";
 import { typeEnum } from "../constants/typeEnum";
 import * as calendarActions from "../store/actions/calendar";
-// import DateTimePicker from "@react-native-community/datetimepicker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import Colors from "../constants/Colors";

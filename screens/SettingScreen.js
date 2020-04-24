@@ -237,6 +237,12 @@ export default function SettingScreen(props) {
                 />
               </Picker> */}
 
+              <FlatButton
+                onPress={props.handleSubmit}
+                text="kaydet"
+                disabled={true}
+              />
+
               {!isPasswordUpdate && (
                 <FlatButton
                   styleButton={styles.passwordButton}
@@ -247,12 +253,16 @@ export default function SettingScreen(props) {
                   text="Şifre Güncelle"
                 />
               )}
-
-              <FlatButton
-                onPress={props.handleSubmit}
-                text="kaydet"
-                disabled={true}
-              />
+              {isPasswordUpdate && (
+                <FlatButton
+                  styleButton={styles.passwordButton}
+                  styleButtonText={styles.passwordButtonText}
+                  onPress={() => {
+                    setisPasswordUpdate(!isPasswordUpdate);
+                  }}
+                  text="Profil Güncelle"
+                />
+              )}
             </View>
           )}
         </Formik>
