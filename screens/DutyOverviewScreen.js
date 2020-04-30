@@ -9,11 +9,13 @@ import {
   StyleSheet,
   Alert,
   StatusBar,
+  Vibration,
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import moment from "moment";
+import { Notifications } from "expo";
 
 import DutyItem from "../components/items/DutyItem";
 import * as calendarActions from "../store/actions/calendar";
@@ -24,6 +26,7 @@ const DutyOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
+  const [notification, setNotification] = useState({});
   const duty = useSelector((state) => state.calendars.mountCalendars);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
@@ -74,9 +77,12 @@ const DutyOverviewScreen = (props) => {
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", loadDuty);
-
+    const _notificationSubscription = Notifications.addListener(
+      _handleNotification
+    );
     return () => {
       unsubscribe();
+      _notificationSubscription.unsubscribe();
     };
   }, [loadDuty]);
 
@@ -92,6 +98,20 @@ const DutyOverviewScreen = (props) => {
       calendar: JSON.stringify(calendar),
     });
   };
+
+  const _handleNotification = (notification) => {
+    Vibration.vibrate();
+    // console.log(notification);
+    setNotification(notification);
+  };
+
+  useEffect(() => {
+    if (notification.data) {
+      Alert.alert("Mesajınız Var!", notification.data.message, [
+        { text: "Okay" },
+      ]);
+    }
+  }, [notification]);
 
   if (error) {
     return (

@@ -27,7 +27,7 @@ export const authenticate = (token, userId, expiryTime) => {
   };
 };
 
-export const signup = (email, password, fullName) => {
+export const signup = (email, password, fullName, expoPushToken) => {
   const apiUrl = "https://doctorcalendar.eu-gb.mybluemix.net/users";
   return async (dispatch) => {
     const response = await fetch(apiUrl, {
@@ -40,7 +40,7 @@ export const signup = (email, password, fullName) => {
         password: password,
         fullName: fullName,
         title: "Dr.",
-        deviceId: "QWERT1",
+        deviceId: expoPushToken,
         roles: ["user"],
         platform: 2,
       }),

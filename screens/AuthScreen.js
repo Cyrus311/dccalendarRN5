@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
 import {
   View,
-  ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
   Button,
@@ -13,6 +12,9 @@ import {
 // import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
+import Constants from "expo-constants";
 
 import Input from "../components/UI/Input";
 import Card from "../components/UI/Card";
@@ -52,6 +54,7 @@ const AuthScreen = (props) => {
   const [error, setError] = useState();
   const [isSignup, setIsSignup] = useState(false);
   const [tryEmailExist, setTryEmailExist] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState("");
   const isEmailCheck = useSelector((state) => state.auth.isEmailCheck);
   const dispatch = useDispatch();
 
@@ -96,6 +99,13 @@ const AuthScreen = (props) => {
       ]);
     }
   }, [error]);
+
+  useEffect(() => {
+    const tryRegisterPushNotification = async () => {
+      await registerForPushNotificationsAsync();
+    };
+    tryRegisterPushNotification();
+  }, [dispatch]);
 
   useEffect(() => {
     if (isEmailCheck) {
@@ -184,7 +194,8 @@ const AuthScreen = (props) => {
       action = authActions.signup(
         formState.inputValues.email,
         formState.inputValues.password,
-        formState.inputValues.fullName
+        formState.inputValues.fullName,
+        expoPushToken
       );
     } else {
       action = authActions.login(
@@ -205,6 +216,39 @@ const AuthScreen = (props) => {
       setError(error.message);
       setIsLoading(false);
       setTryEmailExist(false);
+    }
+  };
+
+  const registerForPushNotificationsAsync = async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+      );
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Permissions.askAsync(
+          Permissions.NOTIFICATIONS
+        );
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        // alert("Failed to get push token for push notification!");
+        return;
+      }
+      const token = await Notifications.getExpoPushTokenAsync();
+      // console.log(token);
+      setExpoPushToken(token);
+    } else {
+      // alert("Must use physical device for Push Notifications");
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.createChannelAndroidAsync("default", {
+        name: "default",
+        sound: true,
+        priority: "max",
+        vibrate: [0, 250, 250, 250],
+      });
     }
   };
 
