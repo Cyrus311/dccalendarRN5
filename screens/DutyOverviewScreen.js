@@ -82,7 +82,6 @@ const DutyOverviewScreen = (props) => {
     );
     return () => {
       unsubscribe();
-      _notificationSubscription.unsubscribe();
     };
   }, [loadDuty]);
 
