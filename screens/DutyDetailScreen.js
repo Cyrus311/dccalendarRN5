@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
+import SafeAreaView from "react-native-safe-area-view";
 import { useSelector, useDispatch } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
@@ -154,54 +155,55 @@ const DutyDetailScreen = (props) => {
   }
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.daysContainer}>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          initialScrollIndex={activeIndex - 2}
-          renderItem={(item) => renderItem(item)}
-          // ref={ref => {
-          //   this.flatListRef = ref;
-          // }}
-          // initialNumToRender={5}
-          getItemLayout={getItemLayout}
-          data={listOfDate}
-          horizontal={true}
-          keyExtractor={keyExtractor}
-        />
-        <ArrowIcon />
-      </View>
-      {isLoading && (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-        </View>
-      )}
-      {!isLoading && duty.length === 0 && (
-        <View style={[styles.centered]}>
-          <View style={styles.noDutyContainer}>
-            <Text style={styles.text}>
-              Seçili gün için atanmış nöbetçi bulunamadı.
-            </Text>
-          </View>
-        </View>
-      )}
-      {!isLoading && (
-        <View style={styles.dutyContainer}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.screen}>
+        <View style={styles.daysContainer}>
           <FlatList
-            onRefresh={loadDuty.bind(this, selectedDate)}
-            refreshing={isRefreshing}
-            data={duty}
-            keyExtractor={(item) => item.id}
-            renderItem={(itemData) => (
-              <DutyItem
-                date={itemData.item.calendar.readableDate}
-                location={itemData.item.location}
-                description={itemData.item.calendar.description}
-                onSelect={() => {}}
-                user={itemData.item.user}
-                // selectable={user.id !== itemData.item.user.id}
-              >
-                {/* {user.id !== itemData.item.user.id && (
+            showsHorizontalScrollIndicator={false}
+            initialScrollIndex={activeIndex - 2}
+            renderItem={(item) => renderItem(item)}
+            // ref={ref => {
+            //   this.flatListRef = ref;
+            // }}
+            // initialNumToRender={5}
+            getItemLayout={getItemLayout}
+            data={listOfDate}
+            horizontal={true}
+            keyExtractor={keyExtractor}
+          />
+          <ArrowIcon />
+        </View>
+        {isLoading && (
+          <View style={styles.centered}>
+            <ActivityIndicator size="large" color={Colors.primary} />
+          </View>
+        )}
+        {!isLoading && duty.length === 0 && (
+          <View style={[styles.centered]}>
+            <View style={styles.noDutyContainer}>
+              <Text style={styles.text}>
+                Seçili gün için atanmış nöbetçi bulunamadı.
+              </Text>
+            </View>
+          </View>
+        )}
+        {!isLoading && (
+          <View style={styles.dutyContainer}>
+            <FlatList
+              onRefresh={loadDuty.bind(this, selectedDate)}
+              refreshing={isRefreshing}
+              data={duty}
+              keyExtractor={(item) => item.id}
+              renderItem={(itemData) => (
+                <DutyItem
+                  date={itemData.item.calendar.readableDate}
+                  location={itemData.item.location}
+                  description={itemData.item.calendar.description}
+                  onSelect={() => {}}
+                  user={itemData.item.user}
+                  // selectable={user.id !== itemData.item.user.id}
+                >
+                  {/* {user.id !== itemData.item.user.id && (
                   <TouchableOpacity
                     onPress={() => props.navigation.navigate("Swap")}
                     style={styles.swapButton}
@@ -213,12 +215,13 @@ const DutyDetailScreen = (props) => {
                     />
                   </TouchableOpacity>
                 )} */}
-              </DutyItem>
-            )}
-          />
-        </View>
-      )}
-    </View>
+                </DutyItem>
+              )}
+            />
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
