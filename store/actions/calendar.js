@@ -103,12 +103,22 @@ export const fetchCalendar = (filterData) => {
             moment(duty.calendar.startDate).format("Y-MM") ===
               moment().format("Y-MM")
         ),
-        noDutyCalendars: loadedCalendars.filter(
-          (duty) =>
-            duty.user.id === userId &&
-            duty.calendar.type !== 0 &&
-            duty.calendar.type !== 1
-        ),
+        noDutyCalendars: loadedCalendars
+          .filter(
+            (duty) =>
+              duty.user.id === userId &&
+              duty.calendar.type !== 0 &&
+              duty.calendar.type !== 1
+          )
+          .sort((a, b) => {
+            if (a.calendar.startDate > b.calendar.startDate) {
+              return -1;
+            }
+            if (a.calendar.startDate < b.calendar.startDate) {
+              return 1;
+            }
+            return 0;
+          }),
         dailyCalendars: [],
       });
     } catch (error) {
@@ -240,35 +250,30 @@ export const dailyCalendar = (date) => {
 
 export const deleteCalendar = (calendarId) => {
   return async (dispatch, getState) => {
-    const token = getState().auth.token;
-    const response = await fetch(
-      `https://shoppingapp-a4b90.firebaseio.com/calendars/${calendarId}.json?auth=${token}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    try {
+      const response = await calendarService.deleteCalendar(calendarId);
 
-    if (!response.ok) {
-      // throw new Error("Something went wrong!");
-      const errorResData = await response.json();
-      console.log("ERROR", errorResData);
+      if (response.error) {
+        const errorResData = response.error;
+        console.log("ERROR", errorResData);
 
-      const errorId = errorResData.error.message;
-      let message = "Something went wrong!";
-      if (errorId === "INVALID_EMAIL") {
-        message = "This email is not valid!";
-      } else if (errorId === "EMAIL_NOT_FOUND") {
-        message = "This email could not be found!";
-      } else if (errorId === "INVALID_PASSWORD") {
-        message = "This password is not valid!";
+        const errorId = errorResData.error.message;
+        let message = "Something went wrong!";
+        if (errorId === "INVALID_EMAIL") {
+          message = "This email is not valid!";
+        } else if (errorId === "EMAIL_NOT_FOUND") {
+          message = "This email could not be found!";
+        } else if (errorId === "INVALID_PASSWORD") {
+          message = "This password is not valid!";
+        }
+        throw new Error(message);
       }
-      throw new Error(message);
+
+      dispatch({ type: DELETE_CALENDAR, pid: calendarId });
+    } catch (error) {
+      console.log("error", error);
+      throw error;
     }
-
-    dispatch({ type: DELETE_CALENDAR, pid: calendarId });
   };
 };
 

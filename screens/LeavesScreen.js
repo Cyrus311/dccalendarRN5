@@ -75,6 +75,15 @@ const LeavesScreen = (props) => {
     }
   }, [dispatch, setIsLoading, setError]);
 
+  const deleteCalendarHandler = async (id) => {
+    try {
+      await dispatch(calendarActions.deleteCalendar(id));
+    } catch (error) {
+      console.log("dutyERROR", error);
+      setError(error.message);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", loadDuty);
 
@@ -131,8 +140,10 @@ const LeavesScreen = (props) => {
               type={itemData.item.calendar.type}
               description={itemData.item.calendar.description}
               onSelect={() => {}}
-              onRemove={() => {}}
-              // deletable
+              onRemove={() => {
+                deleteCalendarHandler(itemData.item.calendar.id);
+              }}
+              deletable={itemData.item.calendar.status === 3}
             ></LeaveItem>
           )}
         />

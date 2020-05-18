@@ -94,7 +94,8 @@ const DutyItem = (props) => {
 const styles = StyleSheet.create({
   duty: {
     height: 90,
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 8,
   },
   touchable: {
     borderRadius: 10,

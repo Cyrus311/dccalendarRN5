@@ -110,19 +110,19 @@ export default (state = initialState, action) => {
       return {
         ...state,
         userCalendars: state.userCalendars.filter(
-          (calendar) => calendar.id !== action.pid
+          (calendar) => calendar.calendar.id !== action.pid
         ),
         availableCalendars: state.availableCalendars.filter(
-          (calendar) => calendar.id !== action.pid
+          (calendar) => calendar.calendar.id !== action.pid
         ),
         noDutyCalendars: state.noDutyCalendars.filter(
-          (calendar) => calendar.id !== action.pid
+          (calendar) => calendar.calendar.id !== action.pid
         ),
         mountCalendars: state.mountCalendars.filter(
-          (calendar) => calendar.id !== action.pid
+          (calendar) => calendar.calendar.id !== action.pid
         ),
         dailyCalendars: state.dailyCalendars.filter(
-          (calendar) => calendar.id !== action.pid
+          (calendar) => calendar.calendar.id !== action.pid
         ),
       };
     }

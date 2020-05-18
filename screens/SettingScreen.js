@@ -158,7 +158,7 @@ export default function SettingScreen(props) {
                       secureTextEntry
                       style={styles.input}
                       placeholderTextColor={Colors.textColor}
-                      placeholder="Şifre"
+                      placeholder="Mevcut Şifre"
                       underlineColorAndroid="transparent"
                       onChangeText={props.handleChange("oldPassword")}
                       onBlur={props.handleBlur("oldPassword")}

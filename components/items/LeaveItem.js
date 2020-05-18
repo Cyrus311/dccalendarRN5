@@ -3,7 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  // TouchableOpacity,
+  TouchableOpacity,
   // TouchableNativeFeedback,
   Platform,
 } from "react-native";
@@ -75,7 +75,7 @@ const LeaveItem = (props) => {
               >
                 <Ionicons
                   name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
-                  size={27}
+                  size={35}
                   color="red"
                 />
               </TouchableOpacity>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   gradientContainer: {
-    flex: 1,
+    flex: 2,
     // alignItems: "center",
     justifyContent: "center",
   },
@@ -175,8 +175,9 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
   },
   deleteButton: {},
 });
