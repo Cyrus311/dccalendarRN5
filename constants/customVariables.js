@@ -5,6 +5,7 @@ export const customVariables = {
   REMEMBERME: "isRememberMe",
   ERRORCODE: {
     422: "422",
-    400: "400"
-  }
+    400: "400",
+  },
+  CALENDAR_NAME: "OmniCali",
 };

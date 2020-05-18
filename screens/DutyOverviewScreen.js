@@ -16,11 +16,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import moment from "moment";
 // import { Notifications } from "expo";
+import * as Calendar from "expo-calendar";
 
 import DutyItem from "../components/items/DutyItem";
 import * as calendarActions from "../store/actions/calendar";
 import HeaderButton from "../components/UI/HeaderButton";
 import Colors from "../constants/Colors";
+import { customVariables } from "../constants/customVariables";
 
 const DutyOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -86,6 +88,32 @@ const DutyOverviewScreen = (props) => {
   }, [loadDuty]);
 
   useEffect(() => {
+    props.navigation.setOptions({
+      // eslint-disable-next-line react/display-name
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Back"
+            iconName={Platform.OS === "android" ? "md-alarm" : "ios-alarm"}
+            onPress={() => {
+              syncNativeCalendar(duty);
+            }}
+          />
+          <Item
+            title="DutyDetail"
+            iconName={Platform.OS === "android" ? "md-calendar" : "md-calendar"}
+            onPress={() => {
+              props.navigation.navigate("DutyDetail", {
+                calendar: JSON.stringify({ date: moment() }),
+              });
+            }}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, [duty]);
+
+  useEffect(() => {
     setIsLoading(true);
     loadDuty().then(() => {
       setIsLoading(false);
@@ -96,6 +124,74 @@ const DutyOverviewScreen = (props) => {
     props.navigation.navigate("DutyDetail", {
       calendar: JSON.stringify(calendar),
     });
+  };
+
+  const getOmniCaliCalendarSource = async () => {
+    const calendars = await Calendar.getCalendarsAsync();
+    const omnicaliCalendar = calendars.filter(
+      (each) => each.title === customVariables.CALENDAR_NAME
+    );
+    return omnicaliCalendar[0];
+  };
+
+  const syncNativeCalendar = async (duty) => {
+    try {
+      if (!duty) {
+        return;
+      }
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status === "granted") {
+        const defaultCalendar =
+          Platform.OS === "ios"
+            ? await Calendar.getDefaultCalendarAsync()
+            : {
+                source: {
+                  isLocalAccount: true,
+                  name: customVariables.CALENDAR_NAME,
+                },
+              };
+        const omniCaliCalendar = await getOmniCaliCalendarSource();
+        if (omniCaliCalendar) {
+          await Calendar.deleteCalendarAsync(omniCaliCalendar.id);
+        }
+        const newCalendarID = await Calendar.createCalendarAsync({
+          title: customVariables.CALENDAR_NAME,
+          color: "blue",
+          entityType: Calendar.EntityTypes.EVENT,
+          sourceId: defaultCalendar.source.id,
+          source: defaultCalendar.source,
+          name: "internalCalendarName",
+          ownerAccount: "personal",
+          accessLevel: Calendar.CalendarAccessLevel.OWNER,
+        });
+        for (const item of duty) {
+          await Calendar.createEventAsync(newCalendarID, {
+            title: item.location.name,
+            startDate: item.calendar.startDate,
+            endDate: item.calendar.endDate,
+            notes: item.calendar.description,
+            allDay: true,
+            availability: Calendar.Availability.BUSY,
+            alarms: [{ relativeOffset: -900 }],
+          });
+        }
+        if (duty.length === 0) {
+          Alert.alert("Nöbetiniz bulunmamaktadır!", "", [{ text: "Okay" }]);
+          return;
+        }
+        Alert.alert(
+          "Takvim eşitleme başarılı!",
+          "Nöbetleriniz cihaz takviminize aktarılmıştır.",
+          [{ text: "Okay" }]
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Takvim eşitleme sırasında hata oluştu!",
+        "Lütfen sistem yöneticinize başvurunuz",
+        [{ text: "Okay" }]
+      );
+    }
   };
 
   // const _handleNotification = (notification) => {
@@ -122,7 +218,7 @@ const DutyOverviewScreen = (props) => {
     return (
       <View style={styles.centered}>
         <Text>Hata Oluştu!</Text>
-        <Button title="Try Again" onPress={loadDuty} color={Colors.primary} />
+        <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} />
       </View>
     );
   }
@@ -139,6 +235,7 @@ const DutyOverviewScreen = (props) => {
     return (
       <View style={styles.centered}>
         <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
+        <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} />
       </View>
     );
   }
