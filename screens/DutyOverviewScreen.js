@@ -189,7 +189,7 @@ const DutyOverviewScreen = (props) => {
       Alert.alert(
         "Takvim eşitleme sırasında hata oluştu!",
         // "Lütfen sistem yöneticinize başvurunuz",
-        { error },
+        error.message,
         [{ text: "Okay" }]
       );
     }
