@@ -12,24 +12,15 @@ export const DAILY_CALENDARS = "DAILY_CALENDARS";
 export const fetchCalendar = (filterData) => {
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
+
+    if (!userId) {
+      throw new Error(
+        "Kullanıcı bilgisine ulaşılamadı. Lütfen sistem yöneticinize bildiriniz."
+      );
+    }
+
     try {
       const response = await calendarService.getCalendars(filterData);
-
-      if (response.error) {
-        const errorResData = response.error;
-        console.log("ERROR", errorResData);
-
-        const errorId = errorResData.error.message;
-        let message = "Something went wrong!";
-        if (errorId === "INVALID_EMAIL") {
-          message = "This email is not valid!";
-        } else if (errorId === "EMAIL_NOT_FOUND") {
-          message = "This email could not be found!";
-        } else if (errorId === "INVALID_PASSWORD") {
-          message = "This password is not valid!";
-        }
-        throw new Error(message);
-      }
 
       const resData = response;
 
@@ -122,8 +113,16 @@ export const fetchCalendar = (filterData) => {
         dailyCalendars: [],
       });
     } catch (error) {
-      console.log("error", error);
-      throw error;
+      const errorResData = error.data;
+      let message = "Sistem yöneticinize başvurunuz!";
+      message = errorResData.error.message;
+      if (errorResData.error.details) {
+        console.log("errorResData", errorResData.error);
+
+        // message = errorResData.error.details[0].message;
+        message = "Sistem yöneticinize başvurunuz!";
+      }
+      throw new Error(message);
     }
   };
 };
@@ -160,16 +159,6 @@ export const dailyCalendar = (date) => {
       };
 
       const response = await calendarService.getCalendars(filterData);
-
-      if (response.error) {
-        const errorResData = response.error;
-        console.log("ERROR", errorResData);
-
-        const errorId = errorResData.error.message;
-        let message = "Something went wrong!";
-        throw new Error(message);
-        // console.log("ERROR");
-      }
 
       const resData = response;
 
@@ -242,8 +231,16 @@ export const dailyCalendar = (date) => {
           }),
       });
     } catch (error) {
-      console.log("error", error);
-      throw error;
+      const errorResData = error.data;
+      let message = "Sistem yöneticinize başvurunuz!";
+      message = errorResData.error.message;
+      if (errorResData.error.details) {
+        console.log("errorResData", errorResData.error);
+
+        // message = errorResData.error.details[0].message;
+        message = "Sistem yöneticinize başvurunuz!";
+      }
+      throw new Error(message);
     }
   };
 };
@@ -252,27 +249,18 @@ export const deleteCalendar = (calendarId) => {
   return async (dispatch, getState) => {
     try {
       const response = await calendarService.deleteCalendar(calendarId);
-
-      if (response.error) {
-        const errorResData = response.error;
-        console.log("ERROR", errorResData);
-
-        const errorId = errorResData.error.message;
-        let message = "Something went wrong!";
-        if (errorId === "INVALID_EMAIL") {
-          message = "This email is not valid!";
-        } else if (errorId === "EMAIL_NOT_FOUND") {
-          message = "This email could not be found!";
-        } else if (errorId === "INVALID_PASSWORD") {
-          message = "This password is not valid!";
-        }
-        throw new Error(message);
-      }
-
       dispatch({ type: DELETE_CALENDAR, pid: calendarId });
     } catch (error) {
-      console.log("error", error);
-      throw error;
+      const errorResData = error.data;
+      let message = "Sistem yöneticinize başvurunuz!";
+      message = errorResData.error.message;
+      if (errorResData.error.details) {
+        console.log("errorResData", errorResData.error);
+
+        // message = errorResData.error.details[0].message;
+        message = "Sistem yöneticinize başvurunuz!";
+      }
+      throw new Error(message);
     }
   };
 };
