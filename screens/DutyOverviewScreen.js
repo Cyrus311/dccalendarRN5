@@ -43,7 +43,7 @@ const DutyOverviewScreen = (props) => {
         Alert.alert(
           "Bağlı grup bulunamadı!",
           "Lütfen sistem yöneticinize başvurunuz",
-          [{ text: "Okay" }]
+          [{ text: "Tamam" }]
         );
         return;
       }
@@ -176,20 +176,20 @@ const DutyOverviewScreen = (props) => {
           });
         }
         if (duty.length === 0) {
-          Alert.alert("Nöbetiniz bulunmamaktadır!", "", [{ text: "Okay" }]);
+          Alert.alert("Nöbetiniz bulunmamaktadır!", "", [{ text: "Tamam" }]);
           return;
         }
         Alert.alert(
           "Takvim eşitleme başarılı!",
           "Nöbetleriniz cihaz takviminize aktarılmıştır.",
-          [{ text: "Okay" }]
+          [{ text: "Tamam" }]
         );
       }
     } catch (error) {
       Alert.alert(
         "Takvim eşitleme sırasında hata oluştu!",
         "Lütfen sistem yöneticinize başvurunuz",
-        [{ text: "Okay" }]
+        [{ text: "Tamam" }]
       );
     }
   };

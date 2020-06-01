@@ -121,6 +121,7 @@ export default function SettingScreen(props) {
                       onChangeText={props.handleChange("fullName")}
                       onBlur={props.handleBlur("fullName")}
                       value={props.values.fullName}
+                      
                     />
                   </View>
                   <Text style={styles.errorText}>
