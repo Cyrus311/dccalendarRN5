@@ -9,7 +9,11 @@ export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
 export const SET_CALENDARS = "SET_CALENDARS";
 export const DAILY_CALENDARS = "DAILY_CALENDARS";
 
-export const fetchCalendar = (filterData) => {
+export const fetchCalendar = (filterData, selectedMount) => {
+
+  console.log('api',selectedMount);
+  
+
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;
 
@@ -30,45 +34,45 @@ export const fetchCalendar = (filterData) => {
           id: key,
           calendar: resData[key]
             ? new Calendar(
-                resData[key].id,
-                new Date(resData[key].startDate),
-                new Date(resData[key].endDate),
-                resData[key].description,
-                resData[key].type,
-                resData[key].userId,
-                resData[key].groupId,
-                resData[key].locationId,
-                resData[key].isDraft,
-                resData[key].status,
-                resData[key].isWeekend,
-                resData[key].createdDate,
-                resData[key].updatedDate,
-                resData[key].createdUserId,
-                resData[key].updatedUserId
-              )
+              resData[key].id,
+              new Date(resData[key].startDate),
+              new Date(resData[key].endDate),
+              resData[key].description,
+              resData[key].type,
+              resData[key].userId,
+              resData[key].groupId,
+              resData[key].locationId,
+              resData[key].isDraft,
+              resData[key].status,
+              resData[key].isWeekend,
+              resData[key].createdDate,
+              resData[key].updatedDate,
+              resData[key].createdUserId,
+              resData[key].updatedUserId
+            )
             : {},
           group: resData[key].group
             ? new Group(resData[key].group.id, resData[key].group.name)
             : {},
           location: resData[key].location
             ? new Location(
-                resData[key].location.id,
-                resData[key].location.name,
-                resData[key].location.colorCode,
-                resData[key].location.groupId
-              )
+              resData[key].location.id,
+              resData[key].location.name,
+              resData[key].location.colorCode,
+              resData[key].location.groupId
+            )
             : {},
           user: resData[key].user
             ? new User(
-                resData[key].user.id,
-                resData[key].user.email,
-                resData[key].user.fullName,
-                resData[key].user.title,
-                resData[key].user.deviceId,
-                resData[key].user.roles,
-                resData[key].user.createdDate,
-                resData[key].user.updatedDate
-              )
+              resData[key].user.id,
+              resData[key].user.email,
+              resData[key].user.fullName,
+              resData[key].user.title,
+              resData[key].user.deviceId,
+              resData[key].user.roles,
+              resData[key].user.createdDate,
+              resData[key].user.updatedDate
+            )
             : {},
         });
       }
@@ -91,8 +95,8 @@ export const fetchCalendar = (filterData) => {
           (duty) =>
             duty.user.id === userId &&
             duty.calendar.type === 1 &&
-            moment(duty.calendar.startDate).format("Y-MM") ===
-              moment().format("Y-MM")
+            moment(duty.calendar.startDate).format("Y-MM") === selectedMount.value
+          //moment().format("Y-MM")
         ),
         noDutyCalendars: loadedCalendars
           .filter(
@@ -168,45 +172,45 @@ export const dailyCalendar = (date) => {
           id: key,
           calendar: resData[key]
             ? new Calendar(
-                resData[key].id,
-                new Date(resData[key].startDate),
-                new Date(resData[key].endDate),
-                resData[key].description,
-                resData[key].type,
-                resData[key].userId,
-                resData[key].groupId,
-                resData[key].locationId,
-                resData[key].isDraft,
-                resData[key].status,
-                resData[key].isWeekend,
-                resData[key].createdDate,
-                resData[key].updatedDate,
-                resData[key].createdUserId,
-                resData[key].updatedUserId
-              )
+              resData[key].id,
+              new Date(resData[key].startDate),
+              new Date(resData[key].endDate),
+              resData[key].description,
+              resData[key].type,
+              resData[key].userId,
+              resData[key].groupId,
+              resData[key].locationId,
+              resData[key].isDraft,
+              resData[key].status,
+              resData[key].isWeekend,
+              resData[key].createdDate,
+              resData[key].updatedDate,
+              resData[key].createdUserId,
+              resData[key].updatedUserId
+            )
             : {},
           group: resData[key].group
             ? new Group(resData[key].group.id, resData[key].group.name)
             : {},
           location: resData[key].location
             ? new Location(
-                resData[key].location.id,
-                resData[key].location.name,
-                resData[key].location.colorCode,
-                resData[key].location.groupId
-              )
+              resData[key].location.id,
+              resData[key].location.name,
+              resData[key].location.colorCode,
+              resData[key].location.groupId
+            )
             : {},
           user: resData[key].user
             ? new User(
-                resData[key].user.id,
-                resData[key].user.email,
-                resData[key].user.fullName,
-                resData[key].user.title,
-                resData[key].user.deviceId,
-                resData[key].user.roles,
-                resData[key].user.createdDate,
-                resData[key].user.updatedDate
-              )
+              resData[key].user.id,
+              resData[key].user.email,
+              resData[key].user.fullName,
+              resData[key].user.title,
+              resData[key].user.deviceId,
+              resData[key].user.roles,
+              resData[key].user.createdDate,
+              resData[key].user.updatedDate
+            )
             : {},
         });
       }
@@ -218,7 +222,7 @@ export const dailyCalendar = (date) => {
             (duty) =>
               duty.calendar.type === 1 &&
               moment(duty.calendar.startDate).format("Y-MM-DD") ===
-                moment(date).format("Y-MM-DD")
+              moment(date).format("Y-MM-DD")
           )
           .sort((a, b) => {
             if (a.calendar.startDate > b.calendar.startDate) {

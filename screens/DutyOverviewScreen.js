@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import DropDownPicker from 'react-native-dropdown-picker';
 import {
   View,
   Text,
@@ -27,17 +28,25 @@ import { customVariables } from "../constants/customVariables";
 const DutyOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [listOfMount, setListOfMount] = useState([]);
+  const [selectedMount, setSelectedMount] = useState({ label: moment().format("MMMM"), value: moment().format("Y-MM") });
+
   const [error, setError] = useState();
   // const [notification, setNotification] = useState({});
   const duty = useSelector((state) => state.calendars.mountCalendars);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
-  const loadDuty = useCallback(async () => {
+
+  const loadDuty = useCallback(async (data) => {
+
     setError(null);
     setIsRefreshing(true);
     props.navigation.closeDrawer();
+
     try {
+
+
       // filter: {"where":{"date":{"between":["2020-05-01","2020-05-31"]},"groupId":{"like":"5e8db35c3322910099e91a2b"},"type":1},"include":[{"relation":"group"},{"relation":"user"},{"relation":"location"}]}
       if (user.groups && user.groups.length <= 0) {
         Alert.alert(
@@ -68,7 +77,7 @@ const DutyOverviewScreen = (props) => {
           ],
         },
       };
-      await dispatch(calendarActions.fetchCalendar(filterData));
+      await dispatch(calendarActions.fetchCalendar(filterData, data));
     } catch (error) {
       console.log("dutyERROR", error);
       setError(error.message);
@@ -77,8 +86,35 @@ const DutyOverviewScreen = (props) => {
     }
   }, [dispatch, setIsLoading, setError]);
 
+
+
+  const getMounts = useCallback(async () => {
+
+    let result = [];
+    for (let index = 0; index < 12; index++) {
+      let item = { label: moment().month(index).format('MMMM'), value: moment().month(index).format('Y-MM') }
+      result.push(item)
+    }
+    setListOfMount(result);
+
+  }, [setListOfMount]);
+
+
+
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener("focus", loadDuty);
+    getMounts().then();
+  }, [getMounts]);
+
+
+  const onChangeMount = (selectedMount) => {
+    setSelectedMount({ label: selectedMount.label, value: selectedMount.value })
+  }
+
+
+
+  useEffect(() => {
+
+    const unsubscribe = props.navigation.addListener("focus", loadDuty.bind(this, selectedMount));
     // const _notificationSubscription = Notifications.addListener(
     //   _handleNotification
     // );
@@ -111,11 +147,25 @@ const DutyOverviewScreen = (props) => {
         </HeaderButtons>
       ),
     });
+
+
+
   }, [duty]);
+
+
+  useEffect(() => {
+
+
+
+    setIsLoading(true);
+    loadDuty(selectedMount).then(() => {
+      setIsLoading(false);
+    });
+  }, [selectedMount]);
 
   useEffect(() => {
     setIsLoading(true);
-    loadDuty().then(() => {
+    loadDuty(selectedMount).then(() => {
       setIsLoading(false);
     });
   }, [dispatch, loadDuty]);
@@ -145,11 +195,11 @@ const DutyOverviewScreen = (props) => {
           Platform.OS === "ios"
             ? await Calendar.getDefaultCalendarAsync()
             : {
-                source: {
-                  isLocalAccount: true,
-                  name: customVariables.CALENDAR_NAME,
-                },
-              };
+              source: {
+                isLocalAccount: true,
+                name: customVariables.CALENDAR_NAME,
+              },
+            };
         const omniCaliCalendar = await getOmniCaliCalendarSource();
         if (omniCaliCalendar) {
           await Calendar.deleteCalendarAsync(omniCaliCalendar.id);
@@ -219,7 +269,7 @@ const DutyOverviewScreen = (props) => {
     return (
       <View style={styles.centered}>
         <Text>Hata Oluştu!</Text>
-        <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} />
+        <Button title="Tekrar Dene" onPress={loadDuty.bind(this, selectedMount)} color={Colors.primary} />
       </View>
     );
   }
@@ -232,14 +282,7 @@ const DutyOverviewScreen = (props) => {
     );
   }
 
-  if (!isLoading && duty.length === 0) {
-    return (
-      <View style={styles.centered}>
-        <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
-        <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} />
-      </View>
-    );
-  }
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -249,12 +292,54 @@ const DutyOverviewScreen = (props) => {
       <View style={styles.screen}>
         <View style={styles.infoArea}>
           <View>
-            <Text style={styles.text}>{moment().format("MMMM")}</Text>
+
+            {
+              listOfMount.length == 12 &&
+
+              <DropDownPicker
+                defaultValue={selectedMount.value}
+                dropDownMaxHeight={400}
+                items={listOfMount}
+                arrowColor={'white'}
+                arrowStyle={{ marginLeft: 10 }}
+
+                style={styles.text}
+                //defaultIndex={0}
+                containerStyle={{ backgroundColor: Colors.primary }}
+                labelStyle={{ color: 'white' }}
+                //activeLabelStyle={{color: 'white'}}
+                dropDownStyle={{ border: 'none', backgroundColor: Colors.primary }}
+                onChangeItem={item => { onChangeMount(item)}}
+              />
+
+
+            }
+
+
+
+            {/* <Text style={styles.text}>{moment().format("MMMM")}</Text> */}
           </View>
         </View>
+
+
+
+
+
+
         <View style={styles.dutyListContainer}>
+
+
+
+          {!isLoading && duty.length == 0 && <View style={styles.centered}>
+            <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
+            <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} />
+          </View>
+          }
+
+
           <FlatList
-            onRefresh={loadDuty}
+
+            onRefresh={loadDuty.bind(this, selectedMount)}
             refreshing={isRefreshing}
             data={duty}
             keyExtractor={(item) => item.id}
@@ -309,9 +394,9 @@ export const screenOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: Colors.backColor },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  dutyListContainer: { height: "95%" },
+  screen: { flex: 1, backgroundColor: Colors.backColor, },
+  centered: { flex: 1, justifyContent: "center", alignItems: "center", zIndex: 0, },
+  dutyListContainer: { height: "95%", zIndex: -1 },
   infoArea: {
     alignItems: "center",
     height: 45,
@@ -320,13 +405,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   text: {
-    backgroundColor: "transparent",
-    fontFamily: "open-sans-bold",
-    fontSize: 18,
-    marginVertical: 6,
-    paddingHorizontal: 4,
-    paddingVertical: 4,
-    color: Colors.dateText,
+    zIndex: 0,
+    borderWidth: 0,
+    backgroundColor: Colors.primary,
+
+
+    //backgroundColor: "transparent",
+    // fontFamily: "open-sans-bold",
+    // fontSize: 18,
+    // marginVertical: 6,
+    // paddingHorizontal: 4,
+    // paddingVertical: 4,
+    // color: Colors.dateText,
   },
 });
 
