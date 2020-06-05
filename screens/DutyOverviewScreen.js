@@ -39,7 +39,6 @@ const DutyOverviewScreen = (props) => {
 
 
   const loadDuty = useCallback(async (data) => {
-
     setError(null);
     setIsRefreshing(true);
     props.navigation.closeDrawer();
@@ -108,6 +107,11 @@ const DutyOverviewScreen = (props) => {
 
   const onChangeMount = (selectedMount) => {
     setSelectedMount({ label: selectedMount.label, value: selectedMount.value })
+
+    setIsLoading(true);
+    loadDuty(selectedMount).then(() => {
+      setIsLoading(false);
+    });
   }
 
 
@@ -121,9 +125,10 @@ const DutyOverviewScreen = (props) => {
     return () => {
       unsubscribe();
     };
-  }, [loadDuty]);
+  }, [loadDuty,selectedMount]);
 
   useEffect(() => {
+
     props.navigation.setOptions({
       // eslint-disable-next-line react/display-name
       headerRight: () => (
@@ -153,22 +158,14 @@ const DutyOverviewScreen = (props) => {
   }, [duty]);
 
 
-  useEffect(() => {
-
-
-
-    setIsLoading(true);
-    loadDuty(selectedMount).then(() => {
-      setIsLoading(false);
-    });
-  }, [selectedMount]);
+ 
 
   useEffect(() => {
     setIsLoading(true);
     loadDuty(selectedMount).then(() => {
       setIsLoading(false);
     });
-  }, [dispatch, loadDuty]);
+  }, [dispatch, loadDuty,selectedMount]);
 
   const selectItemHandler = (calendar) => {
     props.navigation.navigate("DutyDetail", {
@@ -309,7 +306,7 @@ const DutyOverviewScreen = (props) => {
                 labelStyle={{ color: 'white' }}
                 //activeLabelStyle={{color: 'white'}}
                 dropDownStyle={{ border: 'none', backgroundColor: Colors.primary }}
-                onChangeItem={item => { onChangeMount(item)}}
+                onChangeItem={item => { onChangeMount(item) }}
               />
 
 
@@ -332,7 +329,7 @@ const DutyOverviewScreen = (props) => {
 
           {!isLoading && duty.length == 0 && <View style={styles.centered}>
             <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
-            <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} />
+            {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
           </View>
           }
 
@@ -384,7 +381,7 @@ export const screenOptions = (navData) => {
           iconName={Platform.OS === "android" ? "md-calendar" : "ios-calendar"}
           onPress={() => {
             navData.navigation.navigate("DutyDetail", {
-              calendar: JSON.stringify({ date: moment() }),
+              calendar: JSON.stringify({ date: moment(selectedMount) }),
             });
           }}
         />
@@ -395,7 +392,7 @@ export const screenOptions = (navData) => {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: Colors.backColor, },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center", zIndex: 0, },
+  centered: { flex: 4, justifyContent: "center", alignItems: "center", zIndex: 0, },
   dutyListContainer: { height: "95%", zIndex: -1 },
   infoArea: {
     alignItems: "center",
