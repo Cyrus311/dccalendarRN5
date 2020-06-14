@@ -3,16 +3,92 @@ import { extendMoment } from "moment-range";
 import { Calendar, User, Location, Group } from "../../models/index";
 import { calendarService } from "../../services/calendar";
 
+import { typeEnum } from "../../constants/typeEnum";
+
 export const DELETE_CALENDAR = "DELETE_CALENDAR";
 export const CREATE_CALENDAR = "CREATE_CALENDAR";
 export const UPDATE_CALENDAR = "UPDATE_CALENDAR";
 export const SET_CALENDARS = "SET_CALENDARS";
 export const DAILY_CALENDARS = "DAILY_CALENDARS";
 
+export const GET_CALENDAR_FIRST_DAY_ON_MOUNT = "GET_CALENDAR_FIRST_DAY_ON_MOUNT";
+
+
+
+export const getFirsDayOnMount = () => {
+  return async (dispatch, getState) => {
+    try {
+      if (!getState().user.user.groups) {
+        return;
+      }
+      if (getState().user.user.groups.length <= 0) {
+        return;
+      }
+      const groupId = getState().user.user.groups[0].id;
+      const filterData = {
+        filter: {
+          where: {
+            groupId: {
+              like: groupId,
+            },
+            type: 9, //
+            isDraft: false
+          },
+          include: [
+            {
+              relation: "group",
+            },
+            {
+              relation: "user",
+            },
+            {
+              relation: "location",
+            },
+          ],
+        },
+      };
+
+      // let isPublished = false;
+      const response = await calendarService.getCalendars(filterData);
+      // let responseData = response.filter((calendar) => {
+      //   return moment(calendar.startDate).format("Y-MM") == date
+      // })
+
+      // console.log('Fiter Response', responseData);
+      // if (responseData.length > 0) {
+      //   isPublished = true;
+      // }
+
+      dispatch({
+        type: GET_CALENDAR_FIRST_DAY_ON_MOUNT,
+        // isPublished: isPublished,
+        response:response
+
+      });
+    } catch (error) {
+      console.log('HATA', error);
+
+      // const errorResData = error.data;
+      // let message = "Sistem yöneticinize başvurunuz!";
+      // message = errorResData.error.message;
+      // if (errorResData.error.details) {
+      //   console.log("errorResData", errorResData.error);
+
+      //   // message = errorResData.error.details[0].message;
+      //   message = "Sistem yöneticinize başvurunuz!";
+      // }
+      // throw new Error(message);
+    }
+  };
+};
+
+
+
+
 export const fetchCalendar = (filterData, selectedMount) => {
 
-  console.log('api',selectedMount);
-  
+  console.log('api', selectedMount);
+
 
   return async (dispatch, getState) => {
     const userId = getState().auth.userId;

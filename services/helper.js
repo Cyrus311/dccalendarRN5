@@ -1,4 +1,5 @@
-import { customVariables } from "../hoc/Config/customVariables";
+import { customVariables } from "../constants/customVariables"
+import Toast from 'react-native-tiny-toast';
 
 const getErrorMessage = err => {
   let errorMessage = "";
@@ -16,6 +17,13 @@ const getErrorMessage = err => {
   }
 };
 
+// Detail prop : https://reactnativeexample.com/react-native-toast-like-component-works-on-ios-and-android/
+const showToastMessage = (message) => {
+  Toast.show(message);
+}
+
+
 export const helperService = {
-  getErrorMessage
+  getErrorMessage,
+  showToastMessage
 };

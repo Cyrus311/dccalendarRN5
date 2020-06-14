@@ -25,15 +25,20 @@ import HeaderButton from "../components/UI/HeaderButton";
 import Colors from "../constants/Colors";
 import { customVariables } from "../constants/customVariables";
 
+import { calendarService } from "../services/calendar";
+
+
 const DutyOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [listOfMount, setListOfMount] = useState([]);
   const [selectedMount, setSelectedMount] = useState({ label: moment().format("MMMM"), value: moment().format("Y-MM") });
-
   const [error, setError] = useState();
   // const [notification, setNotification] = useState({});
   const duty = useSelector((state) => state.calendars.mountCalendars);
+
+  const listOfDraftResponse = useSelector((state) => state.calendars.response);
+  const [isPublished, setIsPublished] = useState(false);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
@@ -77,6 +82,9 @@ const DutyOverviewScreen = (props) => {
         },
       };
       await dispatch(calendarActions.fetchCalendar(filterData, data));
+
+
+
     } catch (error) {
       console.log("dutyERROR", error);
       setError(error.message);
@@ -84,7 +92,6 @@ const DutyOverviewScreen = (props) => {
       setIsRefreshing(false);
     }
   }, [dispatch, setIsLoading, setError]);
-
 
 
   const getMounts = useCallback(async () => {
@@ -99,25 +106,12 @@ const DutyOverviewScreen = (props) => {
   }, [setListOfMount]);
 
 
-
   useEffect(() => {
     getMounts().then();
+
   }, [getMounts]);
 
-
-  const onChangeMount = (selectedMount) => {
-    setSelectedMount({ label: selectedMount.label, value: selectedMount.value })
-
-    setIsLoading(true);
-    loadDuty(selectedMount).then(() => {
-      setIsLoading(false);
-    });
-  }
-
-
-
   useEffect(() => {
-
     const unsubscribe = props.navigation.addListener("focus", loadDuty.bind(this, selectedMount));
     // const _notificationSubscription = Notifications.addListener(
     //   _handleNotification
@@ -125,237 +119,335 @@ const DutyOverviewScreen = (props) => {
     return () => {
       unsubscribe();
     };
-  }, [loadDuty,selectedMount]);
-
-  useEffect(() => {
-
-    props.navigation.setOptions({
-      // eslint-disable-next-line react/display-name
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title="Back"
-            iconName={Platform.OS === "android" ? "md-alarm" : "ios-alarm"}
-            onPress={() => {
-              syncNativeCalendar(duty);
-            }}
-          />
-          <Item
-            title="DutyDetail"
-            iconName={Platform.OS === "android" ? "md-calendar" : "md-calendar"}
-            onPress={() => {
-              props.navigation.navigate("DutyDetail", {
-                calendar: JSON.stringify({ date: moment() }),
-              });
-            }}
-          />
-        </HeaderButtons>
-      ),
-    });
+  }, [loadDuty, selectedMount]);
 
 
 
-  }, [duty]);
+  const loadDraft = useCallback(async () => {
 
-
- 
-
-  useEffect(() => {
-    setIsLoading(true);
-    loadDuty(selectedMount).then(() => {
-      setIsLoading(false);
-    });
-  }, [dispatch, loadDuty,selectedMount]);
-
-  const selectItemHandler = (calendar) => {
-    props.navigation.navigate("DutyDetail", {
-      calendar: JSON.stringify(calendar),
-    });
-  };
-
-  const getOmniCaliCalendarSource = async () => {
-    const calendars = await Calendar.getCalendarsAsync();
-    const omnicaliCalendar = calendars.filter(
-      (each) => each.title === customVariables.CALENDAR_NAME
-    );
-    return omnicaliCalendar[0];
-  };
-
-  const syncNativeCalendar = async (duty) => {
     try {
-      if (!duty) {
+      await dispatch(calendarActions.getFirsDayOnMount())
+
+    } catch (error) {
+      console.log('err', error);
+
+    }
+  }, [dispatch]);
+
+
+
+  const onChangeMount = async (selectedMount) => {
+
+    try {
+
+    setSelectedMount({ label: selectedMount.label, value: selectedMount.value })
+
+
+      // console.log(groupId);
+      
+      // const filterData = {
+      //   filter: {
+      //     where: {
+      //       groupId: {
+      //         like: groupId,
+      //       },
+      //       type: 9, //
+      //       isDraft: false
+      //     },
+      //     include: [
+      //       {
+      //         relation: "group",
+      //       },
+      //       {
+      //         relation: "user",
+      //       },
+      //       {
+      //         relation: "location",
+      //       },
+      //     ],
+      //   },
+      // };
+
+    //   calendarService.getCalendars(filterData).then((response) => {
+
+    //     if (response && response.length > 0) {
+
+    //       console.log('value',selectedMount.value);
+    //       console.log('response',response);
+
+          
+
+    //       let filteredListOfDraft = response.filter((calendar) => {
+    //         return moment(calendar.startDate).format("Y-MM") == selectedMount.value;
+    //       });
+
+    //       console.log(filteredListOfDraft);
+          
+
+    //       if (filteredListOfDraft.length > 0) {
+    //         alert('true');
+    //         setIsPublished(true);
+    //       } else {
+    //         alert('false');
+    //         setIsPublished(false);
+    //       }
+    //     } else {
+    //       alert('false');
+    //       setIsPublished(false);
+
+    //     }
+
+      
+
+    //   }).catch ((err) => {
+    //   console.log(err);
+
+    // })
+
+    // setSelectedMount({ label: selectedMount.label, value: selectedMount.value })
+
+    // if (listOfDraftResponse && listOfDraftResponse.length > 0) {
+
+    //   console.log('listOfDraftResponse',listOfDraftResponse);
+
+    //   console.log(selectedMount.value);
+
+  } catch (error) {
+    console.log("err", error);
+  }
+
+}
+
+
+
+
+
+useEffect(() => {
+
+  props.navigation.setOptions({
+    // eslint-disable-next-line react/display-name
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Back"
+          iconName={Platform.OS === "android" ? "md-alarm" : "ios-alarm"}
+          onPress={() => {
+            syncNativeCalendar(duty);
+          }}
+        />
+        <Item
+          title="DutyDetail"
+          iconName={Platform.OS === "android" ? "md-calendar" : "md-calendar"}
+          onPress={() => {
+            props.navigation.navigate("DutyDetail", {
+              calendar: JSON.stringify({ date: moment() }),
+            });
+          }}
+        />
+      </HeaderButtons>
+    ),
+  });
+
+
+
+}, [duty]);
+
+
+
+
+useEffect(() => {
+  setIsLoading(true);
+  loadDuty(selectedMount).then(() => {
+    setIsLoading(false);
+  });
+}, [dispatch, loadDuty, selectedMount]);
+
+const selectItemHandler = (calendar) => {
+  props.navigation.navigate("DutyDetail", {
+    calendar: JSON.stringify(calendar),
+  });
+};
+
+const getOmniCaliCalendarSource = async () => {
+  const calendars = await Calendar.getCalendarsAsync();
+  const omnicaliCalendar = calendars.filter(
+    (each) => each.title === customVariables.CALENDAR_NAME
+  );
+  return omnicaliCalendar[0];
+};
+
+const syncNativeCalendar = async (duty) => {
+  try {
+    if (!duty) {
+      return;
+    }
+    const { status } = await Calendar.requestCalendarPermissionsAsync();
+    if (status === "granted") {
+      const defaultCalendar =
+        Platform.OS === "ios"
+          ? await Calendar.getDefaultCalendarAsync()
+          : {
+            source: {
+              isLocalAccount: true,
+              name: customVariables.CALENDAR_NAME,
+            },
+          };
+      const omniCaliCalendar = await getOmniCaliCalendarSource();
+      if (omniCaliCalendar) {
+        await Calendar.deleteCalendarAsync(omniCaliCalendar.id);
+      }
+      const newCalendarID = await Calendar.createCalendarAsync({
+        title: customVariables.CALENDAR_NAME,
+        color: "blue",
+        entityType: Calendar.EntityTypes.EVENT,
+        sourceId: defaultCalendar.source.id,
+        source: defaultCalendar.source,
+        name: "internalCalendarName",
+        ownerAccount: "personal",
+        accessLevel: Calendar.CalendarAccessLevel.OWNER,
+      });
+      for (const item of duty) {
+        await Calendar.createEventAsync(newCalendarID, {
+          title: item.location.name,
+          startDate: item.calendar.startDate,
+          endDate: item.calendar.endDate,
+          notes: item.calendar.description,
+          allDay: true,
+          availability: Calendar.Availability.BUSY,
+          alarms: [{ relativeOffset: -900 }],
+        });
+      }
+      if (duty.length === 0) {
+        Alert.alert("Nöbetiniz bulunmamaktadır!", "", [{ text: "Tamam" }]);
         return;
       }
-      const { status } = await Calendar.requestCalendarPermissionsAsync();
-      if (status === "granted") {
-        const defaultCalendar =
-          Platform.OS === "ios"
-            ? await Calendar.getDefaultCalendarAsync()
-            : {
-              source: {
-                isLocalAccount: true,
-                name: customVariables.CALENDAR_NAME,
-              },
-            };
-        const omniCaliCalendar = await getOmniCaliCalendarSource();
-        if (omniCaliCalendar) {
-          await Calendar.deleteCalendarAsync(omniCaliCalendar.id);
-        }
-        const newCalendarID = await Calendar.createCalendarAsync({
-          title: customVariables.CALENDAR_NAME,
-          color: "blue",
-          entityType: Calendar.EntityTypes.EVENT,
-          sourceId: defaultCalendar.source.id,
-          source: defaultCalendar.source,
-          name: "internalCalendarName",
-          ownerAccount: "personal",
-          accessLevel: Calendar.CalendarAccessLevel.OWNER,
-        });
-        for (const item of duty) {
-          await Calendar.createEventAsync(newCalendarID, {
-            title: item.location.name,
-            startDate: item.calendar.startDate,
-            endDate: item.calendar.endDate,
-            notes: item.calendar.description,
-            allDay: true,
-            availability: Calendar.Availability.BUSY,
-            alarms: [{ relativeOffset: -900 }],
-          });
-        }
-        if (duty.length === 0) {
-          Alert.alert("Nöbetiniz bulunmamaktadır!", "", [{ text: "Tamam" }]);
-          return;
-        }
-        Alert.alert(
-          "Takvim eşitleme başarılı!",
-          "Nöbetleriniz cihaz takviminize aktarılmıştır.",
-          [{ text: "Tamam" }]
-        );
-      }
-    } catch (error) {
       Alert.alert(
-        "Takvim eşitleme sırasında hata oluştu!",
-        // "Lütfen sistem yöneticinize başvurunuz",
-        error.message,
-        [{ text: "Okay" }]
+        "Takvim eşitleme başarılı!",
+        "Nöbetleriniz cihaz takviminize aktarılmıştır.",
+        [{ text: "Tamam" }]
       );
     }
-  };
-
-  // const _handleNotification = (notification) => {
-  //   Vibration.vibrate();
-  //   // console.log(notification);
-  //   setNotification(notification);
-  // };
-
-  // useEffect(() => {
-  //   if (notification.data) {
-  //     Alert.alert("Mesajınız Var!", notification.data.message, [
-  //       {
-  //         text: "Tamam",
-  //         style: "destructive",
-  //         onPress: () => {
-  //           loadDuty();
-  //         },
-  //       },
-  //     ]);
-  //   }
-  // }, [notification]);
-
-  if (error) {
-    return (
-      <View style={styles.centered}>
-        <Text>Hata Oluştu!</Text>
-        <Button title="Tekrar Dene" onPress={loadDuty.bind(this, selectedMount)} color={Colors.primary} />
-      </View>
+  } catch (error) {
+    Alert.alert(
+      "Takvim eşitleme sırasında hata oluştu!",
+      // "Lütfen sistem yöneticinize başvurunuz",
+      error.message,
+      [{ text: "Okay" }]
     );
   }
+};
 
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+// const _handleNotification = (notification) => {
+//   Vibration.vibrate();
+//   // console.log(notification);
+//   setNotification(notification);
+// };
 
+// useEffect(() => {
+//   if (notification.data) {
+//     Alert.alert("Mesajınız Var!", notification.data.message, [
+//       {
+//         text: "Tamam",
+//         style: "destructive",
+//         onPress: () => {
+//           loadDuty();
+//         },
+//       },
+//     ]);
+//   }
+// }, [notification]);
 
-
+if (error) {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar
-        barStyle={Platform.OS === "android" ? "default" : "dark-content"}
-      />
-      <View style={styles.screen}>
-        <View style={styles.infoArea}>
-          <View>
+    <View style={styles.centered}>
+      <Text>Hata Oluştu!</Text>
+      <Button title="Tekrar Dene" onPress={loadDuty.bind(this, selectedMount)} color={Colors.primary} />
+    </View>
+  );
+}
 
-            {
-              listOfMount.length == 12 &&
-
-              <DropDownPicker
-                defaultValue={selectedMount.value}
-                dropDownMaxHeight={400}
-                items={listOfMount}
-                arrowColor={'white'}
-                arrowStyle={{ marginLeft: 10 }}
-
-                style={styles.text}
-                //defaultIndex={0}
-                containerStyle={{ backgroundColor: Colors.primary }}
-                labelStyle={{ color: 'white' }}
-                //activeLabelStyle={{color: 'white'}}
-                dropDownStyle={{ border: 'none', backgroundColor: Colors.primary }}
-                onChangeItem={item => { onChangeMount(item) }}
-              />
-
-
-            }
+if (isLoading) {
+  return (
+    <View style={styles.centered}>
+      <ActivityIndicator size="large" color={Colors.primary} />
+    </View>
+  );
+}
 
 
 
-            {/* <Text style={styles.text}>{moment().format("MMMM")}</Text> */}
-          </View>
-        </View>
+return (
+  <SafeAreaView style={{ flex: 1 }}>
+    <StatusBar
+      barStyle={Platform.OS === "android" ? "default" : "dark-content"}
+    />
+    <View style={styles.screen}>
+      <View style={styles.infoArea}>
+        <View>
+
+          {
+            listOfMount.length == 12 &&
+
+            <DropDownPicker
+              defaultValue={selectedMount.value}
+              dropDownMaxHeight={400}
+              items={listOfMount}
+              arrowColor={'white'}
+              arrowStyle={{ marginLeft: 10 }}
+              style={{zIndex: 0,borderWidth: 0,backgroundColor: Colors.primary,width:80}}
+              containerStyle={{ backgroundColor: Colors.primary }}
+              labelStyle={{ color: 'white' }}
+              dropDownStyle={{ border: 'none',  backgroundColor: Colors.primary }}
+              onChangeItem={item => { onChangeMount(item) }}
+            />
 
 
-
-
-
-
-        <View style={styles.dutyListContainer}>
-
-
-
-          {!isLoading && duty.length == 0 && <View style={styles.centered}>
-            <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
-            {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
-          </View>
           }
 
 
-          <FlatList
 
-            onRefresh={loadDuty.bind(this, selectedMount)}
-            refreshing={isRefreshing}
-            data={duty}
-            keyExtractor={(item) => item.id}
-            renderItem={(itemData) => (
-              <DutyItem
-                date={itemData.item.calendar.readableDate}
-                location={itemData.item.location}
-                description={itemData.item.calendar.description}
-                onSelect={() => {
-                  selectItemHandler(itemData.item.calendar);
-                }}
-                navigatable
-              ></DutyItem>
-            )}
-          />
+          {/* <Text style={styles.text}>{moment().format("MMMM")}</Text> */}
         </View>
       </View>
-    </SafeAreaView>
-  );
+
+
+
+
+
+
+      <View style={styles.dutyListContainer}>
+
+
+
+        {!isLoading && duty.length == 0 && <View style={styles.centered}>
+          <Text style={{ color: Colors.primary }}>Nöbetiniz bulunamadı.</Text>
+          {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
+        </View>
+        }
+
+
+        <FlatList
+
+          onRefresh={loadDuty.bind(this, selectedMount)}
+          refreshing={isRefreshing}
+          data={duty}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <DutyItem
+              date={itemData.item.calendar.readableDate}
+              location={itemData.item.location}
+              description={itemData.item.calendar.description}
+              onSelect={() => {
+                selectItemHandler(itemData.item.calendar);
+              }}
+              navigatable
+            ></DutyItem>
+          )}
+        />
+      </View>
+    </View>
+  </SafeAreaView>
+);
 };
 
 export const screenOptions = (navData) => {
@@ -400,21 +492,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.textColor,
     backgroundColor: Colors.primary,
-  },
-  text: {
-    zIndex: 0,
-    borderWidth: 0,
-    backgroundColor: Colors.primary,
-
-
-    //backgroundColor: "transparent",
-    // fontFamily: "open-sans-bold",
-    // fontSize: 18,
-    // marginVertical: 6,
-    // paddingHorizontal: 4,
-    // paddingVertical: 4,
-    // color: Colors.dateText,
-  },
+  }
 });
 
 export default DutyOverviewScreen;

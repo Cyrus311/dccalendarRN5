@@ -8,4 +8,5 @@ export const typeEnum = Object.freeze([
   "İdari izin",
   "Özel Durum",
   "Rotasyon",
+  "Publish"
 ]);

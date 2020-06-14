@@ -21,23 +21,24 @@ import Colors from "../constants/Colors";
 import ArrowIcon from "../components/UI/ArrowIcon";
 
 const DutyDetailScreen = (props) => {
-  const dateObj = new Date();
+  const calendarObj = JSON.parse(props.route.params.calendar);
+  const dateObj = calendarObj.startDate ? new Date(calendarObj.startDate) : new Date(calendarObj.date);
+  //const dateObj = new Date();
   const month = dateObj.getUTCMonth() + 1;
   const year = dateObj.getUTCFullYear();
   const plistOfDate = getDaysArray(year, month);
+  const [listOfDate, setListOfDate] = useState(plistOfDate);
+  const calendarId = calendarObj ? calendarObj.id : "";
+  const [selectedDate, setSelectedDate] = useState(calendarObj.startDate);
+  let passedActiveItem = moment(selectedDate).format("D");
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
-  const [listOfDate, setListOfDate] = useState(plistOfDate);
   const [activeIndex, updActiveIndex] = useState(-1);
   const duty = useSelector((state) => state.calendars.dailyCalendars);
   const user = useSelector((state) => state.user.user);
   const [calendar, setCalendar] = useState({});
   const dispatch = useDispatch();
-  const calendarObj = JSON.parse(props.route.params.calendar);
-  const calendarId = calendarObj ? calendarObj.id : "";
-  const [selectedDate, setSelectedDate] = useState(calendarObj.startDate);
-  let passedActiveItem = moment(selectedDate).format("D");
 
   const getItemLayout = (data, index) => ({
     length: 85,
@@ -199,9 +200,9 @@ const DutyDetailScreen = (props) => {
                   date={itemData.item.calendar.readableDate}
                   location={itemData.item.location}
                   description={itemData.item.calendar.description}
-                  onSelect={() => {}}
+                  onSelect={() => { }}
                   user={itemData.item.user}
-                  // selectable={user.id !== itemData.item.user.id}
+                // selectable={user.id !== itemData.item.user.id}
                 >
                   {/* {user.id !== itemData.item.user.id && (
                   <TouchableOpacity
@@ -225,10 +226,10 @@ const DutyDetailScreen = (props) => {
   );
 };
 
-export const screenOptions = (navData) => {
+export const  screenOptions =  (navData) =>  {
   return {
     // headerTitle: navData.route.params.productTitle
-    headerTitle: "Nöbetçi Listesi",
+    headerTitle:" Nöbet Listesi"
   };
 };
 
