@@ -5,7 +5,6 @@ import {
   UPDATE_CALENDAR,
   SET_CALENDARS,
   DAILY_CALENDARS,
-  GET_CALENDAR_FIRST_DAY_ON_MOUNT
 } from "../actions/calendar";
 // import Calendar from "../../models/calendar";
 import Calendar from "../../models/calendar";
@@ -17,24 +16,11 @@ const initialState = {
   mountCalendars: [],
   dailyCalendars: [],
   noDutyCalendars: [],
-  response:[]
-  
+  response: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-
-    case GET_CALENDAR_FIRST_DAY_ON_MOUNT: {
-      return {
-        ...state,
-        // isPublished: action.isPublished ? true : false,
-        response:action.response
-      };
-
-    }
-
-
-
     case SET_CALENDARS: {
       //----------------Gruplama kodu---------------------------------
       // const leaveCalendars = [];
@@ -61,6 +47,7 @@ export default (state = initialState, action) => {
         mountCalendars: action.mountCalendars,
         dailyCalendars: action.dailyCalendars,
         noDutyCalendars: action.noDutyCalendars,
+        publishedCalendars: action.publishedCalendars,
       };
     }
     case DAILY_CALENDARS: {
