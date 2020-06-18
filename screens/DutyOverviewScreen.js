@@ -181,7 +181,6 @@ const DutyOverviewScreen = (props) => {
   }, [duty, isPublished]);
 
   useEffect(() => {
-    console.log("---LOADDUTY---");
     setIsLoading(true);
     loadDuty(selectedMount).then(() => {
       setIsLoading(false);
