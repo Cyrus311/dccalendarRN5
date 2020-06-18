@@ -25,10 +25,8 @@ import HeaderButton from "../components/UI/HeaderButton";
 import Colors from "../constants/Colors";
 import { customVariables } from "../constants/customVariables";
 
-import { calendarService } from "../services/calendar";
-
 const DutyOverviewScreen = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [listOfMount, setListOfMount] = useState([]);
   const [selectedMount, setSelectedMount] = useState({
@@ -62,36 +60,37 @@ const DutyOverviewScreen = (props) => {
           );
           return;
         }
-
-        const filterData = {
-          filter: {
-            where: {
-              groupId: {
-                like: user.groups ? user.groups[0].id : "",
+        const groupId = user.groups ? user.groups[0].id : "";
+        if (groupId) {
+          const filterData = {
+            filter: {
+              where: {
+                groupId: {
+                  like: groupId,
+                },
               },
+              include: [
+                {
+                  relation: "group",
+                },
+                {
+                  relation: "user",
+                },
+                {
+                  relation: "location",
+                },
+              ],
             },
-            include: [
-              {
-                relation: "group",
-              },
-              {
-                relation: "user",
-              },
-              {
-                relation: "location",
-              },
-            ],
-          },
-        };
-        await dispatch(calendarActions.fetchCalendar(filterData, data));
+          };
+          await dispatch(calendarActions.fetchCalendar(filterData, data));
+        }
       } catch (error) {
-        console.log("dutyERROR", error);
         setError(error.message);
       } finally {
         setIsRefreshing(false);
       }
     },
-    [dispatch, setIsLoading, setError]
+    [dispatch, setIsLoading, setError, user]
   );
 
   useEffect(() => {
@@ -182,6 +181,7 @@ const DutyOverviewScreen = (props) => {
   }, [duty, isPublished]);
 
   useEffect(() => {
+    console.log("---LOADDUTY---");
     setIsLoading(true);
     loadDuty(selectedMount).then(() => {
       setIsLoading(false);
@@ -304,85 +304,87 @@ const DutyOverviewScreen = (props) => {
     );
   }
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar
-        barStyle={Platform.OS === "android" ? "default" : "dark-content"}
-      />
-      <View style={styles.screen}>
-        <View style={styles.infoArea}>
-          <View>
-            {listOfMount.length == 12 && (
-              <DropDownPicker
-                defaultValue={selectedMount.value}
-                dropDownMaxHeight={400}
-                items={listOfMount}
-                arrowColor={"white"}
-                arrowStyle={{ marginLeft: 10 }}
-                style={{
-                  zIndex: 0,
-                  borderWidth: 0,
-                  backgroundColor: Colors.primary,
-                  width: 80,
-                }}
-                containerStyle={{ backgroundColor: Colors.primary }}
-                labelStyle={{ color: "white" }}
-                dropDownStyle={{
-                  border: "none",
-                  backgroundColor: Colors.primary,
-                }}
-                onChangeItem={(item) => {
-                  onChangeMount(item);
-                }}
-              />
+  if (!isLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar
+          barStyle={Platform.OS === "android" ? "default" : "dark-content"}
+        />
+        <View style={styles.screen}>
+          <View style={styles.infoArea}>
+            <View>
+              {listOfMount.length == 12 && (
+                <DropDownPicker
+                  defaultValue={selectedMount.value}
+                  dropDownMaxHeight={400}
+                  items={listOfMount}
+                  arrowColor={"white"}
+                  arrowStyle={{ marginLeft: 10 }}
+                  style={{
+                    zIndex: 0,
+                    borderWidth: 0,
+                    backgroundColor: Colors.primary,
+                    width: 80,
+                  }}
+                  containerStyle={{ backgroundColor: Colors.primary }}
+                  labelStyle={{ color: "white" }}
+                  dropDownStyle={{
+                    border: "none",
+                    backgroundColor: Colors.primary,
+                  }}
+                  onChangeItem={(item) => {
+                    onChangeMount(item);
+                  }}
+                />
+              )}
+
+              {/* <Text style={styles.text}>{moment().format("MMMM")}</Text> */}
+            </View>
+          </View>
+
+          <View style={styles.dutyListContainer}>
+            {!isPublished && (
+              <View style={styles.centered}>
+                <Text style={{ color: Colors.primary }}>
+                  Takvim henüz yayınlanmamış.
+                </Text>
+                {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
+              </View>
             )}
 
-            {/* <Text style={styles.text}>{moment().format("MMMM")}</Text> */}
+            {duty.length === 0 && (
+              <View style={styles.centered}>
+                <Text style={{ color: Colors.primary }}>
+                  Nöbetiniz bulunamadı.
+                </Text>
+                {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
+              </View>
+            )}
+
+            {isPublished && (
+              <FlatList
+                onRefresh={loadDuty.bind(this, selectedMount)}
+                refreshing={isRefreshing}
+                data={duty}
+                keyExtractor={(item) => item.id}
+                renderItem={(itemData) => (
+                  <DutyItem
+                    date={itemData.item.calendar.readableDate}
+                    location={itemData.item.location}
+                    description={itemData.item.calendar.description}
+                    onSelect={() => {
+                      selectItemHandler(itemData.item.calendar);
+                    }}
+                    navigatable
+                  ></DutyItem>
+                )}
+              />
+            )}
           </View>
         </View>
-
-        <View style={styles.dutyListContainer}>
-          {!isLoading && !isPublished && (
-            <View style={styles.centered}>
-              <Text style={{ color: Colors.primary }}>
-                Takvim henüz yayınlanmamış.
-              </Text>
-              {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
-            </View>
-          )}
-
-          {!isLoading && duty.length == 0 && (
-            <View style={styles.centered}>
-              <Text style={{ color: Colors.primary }}>
-                Nöbetiniz bulunamadı.
-              </Text>
-              {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
-            </View>
-          )}
-
-          {!isLoading && isPublished && (
-            <FlatList
-              onRefresh={loadDuty.bind(this, selectedMount)}
-              refreshing={isRefreshing}
-              data={duty}
-              keyExtractor={(item) => item.id}
-              renderItem={(itemData) => (
-                <DutyItem
-                  date={itemData.item.calendar.readableDate}
-                  location={itemData.item.location}
-                  description={itemData.item.calendar.description}
-                  onSelect={() => {
-                    selectItemHandler(itemData.item.calendar);
-                  }}
-                  navigatable
-                ></DutyItem>
-              )}
-            />
-          )}
-        </View>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 };
 
 export const screenOptions = (navData) => {
