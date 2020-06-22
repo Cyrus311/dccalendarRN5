@@ -24,6 +24,7 @@ import * as calendarActions from "../store/actions/calendar";
 import HeaderButton from "../components/UI/HeaderButton";
 import Colors from "../constants/Colors";
 import { customVariables } from "../constants/customVariables";
+import { helperService } from "../services"
 
 const DutyOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -168,6 +169,8 @@ const DutyOverviewScreen = (props) => {
             iconName={Platform.OS === "android" ? "md-calendar" : "md-calendar"}
             onPress={() => {
               if (isPublished) {
+                helperService.showToastMessage(moment().format("MMMM") + ' ayı ile ilgili nöbetler gösteriliyor...');
+                setSelectedMount({ label: moment().format("MMMM"), value: moment().format("Y-MM") });
                 props.navigation.navigate("DutyDetail", {
                   calendar: JSON.stringify({ date: moment() }),
                 });
@@ -345,13 +348,13 @@ const DutyOverviewScreen = (props) => {
             {!isPublished && (
               <View style={styles.centered}>
                 <Text style={{ color: Colors.primary }}>
-                  Takvim henüz yayınlanmamış.
+                  Seçili ayın nöbet listesi henüz yayınlanmadı!
                 </Text>
                 {/* <Button title="Tekrar Dene" onPress={loadDuty} color={Colors.primary} /> */}
               </View>
             )}
 
-            {duty.length === 0 && (
+            { isPublished  && duty.length === 0 && (
               <View style={styles.centered}>
                 <Text style={{ color: Colors.primary }}>
                   Nöbetiniz bulunamadı.
